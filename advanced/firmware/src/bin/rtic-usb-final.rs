@@ -1,6 +1,8 @@
 #![no_main]
 #![no_std]
 
+use core::num::NonZeroU8;
+
 use dk::{
     peripheral::USBD,
     usbd::{self, Ep0In, Event},
@@ -18,10 +20,7 @@ const APP: () = {
 
     #[init]
     fn init(_cx: init::Context) -> init::LateResources {
-        static mut BUFFER: [u8; 64] = [0; 64];
-
         let board = dk::init().unwrap();
-        let ep0in = Ep0In::new(BUFFER);
 
         usbd::init(board.power, &board.usbd);
 
@@ -30,7 +29,7 @@ const APP: () = {
         init::LateResources {
             usbd: board.usbd,
             state: State::Default,
-            ep0in,
+            ep0in: board.ep0in,
         }
     }
 
@@ -106,9 +105,11 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
 
             GetDescriptor::Configuration { index } => {
                 if index == 0 {
-                    let desc = usb2::configuration::Descriptor {
+                    let mut full_desc = heapless::Vec::<u8, heapless::consts::U64>::new();
+
+                    let conf_desc = usb2::configuration::Descriptor {
                         wTotalLength: usb2::configuration::Descriptor::SIZE.into(),
-                        bNumInterfaces: 0,
+                        bNumInterfaces: NonZeroU8::new(1).unwrap(),
                         bConfigurationValue: core::num::NonZeroU8::new(CONFIG_VAL).unwrap(),
                         iConfiguration: None,
                         bmAttributes: usb2::configuration::bmAttributes {
@@ -118,8 +119,22 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
                         bMaxPower: 250, // 500 mA
                     };
 
-                    let bytes = desc.bytes();
-                    ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd)?;
+                    let iface_desc = usb2::interface::Descriptor {
+                        bInterfaceNumber: 0,
+                        bAlternativeSetting: 0,
+                        bNumEndpoints: 0,
+                        bInterfaceClass: 0,
+                        bInterfaceSubClass: 0,
+                        bInterfaceProtocol: 0,
+                        iInterface: None,
+                    };
+
+                    full_desc.extend_from_slice(&conf_desc.bytes()).unwrap();
+                    full_desc.extend_from_slice(&iface_desc.bytes()).unwrap();
+                    ep0in.start(
+                        &full_desc[..core::cmp::min(full_desc.len(), length.into())],
+                        usbd,
+                    )?;
                 } else {
                     // out of bounds access: stall the endpoint
                     return Err(());

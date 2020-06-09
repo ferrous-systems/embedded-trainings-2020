@@ -15,18 +15,13 @@ use usb2::{GetDescriptor as Descriptor, StandardRequest as Request}; // crates.i
 #[rtfm::app(device = dk)]
 const APP: () = {
     struct Resources {
-        #[init([0; 64])]
-        buffer: [u8; 64],
         usbd: USBD,
         ep0in: Ep0In,
         state: State,
     }
 
-    #[init(resources = [buffer])]
-    fn init(cx: init::Context) -> init::LateResources {
-        let buffer: &'static mut [u8; 64] = cx.resources.buffer;
-        let ep0in = Ep0In::new(buffer);
-
+    #[init]
+    fn init(_cx: init::Context) -> init::LateResources {
         let board = dk::init().unwrap();
 
         usbd::init(board.power, &board.usbd);
@@ -36,7 +31,7 @@ const APP: () = {
         init::LateResources {
             usbd: board.usbd,
             state: State::Default,
-            ep0in,
+            ep0in: board.ep0in,
         }
     }
 
@@ -72,7 +67,7 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
     }
 }
 
-fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()> {
+fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut State) -> Result<(), ()> {
     let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
     let brequest = usbd.brequest.read().brequest().bits();
     let wlength = usbd::wlength(usbd);

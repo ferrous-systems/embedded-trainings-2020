@@ -1,5 +1,7 @@
 //! Hardware Abstraction Layer (HAL) for the nRF52840 Development Kit
 
+#![deny(missing_docs)]
+#![deny(warnings)]
 #![no_std]
 
 use core::{
@@ -21,7 +23,10 @@ use hal::{
 use log::{LevelFilter, Log};
 use rtt_target::{rprintln, rtt_init_print};
 
-use crate::peripheral::{POWER, USBD};
+use crate::{
+    peripheral::{POWER, USBD},
+    usbd::Ep0In,
+};
 
 mod errata;
 pub mod peripheral;
@@ -29,13 +34,20 @@ pub mod usbd;
 
 /// Components on the board
 pub struct Board {
+    /// LEDs
     pub leds: Leds,
+    /// Radio interface
     // TODO put behind feature flag (off in advanced workshop)
     pub radio: Radio<'static>,
+    /// Timer
     pub timer: Timer,
+    /// USBD (Universal Serial Bus Device) peripheral
     // TODO put behind feature flag (off in beginner workshop)
     pub usbd: USBD,
+    /// POWER (Power Supply) peripheral
     pub power: POWER,
+    /// USB control endpoint 0
+    pub ep0in: Ep0In,
 }
 
 /// All LEDs on the board
@@ -149,7 +161,8 @@ pub fn init() -> Result<Board, ()> {
         cortex_m::Peripherals::take(),
         hal::target::Peripherals::take(),
     ) {
-        // NOTE(unsafe) this branch runs at most once
+        // NOTE(static mut) this branch runs at most once
+        static mut EP0IN_BUF: [u8; 64] = [0; 64];
         static mut CLOCKS: Option<Clocks<ExternalOscillator, ExternalOscillator, LfOscStarted>> =
             None;
 
@@ -210,6 +223,7 @@ pub fn init() -> Result<Board, ()> {
             timer: Timer { inner: timer },
             usbd: periph.USBD,
             power: periph.POWER,
+            ep0in: unsafe { Ep0In::new(&mut EP0IN_BUF) },
         })
     } else {
         Err(())

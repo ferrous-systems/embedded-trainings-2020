@@ -60,7 +60,7 @@ version = "0.1.0"
 [[package]]
 name = "cortex-m"
 version = "0.6.2"
-source = "git+https://github.com/rust-embedded/cortex-m#3136e01e708413774d7be2868705e1782c910027"
+source = "git+https://github.com/rust-embedded/cortex-m#c9c7539233954822a6132f4bc13e5763371b5cb2"
 dependencies = [
  "bare-metal",
  "bitfield",
@@ -118,6 +118,7 @@ name = "dk"
 version = "0.1.0"
 dependencies = [
  "cortex-m",
+ "cortex-m-rt",
  "embedded-hal",
  "log",
  "nrf52840-hal",
@@ -143,6 +144,7 @@ dependencies = [
  "cortex-m-rt",
  "cortex-m-rtfm",
  "dk",
+ "heapless",
  "log",
  "panic-log",
  "quote",
@@ -201,9 +203,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "1.3.2"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "076f042c5b7b98f31d205f1249267e12a6518c1481e9dae9764af19b707d2292"
+checksum = "c398b2b113b55809ceb9ee3e753fcbac793f1956663f3c36549c1346015c2afe"
 dependencies = [
  "autocfg",
 ]
@@ -226,7 +228,7 @@ checksum = "b1411551beb3c11dedfb0a90a0fa256b47d28b9ec2cdff34c25a2fa59e45dbdc"
 [[package]]
 name = "nrf-hal-common"
 version = "0.10.0"
-source = "git+https://github.com/japaric/nrf-hal?branch=radio#443662d20591c3bef26a4fff2de03de90fec51aa"
+source = "git+https://github.com/japaric/nrf-hal?branch=radio#d624e80e5724e4709081ed65abaf63271fe1eca7"
 dependencies = [
  "cast",
  "cortex-m",
@@ -241,7 +243,7 @@ dependencies = [
 [[package]]
 name = "nrf52840-hal"
 version = "0.10.0"
-source = "git+https://github.com/japaric/nrf-hal?branch=radio#443662d20591c3bef26a4fff2de03de90fec51aa"
+source = "git+https://github.com/japaric/nrf-hal?branch=radio#d624e80e5724e4709081ed65abaf63271fe1eca7"
 dependencies = [
  "cast",
  "cortex-m",
@@ -274,18 +276,18 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.17"
+version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1502d12e458c49a4c9cbff560d0fe0060c252bc29799ed94ca2ed4bb665a0101"
+checksum = "beae6331a816b1f65d04c45b078fd8e6c93e8071771f41b8163255bbd8d7c8fa"
 dependencies = [
  "unicode-xid",
 ]
 
 [[package]]
 name = "quote"
-version = "1.0.6"
+version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "54a21852a652ad6f610c9510194f398ff6f8692e334fd1145fed931f7fbe44ea"
+checksum = "aa563d17ecb180e500da1cfd2b028310ac758de548efdd203e18f283af693f37"
 dependencies = [
  "proc-macro2",
 ]
@@ -362,9 +364,9 @@ checksum = "dba1a27d3efae4351c8051072d619e3ade2820635c3958d826bfea39d59b54c8"
 
 [[package]]
 name = "syn"
-version = "1.0.25"
+version = "1.0.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f14a640819f79b72a710c0be059dce779f9339ae046c8bef12c361d56702146f"
+checksum = "93a56fabc59dce20fe48b6c832cc249c713e7ed88fa28b0ee0a3bfcaae5fe4e2"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -396,7 +398,7 @@ version = "0.1.0"
 [[package]]
 name = "usb2"
 version = "0.0.0"
-source = "git+https://github.com/japaric/usb2#c2b8118e667026f690c847782ebc5809aba749fe"
+source = "git+https://github.com/japaric/usb2#6a8c4b1ed0db005dcf19694684524b33cc04abd2"
 
 [[package]]
 name = "vcell"

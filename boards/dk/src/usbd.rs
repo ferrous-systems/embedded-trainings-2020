@@ -1,6 +1,6 @@
-use core::sync::atomic::{self, Ordering};
+//! USBD peripheral
 
-use cortex_m::asm;
+use core::sync::atomic::{self, Ordering};
 
 use crate::{
     errata,
@@ -14,17 +14,23 @@ pub struct Ep0In {
 }
 
 impl Ep0In {
-    pub fn new(buffer: &'static mut [u8; 64]) -> Self {
+    /// # Safety
+    /// Must be created at most once (singleton)
+    pub(crate) unsafe fn new(buffer: &'static mut [u8; 64]) -> Self {
         Self {
             buffer,
             busy: false,
         }
     }
 
+    /// Starts a data transfer over endpoint 0
+    ///
+    /// # Panics
+    ///
+    /// This function panics if the last transfer was not finished by calling the `end` function
     pub fn start(&mut self, bytes: &[u8], usbd: &USBD) -> Result<(), ()> {
         if self.busy {
-            log::error!("EP0IN: last transfer not completed");
-            return Err(());
+            panic!("EP0IN: last transfer has not completed");
         }
 
         if bytes.len() > self.buffer.len() {
@@ -56,12 +62,17 @@ impl Ep0In {
         Ok(())
     }
 
+    /// Completes a data transfer
+    ///
+    /// This function must be called after the EP0DATADONE event is raised
+    ///
+    /// # Panics
+    ///
+    /// This function panics if called before `start` or before the EP0DATADONE event is raised by
+    /// the hardware
     pub fn end(&mut self, usbd: &USBD) {
         if usbd.events_ep0datadone.read().bits() == 0 {
-            log::error!("Ep0In.end called before the EP0DATADONE event was raised");
-            loop {
-                asm::bkpt();
-            }
+            panic!("Ep0In.end called before the EP0DATADONE event was raised");
         } else {
             // DMA transfer complete
             dma_end();
@@ -77,7 +88,7 @@ impl Ep0In {
 //
 // This function call *must* be *followed* by a memory *store* operation. Memory operations that
 // follow this function call will *not* be moved, by the compiler or the instruction pipeline, to
-// *after* the function call. 
+// *after* the function call.
 fn dma_start() {
     atomic::fence(Ordering::Release);
 }
@@ -87,21 +98,28 @@ fn dma_start() {
 //
 // This function call *must* be *preceded* by a memory *load* operation. Memory operations that
 // follow this function call will *not* be moved, by the compiler or the instruction pipeline, to
-// *before* the function call. 
+// *before* the function call.
 fn dma_end() {
     atomic::fence(Ordering::Acquire);
 }
 
+/// Initializes the USBD peripheral
 // NOTE will be called from user code; at that point the high frequency clock source has already
 // been configured to use to the external crystal
 // Reference: section 6.35.4 of the nRF52840 Product Specification
 pub fn init(power: POWER, usbd: &USBD) {
+    let mut once = true;
+
     // wait until the USB has been connected
     while power.events_usbdetected.read().bits() == 0 {
-        power.events_usbdetected.reset();
+        if once {
+            log::info!("waiting for USB connection on port J3");
+            once = false;
+        }
 
         continue;
     }
+    power.events_usbdetected.reset();
 
     // workaround silicon bug
     unsafe { errata::e187a() }
@@ -147,6 +165,7 @@ pub fn disconnect(usbd: &USBD) {
     usbd.usbpullup.reset();
 }
 
+/// Stalls endpoint 0
 pub fn ep0stall(usbd: &USBD) {
     usbd.tasks_ep0stall.write(|w| w.tasks_ep0stall().set_bit());
 }
@@ -176,7 +195,7 @@ pub fn next_event(usbd: &USBD) -> Option<Event> {
     }
 
     if usbd.events_ep0datadone.read().bits() != 0 {
-        // this will be cleared elsewhere
+        // this will be cleared by the `Ep0In.end` method
         // usbd.events_ep0datadone.reset();
 
         return Some(Event::UsbEp0DataDone);
@@ -195,21 +214,22 @@ pub fn next_event(usbd: &USBD) -> Option<Event> {
 pub fn todo(usbd: &USBD) {
     disconnect(usbd);
     log::error!("unimplemented");
-    loop {
-        asm::bkpt()
-    }
+    crate::exit()
 }
 
+/// Reads the WLENGTHL and WLENGTHH registers and returns the 16-bit WLENGTH component of a setup packet
 pub fn wlength(usbd: &USBD) -> u16 {
     u16::from(usbd.wlengthl.read().wlengthl().bits())
         | u16::from(usbd.wlengthh.read().wlengthh().bits()) << 8
 }
 
+/// Reads the WINDEXL and WINDEXH registers and returns the 16-bit WINDEX component of a setup packet
 pub fn windex(usbd: &USBD) -> u16 {
     u16::from(usbd.windexl.read().windexl().bits())
         | u16::from(usbd.windexh.read().windexh().bits()) << 8
 }
 
+/// Reads the WVALUEL and WVALUEH registers and returns the 16-bit WVALUE component of a setup packet
 pub fn wvalue(usbd: &USBD) -> u16 {
     u16::from(usbd.wvaluel.read().wvaluel().bits())
         | u16::from(usbd.wvalueh.read().wvalueh().bits()) << 8

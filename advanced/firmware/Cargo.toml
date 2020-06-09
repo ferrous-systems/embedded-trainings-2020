@@ -16,6 +16,7 @@ cortex-m-rt = "0.6.12"
 # TODO switch to RTIC before public release
 cortex-m-rtfm = "0.5.1"
 dk = { path = "../../boards/dk" }
+heapless = "0.5.5"
 log = "0.4.8"
 panic-log = { path = "../../common/panic-log" }
 usb = { path = "../common/usb" }

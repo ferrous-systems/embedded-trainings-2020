@@ -16,15 +16,10 @@ const APP: () = {
     struct Resources {
         usbd: USBD,
         ep0in: Ep0In,
-        #[init([0; 64])]
-        buffer: [u8; 64],
     }
 
-    #[init(resources = [buffer])]
-    fn init(cx: init::Context) -> init::LateResources {
-        let buffer: &'static mut [u8; 64] = cx.resources.buffer;
-        let ep0in = Ep0In::new(buffer);
-
+    #[init]
+    fn init(_cx: init::Context) -> init::LateResources {
         let board = dk::init().unwrap();
 
         usbd::init(board.power, &board.usbd);
@@ -32,8 +27,8 @@ const APP: () = {
         usbd::connect(&board.usbd);
 
         init::LateResources {
+            ep0in: board.ep0in,
             usbd: board.usbd,
-            ep0in,
         }
     }
 
