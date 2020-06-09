@@ -46,6 +46,8 @@ $ ioreg -p IOUSB -b -n "Open DFU Bootloader"
   |       (...)
   |       "idProduct" = 21023
   |       (...)
+  |       "USB Product Name" = "Open DFU Bootloader"
+  |       (...)
   |       "USB Vendor Name" = "Nordic Semiconductor"
   |       "idVendor" = 6421
   |       (...)
@@ -55,8 +57,12 @@ $ ioreg -p IOUSB -b -n "Open DFU Bootloader"
   |
 ```
 
-The device will show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`, e.g. `tty.usbmodemCA1781C8A1EE1`.
+The device will show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`:
 
+``` console
+$ ls /dev/tty.usbmodem*
+/dev/tty.usbmodemCA1781C8A1EE1
+```
 
 ### nRF52840 Development Kit (DK)
 
@@ -79,7 +85,33 @@ $ ls /dev/ttyACM*
 /dev/ttyACM0
 ```
 
-**macOS**: TODO instead of `lsusb` try `system_profiler SPUSBDataType` and/or `ioreg -p IOUSB`. The device should also show up in `/dev/`
+**macOS**: a removable USB flash drive (named JLINK) in Finder and also a USB device named "J-Link" when executing `ioreg -p IOUSB -b -n "J-Link"`.
+
+``` console
+$ ioreg -p IOUSB -b -n "J-Link"
+(...)
+  | +-o J-Link@14300000  <class AppleUSBDevice, id 0x10000606a, registered, matched, active, busy 0 $
+  |     {
+  |       (...)
+  |       "idProduct" = 4117
+  |       (...)
+  |       "USB Product Name" = "J-Link"
+  |       (...)
+  |       "USB Vendor Name" = "SEGGER"
+  |       "idVendor" = 4966
+  |       (...)
+  |       "USB Serial Number" = "000683420803"
+  |       (...)
+  |     }
+  |
+```
+
+The device will also show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`:
+
+``` console
+$ ls /dev/tty.usbmodem*
+/dev/tty.usbmodem0006834208031
+```
 
 The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, check the position of the on-board switches:
 
@@ -135,7 +167,7 @@ $ rustup +stable component add llvm-tools-preview
 $ cargo install cargo-binutils
 ```
 
-### Python 
+### Python
 
 **Windows**: Go to https://www.python.org/downloads/ and run the Python *3* installer
 
