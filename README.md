@@ -181,11 +181,19 @@ $ # Arch Linux
 $ sudo pacman -S python-pip
 ```
 
-**macOS**: TODO(confirm) should come with Python 2 pre-installed. Is `pip` installed? Does `nrfutil` work with Python 2?
+**macOS**:
+Ensure that you have python 3 and pip installed. Refer to the following link for [Instructions on how to install python 3 and pip](https://docs.python-guide.org/starting/install3/osx/)
+
+```console
+$ python --version
+Python 3.7.7
+$ pip --version
+pip 20.0.2 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
+```
 
 ### nrfutil
 
-**All**: Open a terminal and run these commands:
+**All**: Open a terminal and install nrfutil as follows. *If you are familiar with python, it is advised to do this in a [virtual environment](https://docs.python.org/3/library/venv.html).*
 
 ``` console
 $ pip install nrfutil
