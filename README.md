@@ -315,4 +315,29 @@ Connect the nRF52840 DK to your PC / laptop; use USB connector J2 on the DK. The
 $ probe-rs-cli info
 ```
 
-If you get an error, run the above program above a second time. Let us know what the output of the command(s) is.
+In case you get an error, run the above program above a second time. You should now be seeing output similar to:
+
+```
+$ probe-rs-cli info
+Available Access Ports:
+IDR {
+    REVISION: 0x2,
+    DESIGNER: 0x23b,
+    CLASS: MEMAP,
+    _RES0: 0x0,
+    VARIANT: 0x1,
+    TYPE: AMBA_AHB3,
+}
+Class1RomTable(
+    CSComponentId {
+        base_address: 0xe00ff000,
+        class: RomTable,
+        peripheral_id: PeripheralID {
+            REVAND: 0x000000,
+            CMOD: No,
+            REVISION: 0x000003,
+            JEP106: Some(
+                JEP106Code({ cc: 0x02, id: 0x44 } => Some("Nordic VLSI ASA")),
+            ),
+(...)
+```
