@@ -36,7 +36,27 @@ $ ls /dev/ttyACM*
 /dev/ttyACM0
 ```
 
-**macOS**: TODO instead of `lsusb` try `system_profiler SPUSBDataType` and/or `ioreg -p IOUSB`. The device should also show up in `/dev/`
+**macOS**: a usb device when executing `ioreg -p IOUSB -b -n "Open DFU Bootloader"`. The device will have a vendor ID (`"idVendor"`) of `6421` and a product ID (`"idProduct"`) of `21023`:
+
+``` console
+$ ioreg -p IOUSB -b -n "Open DFU Bootloader"
+(...)
+| +-o Open DFU Bootloader@14300000  <class AppleUSBDevice, id 0x100005d5b, registered, matched, ac$
+  |     {
+  |       (...)
+  |       "idProduct" = 21023
+  |       (...)
+  |       "USB Vendor Name" = "Nordic Semiconductor"
+  |       "idVendor" = 6421
+  |       (...)
+  |       USB Serial Number" = "CA1781C8A1EE"
+  |       (...)
+  |     }
+  |
+```
+
+The device will show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`, e.g. `tty.usbmodemCA1781C8A1EE1`.
+
 
 ### nRF52840 Development Kit (DK)
 
@@ -89,7 +109,7 @@ $ # Arch Linux
 $ sudo pacman -S code
 ```
 
-**macOS**: TODO(confirm) Go to https://code.visualstudio.com and download the .app
+**macOS**: Go to https://code.visualstudio.com and click on "Download for Mac"
 
 ### Rust Analyzer
 
