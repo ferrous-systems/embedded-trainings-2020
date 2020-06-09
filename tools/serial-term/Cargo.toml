@@ -1,0 +1,11 @@
+[package]
+authors = ["Jorge Aparicio <jorge.aparicio@ferrous-systems.com>"]
+edition = "2018"
+name = "serial-term"
+version = "0.1.0"
+
+[dependencies]
+anyhow = "1.0.30"
+consts = { path = "../../common/consts" }
+ctrlc = "3.1.4"
+serialport = "3.3.0"

@@ -1,0 +1,6 @@
+[general]
+chip = "nRF52840_xxAA"
+
+[rtt]
+enabled = true
+channels = [{ up = 0 }] 

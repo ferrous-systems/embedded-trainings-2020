@@ -1,0 +1,13 @@
+[package]
+authors = ["Jorge Aparicio <jorge.aparicio@ferrous-systems.com>"]
+edition = "2018"
+name = "dk"
+version = "0.1.0"
+
+[dependencies]
+cortex-m = "0.6.2"
+cortex-m-rt = "0.6.12"
+embedded-hal = "0.2.3"
+hal = { package = "nrf52840-hal", git = "https://github.com/japaric/nrf-hal", branch = "radio" }
+log = "0.4.8"
+rtt-target = { version = "0.2.0", features = ["cortex-m"] }

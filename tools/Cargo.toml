@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "dk-run",
+  "dongle-flash",
+  "serial-term",
+]
