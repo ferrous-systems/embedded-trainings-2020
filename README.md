@@ -36,7 +36,33 @@ $ ls /dev/ttyACM*
 /dev/ttyACM0
 ```
 
-**macOS**: TODO instead of `lsusb` try `system_profiler SPUSBDataType` and/or `ioreg -p IOUSB`. The device should also show up in `/dev/`
+**macOS**: a usb device when executing `ioreg -p IOUSB -b -n "Open DFU Bootloader"`. The device will have a vendor ID (`"idVendor"`) of `6421` and a product ID (`"idProduct"`) of `21023`:
+
+``` console
+$ ioreg -p IOUSB -b -n "Open DFU Bootloader"
+(...)
+| +-o Open DFU Bootloader@14300000  <class AppleUSBDevice, id 0x100005d5b, registered, matched, ac$
+  |     {
+  |       (...)
+  |       "idProduct" = 21023
+  |       (...)
+  |       "USB Product Name" = "Open DFU Bootloader"
+  |       (...)
+  |       "USB Vendor Name" = "Nordic Semiconductor"
+  |       "idVendor" = 6421
+  |       (...)
+  |       USB Serial Number" = "CA1781C8A1EE"
+  |       (...)
+  |     }
+  |
+```
+
+The device will show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`:
+
+``` console
+$ ls /dev/tty.usbmodem*
+/dev/tty.usbmodemCA1781C8A1EE1
+```
 
 ### nRF52840 Development Kit (DK)
 
@@ -59,7 +85,33 @@ $ ls /dev/ttyACM*
 /dev/ttyACM0
 ```
 
-**macOS**: TODO instead of `lsusb` try `system_profiler SPUSBDataType` and/or `ioreg -p IOUSB`. The device should also show up in `/dev/`
+**macOS**: a removable USB flash drive (named JLINK) in Finder and also a USB device named "J-Link" when executing `ioreg -p IOUSB -b -n "J-Link"`.
+
+``` console
+$ ioreg -p IOUSB -b -n "J-Link"
+(...)
+  | +-o J-Link@14300000  <class AppleUSBDevice, id 0x10000606a, registered, matched, active, busy 0 $
+  |     {
+  |       (...)
+  |       "idProduct" = 4117
+  |       (...)
+  |       "USB Product Name" = "J-Link"
+  |       (...)
+  |       "USB Vendor Name" = "SEGGER"
+  |       "idVendor" = 4966
+  |       (...)
+  |       "USB Serial Number" = "000683420803"
+  |       (...)
+  |     }
+  |
+```
+
+The device will also show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`:
+
+``` console
+$ ls /dev/tty.usbmodem*
+/dev/tty.usbmodem0006834208031
+```
 
 The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, check the position of the on-board switches:
 
@@ -89,7 +141,7 @@ $ # Arch Linux
 $ sudo pacman -S code
 ```
 
-**macOS**: TODO(confirm) Go to https://code.visualstudio.com and download the .app
+**macOS**: Go to https://code.visualstudio.com and click on "Download for Mac"
 
 ### Rust Analyzer
 
@@ -115,7 +167,7 @@ $ rustup +stable component add llvm-tools-preview
 $ cargo install cargo-binutils
 ```
 
-### Python 
+### Python
 
 **Windows**: Go to https://www.python.org/downloads/ and run the Python *3* installer
 
@@ -129,11 +181,19 @@ $ # Arch Linux
 $ sudo pacman -S python-pip
 ```
 
-**macOS**: TODO(confirm) should come with Python 2 pre-installed. Is `pip` installed? Does `nrfutil` work with Python 2?
+**macOS**:
+Ensure that you have python 3 and pip installed. Refer to the following link for [Instructions on how to install python 3 and pip](https://docs.python-guide.org/starting/install3/osx/)
+
+```console
+$ python --version
+Python 3.7.7
+$ pip --version
+pip 20.0.2 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
+```
 
 ### nrfutil
 
-**All**: Open a terminal and run these commands:
+**All**: Open a terminal and install nrfutil as follows. *If you are familiar with python, it is advised to do this in a [virtual environment](https://docs.python.org/3/library/venv.html).*
 
 ``` console
 $ pip install nrfutil
@@ -255,4 +315,29 @@ Connect the nRF52840 DK to your PC / laptop; use USB connector J2 on the DK. The
 $ probe-rs-cli info
 ```
 
-If you get an error, run the above program above a second time. Let us know what the output of the command(s) is.
+In case you get an error, run the above program above a second time. You should now be seeing output similar to:
+
+```
+$ probe-rs-cli info
+Available Access Ports:
+IDR {
+    REVISION: 0x2,
+    DESIGNER: 0x23b,
+    CLASS: MEMAP,
+    _RES0: 0x0,
+    VARIANT: 0x1,
+    TYPE: AMBA_AHB3,
+}
+Class1RomTable(
+    CSComponentId {
+        base_address: 0xe00ff000,
+        class: RomTable,
+        peripheral_id: PeripheralID {
+            REVAND: 0x000000,
+            CMOD: No,
+            REVISION: 0x000003,
+            JEP106: Some(
+                JEP106Code({ cc: 0x02, id: 0x44 } => Some("Nordic VLSI ASA")),
+            ),
+(...)
+```
