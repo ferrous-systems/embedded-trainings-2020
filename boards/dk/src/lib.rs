@@ -11,42 +11,48 @@ use core::{
 
 use cortex_m::asm;
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
+#[cfg(feature = "beginner")]
 pub use hal::ieee802154;
 pub use hal::target::{interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
 use hal::{
-    clocks::{Clocks, ExternalOscillator, LfOscConfiguration, LfOscStarted},
+    clocks::{self, Clocks},
     gpio::{p0, Level, Output, Pin, PushPull},
-    ieee802154::Radio,
     rtc::{Rtc, RtcInterrupt},
     timer::OneShot,
 };
 use log::{LevelFilter, Log};
 use rtt_target::{rprintln, rtt_init_print};
 
+#[cfg(feature = "advanced")]
 use crate::{
     peripheral::{POWER, USBD},
     usbd::Ep0In,
 };
 
+#[cfg(feature = "advanced")]
 mod errata;
 pub mod peripheral;
+#[cfg(feature = "advanced")]
 pub mod usbd;
 
 /// Components on the board
 pub struct Board {
     /// LEDs
     pub leds: Leds,
-    /// Radio interface
-    // TODO put behind feature flag (off in advanced workshop)
-    pub radio: Radio<'static>,
     /// Timer
     pub timer: Timer,
+
+    /// Radio interface
+    #[cfg(feature = "beginner")]
+    pub radio: ieee802154::Radio<'static>,
     /// USBD (Universal Serial Bus Device) peripheral
-    // TODO put behind feature flag (off in beginner workshop)
+    #[cfg(feature = "advanced")]
     pub usbd: USBD,
     /// POWER (Power Supply) peripheral
+    #[cfg(feature = "advanced")]
     pub power: POWER,
     /// USB control endpoint 0
+    #[cfg(feature = "advanced")]
     pub ep0in: Ep0In,
 }
 
@@ -162,9 +168,12 @@ pub fn init() -> Result<Board, ()> {
         hal::target::Peripherals::take(),
     ) {
         // NOTE(static mut) this branch runs at most once
+        #[cfg(feature = "advanced")]
         static mut EP0IN_BUF: [u8; 64] = [0; 64];
-        static mut CLOCKS: Option<Clocks<ExternalOscillator, ExternalOscillator, LfOscStarted>> =
-            None;
+        #[cfg(feature = "beginner")]
+        static mut CLOCKS: Option<
+            Clocks<clocks::ExternalOscillator, clocks::ExternalOscillator, clocks::LfOscStarted>,
+        > = None;
 
         // NOTE this must be executed as early as possible or the tool will timeout
         // NOTE the unsafety of this macro is incorrect; it must be run at most once
@@ -181,10 +190,12 @@ pub fn init() -> Result<Board, ()> {
 
         let clocks = Clocks::new(periph.CLOCK);
         let clocks = clocks.enable_ext_hfosc();
-        let clocks = clocks.set_lfclk_src_external(LfOscConfiguration::NoExternalNoBypass);
+        let clocks = clocks.set_lfclk_src_external(clocks::LfOscConfiguration::NoExternalNoBypass);
         let clocks = clocks.start_lfclk();
+        let _clocks = clocks.enable_ext_hfosc();
         // extend lifetime to `'static`
-        let clocks = unsafe { CLOCKS.get_or_insert(clocks.enable_ext_hfosc()) };
+        #[cfg(feature = "beginner")]
+        let clocks = unsafe { CLOCKS.get_or_insert(_clocks) };
 
         log::debug!("Clocks configured");
 
@@ -206,11 +217,15 @@ pub fn init() -> Result<Board, ()> {
 
         let timer = hal::Timer::new(periph.TIMER0);
 
-        let mut radio = Radio::init(periph.RADIO, clocks);
+        #[cfg(feature = "beginner")]
+        let radio = {
+            let mut radio = ieee802154::Radio::init(periph.RADIO, clocks);
 
-        // set TX power to its maximum value
-        radio.set_txpower(ieee802154::TxPower::Pos8dBm);
-        log::debug!("Radio initialized and configured with TX power set to the maximum value");
+            // set TX power to its maximum value
+            radio.set_txpower(ieee802154::TxPower::Pos8dBm);
+            log::debug!("Radio initialized and configured with TX power set to the maximum value");
+            radio
+        };
 
         Ok(Board {
             leds: Leds {
@@ -219,10 +234,14 @@ pub fn init() -> Result<Board, ()> {
                 _3: Led { inner: _3 },
                 _4: Led { inner: _4 },
             },
+            #[cfg(feature = "beginner")]
             radio,
             timer: Timer { inner: timer },
+            #[cfg(feature = "advanced")]
             usbd: periph.USBD,
+            #[cfg(feature = "advanced")]
             power: periph.POWER,
+            #[cfg(feature = "advanced")]
             ep0in: unsafe { Ep0In::new(&mut EP0IN_BUF) },
         })
     } else {

@@ -4,7 +4,21 @@
 
 In this workshop we'll build a toy USB device application that gets enumerated by the host.
 
-The embedded application will run in a fully event driven fashion: only doing work when the host asks it to.
+The embedded application will run in a fully event driven fashion: only doing work when the host asks for it.
+
+## The nRF52840
+
+Some details about the nRF52840 microcontroller that are relevant to this workshop.
+
+- single core ARM Cortex-M4 processor clocked at 64 MHz
+- 1 MB of Flash (at address `0x0000_0000`)
+- 256 KB of RAM (at address `0x2000_0000`)
+- IEEE 802.15.4 and BLE (Bluetooth Low Energy) compatible radio
+- USB controller (device function)
+
+## The nRF52840 Development Kit
+
+The development board we'll use has two USB ports: J2 and J3 -- you can find a description of the board in the top-level README of this repository -- and an on-board J-Link programmer / debugger. USB port J2 is the J-Link's USB port. USB port J3 is the nRF52840's USB port.
 
 ## Code organization
 
@@ -21,7 +35,7 @@ $ tree -L 1 .
 └── README.md
 ```
 
-In addition to these two workspaces there's a third folder called "common". This folder contains `no_std` code that be depended on by either "host" code or "firmware" code.
+In addition to these two workspaces there's a third folder called "common". This folder contains `no_std` code that can be depended on by either "host" code or "firmware" code.
 
 ## Listing USB devices
 
@@ -44,62 +58,75 @@ Bus 002 Device 001: ID 1d6b:0003
 Bus 001 Device 002: ID 0cf3:e300
 Bus 001 Device 003: ID 0c45:6713
 Bus 001 Device 001: ID 1d6b:0002
-Bus 001 Device 059: ID 0000:0000 <- !
+Bus 001 Device 059: ID 0000:0000 <- nRF52840 on the nRF52840 Development Kit
 ```
 
 ## Hello, world!
 
 0. Open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
 
-1. Open the `advanced/firmware` folder in VS Code.
+1. Open the `advanced/firmware` folder in VS Code then open the `src/bin/hello.rs` file.
 
-``` console
-$ # or use "File > Open Folder" in VS Code
-$ code advanced/firmware
-```
+2. In VS code, click the "Run" button that's displayed over the `main` function. If you are not using VS code run the `cargo run --bin hello` command from the `advanced/firmware` folder.
 
-2. Open the `src/bin/hello.rs` file.
-
-3. Click the "Run" button
+> NOTE if you run into an error along the lines of "Debug power request failed" retry the operation and the error should disappear
 
 The `firmware` workspace has been configured to cross-compile applications to the ARM Cortex-M architecture and then run them through the `dk-run` custom Cargo runner. The `dk-run` tool will load and run the embedded application on the microcontroller and collect logs from the microcontroller.
 
-The `dk-run` process will terminate when the microcontrollers enters the "halted" state. From the embedded application, one can enter the "halted" state using the `asm::bkpt` function.
+The `dk-run` process will terminate when the microcontroller enters the "halted" state. From the embedded application, one can enter the "halted" state using the `asm::bkpt` function. For convenience, an `exit` function is provided in the `dk` Hardware Abstraction Layer (HAL). This function is divergent like `std::process::exit` (`fn() -> !`) and can be used to halt the device and terminate the `dk-run` process.
+
+Note that when the `dk-run` tool sees the device enter the halted state it will proceed to reset-halt the device. This is particularly important when writing USB applications because simply leaving the device in a halted state will make it appear as an unresponsive USB device to the host; some OSes (e.g. Linux) will try to make an unresponsive device respond by power cycling the entire USB bus -- this will cause all other USB devices on the bus to be re-enumerated. Reset-halting the device will cause it to be electrically disconnected from the host USB bus and avoid the "power cycle the USB bus" scenario.
 
 ## RTIC hello
 
 RTIC, Real Time on Integrated Circuits, is a framework for building evented, time sensitive applications.
 
-1. Open the `advanced/apps` folder in VS Code.
+Open the `advanced/apps` folder in VS Code then open the `src/bin/rtic-hello.rs` file.
 
-``` console
-$ # or use "File > Open Folder" in VS Code
-$ code beginner/apps
+RTIC applications are written in RTIC's Domain Specific Language (DSL). The DSL extends Rust syntax with custom attributes like `#[init]` and `#[idle]`.
+
+RTIC makes a clearer distinction between the application's initialization phase, the `#[init]` function, and the application's main loop or main logic, the `#[idle]` function. The initialization phase runs with interrupts disabled and interrupts are re-enabled before the `idle` function is executed. 
+
+`rtic::app` is a procedural macro that generates extra Rust code, in addition to the user's functions. The fully expanded version of the macro can be found in the file `target/rtic-expansion.rs`. This file will contain the expansion of the procedural macro for the last compiled RTIC application.
+
+If you look at the `rtic-expansion.rs` file generated for the build of the `rtic-hello` example you can confirm that interrupts are disabled during the execution of the `init` function.
+
+``` rust
+fn main() -> ! {
+    rtfm::export::interrupt::disable();
+    let late = init(init::Context::new(/* .. */));
+    rtfm::export::interrupt::enable();
+    idle(idle::Context::new(/* .. */))
+}
 ```
-
-2. Open the `src/bin/rtic-hello.rs` file.
-
-3. Click the "Run" button
-
-> TODO explain differences between `hello` and `rtic-hello`
 
 ## Dealing with registers
 
 Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-events.rs` file.
 
-> TODO explain the basics of the svd2rust API
+In this and the next section we'll look into the RTIC's event handling features. To explore these features we'll use the action of connecting a USB cable to the DK's port J2 as the event we'd like to handle.
 
-> TODO explain what the code in `init` is doing
+The example application enables the signaling of this "USB power" event in the `init` function. This is done using the low level register API generated by the [`svd2rust`] tool. The register API was generated from a SVD (System View Description) file, a file that describes all the peripherals and registers, and their memory layout, on a Cortex-M microcontroller.
+
+[`svd2rust`]: https://crates.io/crates/svd2rust
+
+In the `svd2rust` API, peripherals are represented as structs. The fields of each peripheral struct are the registers associated to that peripheral. Each register field exposes methods to `read` and `write` to the register in a single memory operation. 
+
+The `read` and `write` methods take closure arguments. These closures in turn grant access to a "constructor" value, usually named `r` or `w`, which provides methods to modify the bitfields of a register. At the same time the API of these "constructors" prevent you from modifying the reserved parts of the register: you cannot write arbitrary values into registers; you can only write valid values into registers.
+
+In Cortex-M devices interrupt handling needs to be enabled on two sides: on the peripheral side and on the core side. The register operations done in `init` take care of the peripheral side. The core side of the operation involves writing to the registers of the Nested Vector Interrupt Controller (NVIC) peripheral. This second part doesn't need to be in RTIC application because the framework takes care of it.
 
 ## Event handling
 
-"Run" the `rtic-events` application.
+Below the `idle` function you'll see a `#[task]` handler (function). This *task* is bound to the POWER_CLOCK interrupt signal and will be executed, function call style, every time the interrupt signal is raised by the hardware.
 
-Connect a micro-USB cable to your PC/laptop then connect the other end to the DK (TODO specify port).
+"Run" the `rtic-events` application. Then connect a micro-USB cable to your PC/laptop then connect the other end to the DK (port J2). You'll see the "POWER event occurred" message after the cable is connected.
 
-> TODO explain the event handler
+Note that all tasks will be prioritized over the `idle` function so the execution of `idle` will be interrupted (paused) by the `on_power_event` task. When the `on_power_event` task finishes (returns) the execution of the `idle` will be resumed. This will become more obvious in the next section.
 
-## Adding state
+
+
+## Task state
 
 Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-resources.rs` file.
 
@@ -107,7 +134,7 @@ Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-reso
 
 You should always disconnect the device from the host before halting the device. Otherwise, the host will observe an unresponsive USB device and try power cycling the whole USB hub / bus.
 
-## USB primer
+## USB basics
 
 Some basics about the USB protocol. The protocol is complex so we'll leave out many details and focus on the concepts required to get enumeration working.
 
@@ -121,19 +148,29 @@ Each OS may perform the enumeration process slightly differently but the process
 - GET_DESCRIPTOR request to get the device descriptor.
 - SET_ADDRESS request to assign an address to the device.
 
-The device descriptor is a binary encoded data structure sent by the device to the host that contains information about the device, like its product and vendor identifiers and how many *configurations* it has.
+The device descriptor is a binary encoded data structure sent by the device to the host. It contains information about the device, like its product and vendor identifiers and how many *configurations* it has.
 
-A *configuration* is basically an operation mode or profile. The USB device may act as a HID device in one configuration but as a CDC ACM device (serial terminal emulation over USB) in another configuration. The number of configurations the device supports is part of the device descriptor. 
+A *configuration* is akin to an operation mode. USB devices usually have a single configuration that will be the only mode in which they'll operate, for example a USB mouse will always act as a USB mouse. Some devices, though, may provide a second configuration for the purpose of firmware upgrades. For example a printer may enter DFU (Device Firmware Upgrade) mode, a second *configuration*, so that a user can update its firmware; while in DFU mode the printer will not provide printing functionality.
 
-> TODO add/info: drivers are bound to interfaces, not devices
+Like the device descriptor, the configuration descriptor is also a binary encoded data structure sent by the device to the host. This descriptor contains information about the *interfaces* and *endpoints* the configuration exposes.
 
-> FIXME configuration descriptor requires at least one interface
+An interface is closest to a USB device's function. For example, a USB mouse may expose a single HID (Human Interface Device) interface to report user input to the host. USB devices can expose multiple interfaces. For example, the nRF52840 Dongle could expose both a CDC ACM interface (AKA virtual serial port) *and* a HID interface; the first interface could be used for (`log::info!`-style) logs; and the second one could provide a RPC (Remote Procedure Call) interface to the host for controlling the nRF52840's radio.
 
-Like the device descriptor, the configuration descriptor is also a binary encoded data structure sent by the device to the host. This descriptor contains information about the *interfaces* and *endpoints* the configuration uses. An *endpoint* is similar to a UDP or TCP port on a single PC: it allows logical multiplexing on a single physical USB bus. An *interface* is a logical grouping of endpoints.
+An interface is made up of one or more *endpoints*. An *endpoint* is similar to a UDP or TCP port on a PC in that they allow logical multiplexing of data over a single physical USB bus. Endpoints have directions: a endpoint can either be an IN endpoint or an OUT endpoint. The direction is always from the perspective of the host so in an IN endpoint data travels from the device to the host and in an OUT endpoint data travels from the host to the device. To give an example, a HID interface can use two (interrupt) endpoints, one IN and one OUT, for bidirectional communication with the host. A single endpoint cannot be used by more than one interface (with the exception of the special "endpoint 0").
 
-In this workshop we'll only deal with the control endpoint 0, which is mandatory on all USB devices. Endpoints have directions: in an OUT endpoint data flows from the host to the device; in an IN endpoint data flows from the device to the host. The control endpoint 0 actually refers to two endpoints: endpoint 0 IN (EP0IN) and endpoint 0 OUT (EP0OUT). Although both should be implemented, it's usually sufficient to implement EP0IN to get enumeration working.
+Endpoints are identified by their address, a zero-based index, and direction. There are three types of non-zero endpoints ("endpoint 0" is special): bulk endpoints, interrupt endpoints and isochronous endpoints. Each endpoint type has different reliability and latency data transfer properties but it's not important to discuss them for this workshop.
 
-A USB device must report at least one configuration. The control endpoint, EP0IN and EP0OUT, however does not need to described in the configuration descriptor so we can report 0 endpoints and 0 interfaces in the configuration descriptor. 
+"Endpoint 0", also known as the *control pipe*, actually refers to two endpoints: endpoint 0 IN and endpoint 0 OUT so the control pipe supports data transfers in both directions. The control pipe is mandatory: it must always be present and must always be active.
+
+In this workshop we'll implement the minimal amount of functionality to make enumeration work. To that end you need to consider the following requirements:
+
+- a USB device must support at least one configuration
+- each configuration must expose at least one interface
+- the control pipe (endpoint 0) must be implemented
+- endpoint 0 is implicitly associated to all interfaces
+- the number of endpoints bound to an interface can be zero -- endpoint 0 is never included in the endpoint count of an interface
+
+Although the control pipe should be bidirectional, in practice to complete the enumeration data only needs to be transferred from the device to the host (IN direction). 
 
 ## Dealing with USB events
 

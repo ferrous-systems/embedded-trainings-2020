@@ -38,6 +38,6 @@ const APP: () = {
     #[task(binds = POWER_CLOCK)]
     fn on_power_event(_cx: on_power_event::Context) {
         log::info!("POWER event occurred");
-        asm::bkpt();
+        dk::exit()
     }
 };

@@ -7,6 +7,7 @@ use panic_log as _; // panic handler
 
 #[entry]
 fn main() -> ! {
+    // board initialization
     dk::init().unwrap();
 
     log::info!("Hello, world!");
