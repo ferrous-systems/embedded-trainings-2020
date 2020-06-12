@@ -18,11 +18,8 @@ fn main() -> ! {
 
     let mut packet = Packet::new();
     packet.copy_from_slice(b"Hello");
-    //radio.send(&packet);
     let res = radio.try_send(&packet);
     log::info!("{:?}", res);
 
-    loop {
-        asm::bkpt();
-    }
+    dk::exit();
 }

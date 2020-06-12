@@ -20,20 +20,22 @@ Some details about the nRF52840 microcontroller that are relevant to this worksh
 
 ## Parts of an embedded program
 
-1. Open the `beginner/apps` folder in VS Code.
+Open the `beginner/apps` folder in VS Code. 
 
 ``` console
 $ # or use "File > Open Folder" in VS Code
 $ code beginner/apps
 ```
 
-2. Open the `src/bin/hello.rs` file.
+Then open the `src/bin/hello.rs` file.
+
+If you find it more convenient to open the repository at the root then please also add the `beginner/apps` folder to the VS Code workspace: right click the left side panel, select "Add folder to workspace" and add the `beginner/apps` folder.
 
 Note the differences between this embedded program and a desktop program:
 
  The `#![no_std]` attribute indicates that the program will not make use of the standard library, `std` crate. Instead it will use the `core` library, a subset of the standard library that does not on a underlying operating system (OS).
 
-The `#![no_main]` attribute indicates that the program will use a custom entry point instead of the default one: `fn main() { .. }`.
+The `#![no_main]` attribute indicates that the program will use a custom entry point instead of the default `fn main() { .. }` one.
 
 The `#[entry]` attribute declares the custom entry point of the program. The entry point must be a divergent function; note that the return type is the never type `!`. The function is not allowed to return; therefore the program is not allowed to terminate.
 
@@ -104,6 +106,8 @@ The following command will flash the ELF file to the device.
 $ cargo flash --chip nRF52840_xxAA --elf target/thumbv7em-none-eabi/debug/hello
 ```
 
+> NOTE if you run into an error along the lines of "Debug power request failed" retry the operation and the error should disappear
+
 Alternatively you can run this command, which builds the application before flashing it.
 
 ``` console
@@ -138,13 +142,15 @@ Logging is implemented using the Real Time Transfer (RTT) protocol. Under this p
 
 Both `cargo-embed` and `cargo-flash` are tools based on the `probe-rs` library. This library exposes an API to communicate with the J-Link and perform all the operations exposed by the JTAG protocol. For this workshop we have developed a small Cargo runner that uses the `probe-rs` library to streamline the process of running a program and printing logs, like `cargo-embed`, while also having better integration into VS code.
 
-1. Browse to the `tools/dk-run` folder and run this command from there:
+1. Run this command from the `tools/dk-run` folder:
 
 ``` console
 $ cargo install --path . -f
 ```
 
-2. Open the `beginner/apps` folder in VS Code; then open the `src/bin/hello.rs` file and click the "Run" button that's hovering over the `main` function.
+2. Open the `src/bin/hello.rs` file and click the "Run" button that's hovering over the `main` function.
+
+Note: you will get the "Run" button if the Rust analyzer's workspace is set to the `beginner/apps` folder. This will be the case if the current folder in VS code (left side panel) is set to `beginner/apps`.
 
 If you are not using VS code, run the command `cargo run --bin hello` from within the `beginer/apps` folder. Rust Analyzer's "Run" button is a short-cut for that command.
 
@@ -164,7 +170,7 @@ Unlike `cargo-embed`, `dk-run` will terminate when the program reaches a breakpo
 
 ## Panicking
 
-Open the `beginner/apps` folder in VS Code then open the `src/bin/panic.rs` file and click the "Run" button.
+Open the `src/bin/panic.rs` file and click the "Run" button.
 
 This program attempts to index an array beyond its length and this results in a panic.
 
@@ -200,7 +206,7 @@ Now run the program again. Try changing the format string of the `error!` macro.
 
 In this section we'll start using the hardware features of the nRF52840 and the board.
 
-Open the `beginner/apps` folder in VS Code then open the `src/bin/led.rs` file.
+Open the `src/bin/led.rs` file.
 
 The `dk` crate / library is a Hardware Abstraction Layer (HAL) over the nRF52840 Development Kit. The purpose of a HAL is to abstract away the device-specific details of the hardware, for example registers, and instead expose a higher level API more suitable for application development.
 
@@ -211,6 +217,8 @@ $ cargo doc -p dk --open
 ```
 
 Check the API docs of the `Led` abstraction then run the `led` program. Two of the green LEDs on the board should turn on; the other two should stay off.
+
+> NOTE this program will not terminate itself. Within VS code you need to click "Kill terminal" (garbage bin icon) in the bottom panel to terminate it.
 
 Now, uncomment the `log::set_max_level` line. This will make the logs more verbose; they will now include logs from the board initialization function (`dk::init`) and from the `Led` API.
 
@@ -224,7 +232,7 @@ After the `dk::init` logs you'll find logs about the `Led` API. As the logs indi
 
 Next we'll look into the time related APIs exposed by the `dk` HAL.
 
-Open the `beginner/apps` folder in VS Code then open the `src/bin/blinky.rs` file.
+Open the `src/bin/blinky.rs` file.
 
 This program will blink (turn on and off) one of the LEDs on the board. The time interval between each toggle operation is one second. This wait time between consecutive operations is generated by the blocking `timer.wait` operation. This function call will block the program execution for the specified [`Duration`] argument.
 
@@ -250,15 +258,9 @@ When put in bootloader mode the Dongle will run a bootloader program instead of 
 
 To put the Dongle in bootloader mode connect it to your laptop / PC  / mac and then press its *reset* button. The Dongle has two buttons: a round-ish user button (SW1) and a square-ish reset button (RESET); the latter is mounted "sideways". The buttons are next to each other. The RESET button is mounted closer to the edge of the board that has the Nordic logo on silkscreen and the actual button is facing towards that edge. The opposite edge of the board is narrower and has the surface USB connector; this is the end that goes into your PC USB port.
 
-When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`. If you have the `lsusb` tool installed (Linux distributions have it) then you can run it to check the presence of the USB device:
+When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
 
-``` console
-$ lsusb
-(..)
-Bus 001 Device 016: ID 1915:521f Nordic Semiconductor ASA 4-Port USB 2.0 Hub
-```
-
-If you don't have the `lsusb` tool installed, we have provided a cross-platform version of it in the `advanced/host/lsusb` folder. Call `cargo run` from that directory to run the tool.
+In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool. Run it (`cargo run` from `tools/usb-list`) to list all USB devices; the Dongle will be highlighted in the output.
 
 ``` console
 $ cargo run
@@ -280,7 +282,7 @@ Device programmed.
 
 After the device has been programmed it will automatically reset and start running the new application.
 
-The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device. If you run our `lsusb` tool (from the `advanced/host/lsusb` directory) you should see the newly enumerated Dongle in the output:
+The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device. If you run  `usb-list` tool (from the `tools/usb-list` directory) you should see the newly enumerated Dongle in the output:
 
 ``` console
 $ cargo run
@@ -301,15 +303,13 @@ deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
 (..)
 ```
 
-> NOTE The application may take a while to print to the console
-
 This line is printed by the `loopback` app on boot. It contains the device ID of the dongle, a 64-bit unique identifier (so everyone will see a different number); the radio channel that the device will use to communicate; and the transmission power of the radio in dBm.
 
 Leave the Dongle connected and the `serial-term` application running. Now we'll switch back to the Development Kit.
 
 ## Radio out
 
-Open the `beginner/apps` folder in VS Code; then open the `src/bin/radio-send.rs` file.
+Open the `src/bin/radio-send.rs` file.
 
 In this section you'll send radio packets from the DK to the Dongle and get familiar with the different settings of the radio API.
 
@@ -343,7 +343,7 @@ In this section we'll explore the `recv` method of the Radio API. As the name im
 
 The `loopback` application running on the Dongle will broadcast a radio packet after receiving one over channel 20. The contents of this outgoing packet will be the contents of the received one but reversed.
 
-Open the `beginner/apps` folder in VS Code; then open the `src/bin/radio-recv.rs` file and click the "Run" button.
+Open the `src/bin/radio-recv.rs` file and click the "Run" button.
 
 The Dongle will response as soon as it receives a packet. If you insert a delay between the `send` operation and the `recv` operation in the `radio-recv` program this will result in the DK not seeing the Dongle's response.
 

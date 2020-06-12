@@ -6,6 +6,6 @@ version = "0.1.0"
 
 [dependencies]
 anyhow = "1.0.30"
-consts = { path = "../../common/consts" }
+consts = { path = "../../advanced/common/consts" }
 ctrlc = "3.1.4"
 serialport = "3.3.0"

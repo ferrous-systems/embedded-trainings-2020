@@ -39,7 +39,7 @@ In addition to these two workspaces there's a third folder called "common". This
 
 ## Listing USB devices
 
-Open the `advanced/host/lsusb` folder in VS Code and run the program.
+In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool. Run it (`cargo run` from `tools/usb-list`) to list all USB devices.
 
 ``` console
 $ cargo run
@@ -49,7 +49,7 @@ Bus 001 Device 003: ID 0c45:6713
 Bus 001 Device 001: ID 1d6b:0002
 ```
 
-The goal is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; the `lsusb` tool will also look for a USB device with that VID/PID and highlight it in the output.
+The goal is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; the `usb-list` tool will highlight the USB device that matches that VID PID pair.
 
 ``` console
 $ # expected output
@@ -58,16 +58,22 @@ Bus 002 Device 001: ID 1d6b:0003
 Bus 001 Device 002: ID 0cf3:e300
 Bus 001 Device 003: ID 0c45:6713
 Bus 001 Device 001: ID 1d6b:0002
-Bus 001 Device 059: ID 0000:0000 <- nRF52840 on the nRF52840 Development Kit
+Bus 001 Device 059: ID 2020:0705 <- nRF52840 on the nRF52840 Development Kit
 ```
 
 ## Hello, world!
 
-0. Open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
+First, open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
 
-1. Open the `advanced/firmware` folder in VS Code then open the `src/bin/hello.rs` file.
+Next open the `advanced/firmware` folder in VS Code. If have already opened the root of the repository (`embedded-trainings-2020`) then please also open the `advanced/firmware` folder: right click the left side panel, select "Add folder to workspace" and add the `advanced/apps` folder.
 
-2. In VS code, click the "Run" button that's displayed over the `main` function. If you are not using VS code run the `cargo run --bin hello` command from the `advanced/firmware` folder.
+Now, on the left side panel, open the `src/bin/hello.rs` file from under the `advanced/apps` folder.
+
+Give Rust Analyzer some time to analyze the file and its dependency graph. When it's done, a "Run" button will appear over the `main` function -- you may need to edit the file contents to make the "Run" button appear.
+
+Click the "Run" button to run the application on the microcontroller.
+
+If you are not using VS code run the `cargo run --bin hello` command from the `advanced/firmware` folder.
 
 > NOTE if you run into an error along the lines of "Debug power request failed" retry the operation and the error should disappear
 
@@ -81,7 +87,7 @@ Note that when the `dk-run` tool sees the device enter the halted state it will 
 
 RTIC, Real Time on Integrated Circuits, is a framework for building evented, time sensitive applications.
 
-Open the `advanced/apps` folder in VS Code then open the `src/bin/rtic-hello.rs` file.
+Open the `src/bin/rtic-hello.rs` file.
 
 RTIC applications are written in RTIC's Domain Specific Language (DSL). The DSL extends Rust syntax with custom attributes like `#[init]` and `#[idle]`.
 
@@ -102,7 +108,7 @@ fn main() -> ! {
 
 ## Dealing with registers
 
-Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-events.rs` file.
+Open the `src/bin/rtic-events.rs` file.
 
 In this and the next section we'll look into the RTIC's event handling features. To explore these features we'll use the action of connecting a USB cable to the DK's port J2 as the event we'd like to handle.
 
@@ -124,11 +130,9 @@ Below the `idle` function you'll see a `#[task]` handler (function). This *task*
 
 Note that all tasks will be prioritized over the `idle` function so the execution of `idle` will be interrupted (paused) by the `on_power_event` task. When the `on_power_event` task finishes (returns) the execution of the `idle` will be resumed. This will become more obvious in the next section.
 
-
-
 ## Task state
 
-Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-resources.rs` file.
+Open the `src/bin/rtic-resources.rs` file.
 
 > TODO
 
@@ -174,7 +178,7 @@ Although the control pipe should be bidirectional, in practice to complete the e
 
 ## Dealing with USB events
 
-Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-usb-1.rs` file.
+Open the `src/bin/rtic-usb-1.rs` file.
 
 The USB peripheral contains a series of registers, called EVENTS registers, that indicate the reason for entering the USBD event handler. These events must be handled by the application to complete the enumeration process.
 
@@ -194,7 +198,7 @@ The SETUP stage consists of the host sending a 8 byte header to the device. This
 
 The nRF52840 USBD peripheral will parse this header and store its contents in the following registers: BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}. These registers match the logical division of the setup packet, in *fields*, as specified in the USB 2.0 specification. The fields that start with the letter 'b' are 1-byte large; the ones that start with the letter 'w' are 2-bytes large.
 
-Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-usb-2.rs` file. 
+Open the `src/bin/rtic-usb-2.rs` file. 
 
 The task here is to write a SETUP packet parser in the `common/usb` crate and reach the GOAL comment when executing the program. The starter code has already read the relevant registers using helper functions.
 
@@ -206,7 +210,7 @@ You should develop this part completely on the host. Switch the workspace to the
 
 After receiving a GET_DESCRIPTOR request during the SETUP stage the device needs to respond with a descriptor during the DATA stage.
 
-Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-usb-3.rs` file. 
+Open the `src/bin/rtic-usb-3.rs` file. 
 
 This starter code parses the GET_DESCRIPTOR request and sends back a zero-byte response to the host using the `Ep0In` abstraction, which we'll cover in the next section. The starter code is wrong because a zero-byte response is not a valid descriptor.
 
@@ -245,7 +249,7 @@ Not relevant to the DMA operation but relevant to the USB specification, the `st
 
 The USB specification defines a device-side procedure for "stalling a endpoint", which amounts to the device telling the host that it doesn't support some request. This procedure should be used to deal with invalid requests, requests whose SETUP stage doesn't match any USB 2.0 standard request, and requests not supported by the device, for instance the SET_DESCRIPTOR request is not mandatory.
 
-Open the `advanced/firmware` folder in VS Code; then open the `src/bin/rtic-usb-4.rs` file. 
+Open the `src/bin/rtic-usb-4.rs` file. 
 
 In this starter code the code that handles the SETUP stage of endpoint 0 has been refactored into a separate function, `ep0setup`, that uses Rust's built-in error handling features. This function will return the `Err` variant when it encounters an invalid request or a request that is not supported.
 

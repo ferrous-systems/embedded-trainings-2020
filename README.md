@@ -13,8 +13,6 @@ Material for the beginner and advanced workshops of Oxidize Global (15.07.2020).
 
 ## Checking the hardware
 
-> NOTE To be done *before* the workshop
-
 ### nRF52840 Dongle
 
 Connect the Dongle to your PC/laptop. Its red LED should start oscillating in intensity. The device will also show up as:
@@ -115,14 +113,12 @@ $ ls /dev/tty.usbmodem*
 
 The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, check the position of the on-board switches:
 
-NOTE: Directions assume you are holding the board "horizontally" with components (switches and button) facing up. In this horizontal position you'll find one USB connector (J2) on the left edge, another USB connector (J3) on the bottom edge and 4 buttons on the bottom right corner.
+These directions assume you are holding the board "horizontally" with components (switches and button) facing up. In this horizontal position you'll find one USB connector (J2) on the left edge, another USB connector (J3) on the bottom edge and 4 buttons on the bottom right corner.
 
 - Switch SW8, on the bottom edge left corner, is set to the ON position; this is the left position of the two possible positions
 - Switch SW9, to the right the left edge USB connector (J2), is set to the VDD position; this is the center position of the three possible positions
 
 ## Installation instructions
-
-> NOTE To be done *before* the workshop
 
 ### Base Rust installation
 
@@ -275,8 +271,6 @@ In Zadig's graphical user interface,
 
 ### `nrf-recover`
 
-> NOTE(japaric) this may not be necessary in the future -- the probe-rs library may do this on its own
-
 Some nRF52840 devices, specially older revisions, may have parts of their Flash memory locked. To unlock the memory use the `nrf-recover` tool.
 
 This is only relevant to the nRF52840 Development Kit. First connect the nRF52840 DK to your PC using micro-USB J2 (as done before) then run the following commands:
@@ -297,47 +291,4 @@ Install the `cargo-flash` and `cargo-embed` subcommands using the following comm
 $ cargo install cargo-flash cargo-embed cargo-binutils
 (..)
      Summary Successfully installed cargo-flash, cargo-embed, cargo-binutils!
-```
-
-### "power debug error"
-
-> NOTE(japaric) we need to investigate what this error is about -- it seems to occur only once?
-
-Install `probe-rs-cli`:
-
-``` console
-$ cargo install probe-rs-cli
-```
-
-Connect the nRF52840 DK to your PC / laptop; use USB connector J2 on the DK. Then run this command:
-
-``` console
-$ probe-rs-cli info
-```
-
-In case you get an error, run the above program above a second time. You should now be seeing output similar to:
-
-```
-$ probe-rs-cli info
-Available Access Ports:
-IDR {
-    REVISION: 0x2,
-    DESIGNER: 0x23b,
-    CLASS: MEMAP,
-    _RES0: 0x0,
-    VARIANT: 0x1,
-    TYPE: AMBA_AHB3,
-}
-Class1RomTable(
-    CSComponentId {
-        base_address: 0xe00ff000,
-        class: RomTable,
-        peripheral_id: PeripheralID {
-            REVAND: 0x000000,
-            CMOD: No,
-            REVISION: 0x000003,
-            JEP106: Some(
-                JEP106Code({ cc: 0x02, id: 0x44 } => Some("Nordic VLSI ASA")),
-            ),
-(...)
 ```

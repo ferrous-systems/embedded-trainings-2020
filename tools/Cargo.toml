@@ -3,4 +3,5 @@ members = [
   "dk-run",
   "dongle-flash",
   "serial-term",
+  "usb-list",
 ]

@@ -1,9 +1,9 @@
 [package]
 authors = ["Jorge Aparicio <jorge.aparicio@ferrous-systems.com>"]
 edition = "2018"
-name = "lsusb"
+name = "usb-list"
 version = "0.1.0"
 
 [dependencies]
-consts = { path = "../../common/consts" }
+consts = { path = "../../advanced/common/consts" }
 rusb = "0.5.5"
