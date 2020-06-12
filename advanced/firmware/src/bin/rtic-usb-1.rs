@@ -7,7 +7,7 @@ use dk::{
 };
 use panic_log as _; // panic handler
 
-#[rtfm::app(device = dk)]
+#[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         usbd: USBD,

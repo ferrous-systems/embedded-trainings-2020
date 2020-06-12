@@ -13,8 +13,7 @@ usb2 = { git = "https://github.com/japaric/usb2" }
 consts = { path = "../common/consts" }
 cortex-m = "0.6.2"
 cortex-m-rt = "0.6.12"
-# TODO switch to RTIC before public release
-cortex-m-rtfm = "0.5.1"
+cortex-m-rtic = "0.5.1"
 dk = { path = "../../boards/dk", features = ["advanced"] }
 heapless = "0.5.5"
 log = "0.4.8"

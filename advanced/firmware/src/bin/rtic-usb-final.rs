@@ -10,7 +10,7 @@ use dk::{
 use panic_log as _; // panic handler
 use usb2::{GetDescriptor, StandardRequest, State};
 
-#[rtfm::app(device = dk)]
+#[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         ep0in: Ep0In,

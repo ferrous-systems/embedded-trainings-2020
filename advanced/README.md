@@ -99,9 +99,9 @@ If you look at the `rtic-expansion.rs` file generated for the build of the `rtic
 
 ``` rust
 fn main() -> ! {
-    rtfm::export::interrupt::disable();
+    rtic::export::interrupt::disable();
     let late = init(init::Context::new(/* .. */));
-    rtfm::export::interrupt::enable();
+    rtic::export::interrupt::enable();
     idle(idle::Context::new(/* .. */))
 }
 ```
@@ -321,5 +321,5 @@ For more details, read the section 9.4.7 'SET_CONFIGURATION' of the USB 2.0 spec
 
 ## References
 
-- [nRF52840 Product Specification 1.0](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.0.pdf)
+- [nRF52840 Product Specification 1.1](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
 - [Universal Serial Bus Specification Revision 2.0](https://www.usb.org/document-library/usb-20-specification)

@@ -11,7 +11,7 @@ use panic_log as _; // panic handler
 // use usb::{Descriptor, Request}; // your implementation
 use usb2::{GetDescriptor as Descriptor, StandardRequest as Request}; // crates.io impl
 
-#[rtfm::app(device = dk)]
+#[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         usbd: USBD,

@@ -5,7 +5,7 @@ use cortex_m::asm;
 use dk::{peripheral::USBD, usbd};
 use panic_log as _; // panic handler
 
-#[rtfm::app(device = dk)]
+#[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         usbd: USBD,

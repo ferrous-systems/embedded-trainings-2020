@@ -4,7 +4,7 @@
 use cortex_m::asm;
 use panic_log as _; // panic handler
 
-#[rtfm::app(device = dk)]
+#[rtic::app(device = dk)]
 const APP: () = {
     #[init]
     fn init(_cx: init::Context) {
