@@ -2,7 +2,6 @@
 #![no_main]
 #![no_std]
 
-use cortex_m::asm;
 use cortex_m_rt::entry;
 use dk::ieee802154::{Packet, Channel, TxPower};
 use panic_log as _; // the panicking behavior
