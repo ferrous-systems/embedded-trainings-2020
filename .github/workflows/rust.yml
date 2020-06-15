@@ -1,0 +1,62 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: check out repository
+      uses: actions/checkout@v2
+
+    - name: set up rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+
+    - name: set up actions.rs
+      uses: actions-rs/cargo@v1
+
+    - name: cache rust dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: cache linux dependencies
+      uses: actions/cache@v2
+      if: startsWith(runner.os, 'Linux')
+      with:
+        path: ~/.local/share/renv
+        key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-renv-
+
+    - name: install all dependencies
+      run: |
+        sudo apt-get install libudev-dev libusb-1.0-0-dev
+        rustup +stable target add thumbv7em-none-eabi
+
+    - name: build tools
+      working-directory: ./tools
+      run: cargo build --verbose
+
+    - name: build beginner/apps
+      working-directory: ./beginner/apps
+      run: cargo build --verbose
+
+    - name: build advanced/common/usb
+      working-directory: ./advanced/common/usb
+      run: cargo build --verbose
