@@ -1,6 +1,5 @@
 use core::sync::atomic::{AtomicBool, Ordering};
 use std::{
-    fs::OpenOptions,
     io::{self, Read as _, Write as _},
     thread,
     time::Duration,
