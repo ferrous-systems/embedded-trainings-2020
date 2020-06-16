@@ -58,7 +58,7 @@ Bus 002 Device 001: ID 1d6b:0003
 Bus 001 Device 002: ID 0cf3:e300
 Bus 001 Device 003: ID 0c45:6713
 Bus 001 Device 001: ID 1d6b:0002
-Bus 001 Device 059: ID 2020:0705 <- nRF52840 on the nRF52840 Development Kit
+Bus 001 Device 059: ID 2020:0717 <- nRF52840 on the nRF52840 Development Kit
 ```
 
 ## Hello, world!
@@ -130,19 +130,31 @@ Below the `idle` function you'll see a `#[task]` handler (function). This *task*
 
 Note that all tasks will be prioritized over the `idle` function so the execution of `idle` will be interrupted (paused) by the `on_power_event` task. When the `on_power_event` task finishes (returns) the execution of the `idle` will be resumed. This will become more obvious in the next section.
 
+Try this: add an infinite loop to `init` so that it never returns. Now run the program and connect the USB cable. What behavior do you observe?
+
 ## Task state
 
-Open the `src/bin/rtic-resources.rs` file.
+Now let's say we want to change the previous program to count how many times the USB cable (port J3) has been connected and disconnected.
 
-> TODO
+Tasks run from start to finish, like functions, in response to events. To preserve some state between the different executions of a task we can add a *resource* to the task. In RTIC, resources are the mechanism used to share data between different tasks in a memory safe manner but they can also be used to hold task state.
 
-You should always disconnect the device from the host before halting the device. Otherwise, the host will observe an unresponsive USB device and try power cycling the whole USB hub / bus.
+To get the desired behavior we'll want to store some counter in the state of the `on_power_event` task.
+
+Open the `src/bin/rtic-resources.rs` file. The starter code shows the syntax to declare a resource, the `Resources` struct, and the syntax to associate a resource to a task, the `resources` list in the `#[task]` attribute.
+
+In the starter code a resource is used to *move* the POWER peripheral from `init` to the `on_power_event` task. The POWER peripheral then becomes part of the state of the `on_power_event` task. The resources of a task are available via the `Context` argument of the task.
+
+We have moved the POWER peripheral into the task because we want to clear the USBDETECTED interrupt flag after it has been set by the hardware. If we miss this step the `on_power_event` task (function) will be called again once it returns and then again and again and again (ad infinitum).
+
+Also note that in the starter code the `idle` function has been modified. Pay attention to the logs when you run the starter code.
+
+Your task in this section will be to modify the program so that it prints the number of times the USB cable has been connected to the DK each time the cable is connected.
 
 ## USB basics
 
 Some basics about the USB protocol. The protocol is complex so we'll leave out many details and focus on the concepts required to get enumeration working.
 
-A USB device, the nRF52840 in our case, can be one of these three states: the Default state, the Address state or the Configured state. 
+A USB device, the nRF52840 in our case, can be one of these three states: the Default state, the Address state or the Configured state.
 
 After being powered the device will start in the Default state. The enumeration process will take the device from the Default state to the Address state. As a result of the enumeration process the device will be assigned an address, in the range `1..=127`, by the host.
 
