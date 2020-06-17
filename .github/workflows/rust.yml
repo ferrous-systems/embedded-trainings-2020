@@ -57,6 +57,6 @@ jobs:
       working-directory: ./beginner/apps
       run: cargo build --verbose
 
-    - name: build advanced/common/usb
-      working-directory: ./advanced/common/usb
+    - name: build advanced/firmware
+      working-directory: ./advanced/firmware
       run: cargo build --verbose
