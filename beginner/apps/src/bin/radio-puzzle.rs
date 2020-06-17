@@ -5,13 +5,16 @@
 use core::str;
 
 use cortex_m_rt::entry;
-use dk::ieee802154::Packet;
+use dk::ieee802154::{Channel, Packet};
 use panic_log as _; // the panicking behavior
 
 #[entry]
 fn main() -> ! {
     let board = dk::init().unwrap();
     let mut radio = board.radio;
+
+    // puzzle.hex uses channel 25
+    radio.set_channel(Channel::_25);
 
     let mut packet = Packet::new();
 
