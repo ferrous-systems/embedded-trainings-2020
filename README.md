@@ -199,7 +199,15 @@ $ nrfutil version
 nrfutil version 6.1.0
 ```
 
-### USB permissions (Linux only)
+### USB (Linux only)
+
+Some of our tools depend on `pkg-config` and `libudev.pc`. Ensure you have the proper packages installed; on Debian based distributions you can use:
+
+``` console
+$ sudo apt-get install libudev-dev libusb-1.0-0-dev
+```
+
+To access the USB devices as a non-root user, follow these steps:
 
 1. (Optional) Connect the dongle and check its permissions with these commands:
 
