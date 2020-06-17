@@ -5,6 +5,7 @@
 #![no_std]
 
 use core::{
+    ops,
     sync::atomic::{AtomicU32, Ordering},
     time::Duration,
 };
@@ -118,7 +119,7 @@ impl Led {
     }
 }
 
-/// A timer for blocking delay
+/// A timer for creating blocking delays
 pub struct Timer {
     inner: hal::Timer<hal::target::TIMER0, OneShot>,
 }
@@ -157,7 +158,19 @@ impl Timer {
     }
 }
 
-// add Instant API
+impl ops::Deref for Timer {
+    type Target = hal::Timer<hal::target::TIMER0, OneShot>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
+}
+
+impl ops::DerefMut for Timer {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.inner
+    }
+}
 
 /// Initializes the board
 ///
