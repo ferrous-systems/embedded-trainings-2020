@@ -23,12 +23,11 @@ fn main() -> ! {
     packet.copy_from_slice(msg.as_bytes());
     radio.send(&packet);
     log::info!("sent: {:?}", msg);
-    radio.recv(&mut packet).ok();
-    if let Ok(s) = str::from_utf8(&*packet) {
-        log::info!("received: {}", s);
-    } else {
-        log::info!("received: {:?}", &*packet);
+    // listen for a response packet and ensure it is not corrupted
+    if radio.recv(&mut packet).is_ok() {
+        // convert the packet contents to str or print error message on failure
+        let response = str::from_utf8(&*packet).expect("could not convert response to str");
+        log::info!("received: {}", response);
     }
-
     dk::exit()
 }

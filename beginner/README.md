@@ -2,11 +2,11 @@
 
 > Beginner workshop
 
-## Hardware 
+## Hardware
 
 In this workshop we'll use both the nRF52840 Development Kit (DK) and the nRF52840 Dongle. We'll mainly develop programs for the DK and use the Dongle to assist with some exercises.
 
-For the span of this workshop keep the nRF52840 DK connected to your PC using a micro-USB cable. Connect the USB cable to the J2 port on the nRF52840 DK. Instructions to identify the USB ports on the nRF52840 board can be found in the top level README file. 
+For the span of this workshop keep the nRF52840 DK connected to your PC using a micro-USB cable. Connect the USB cable to the J2 port on the nRF52840 DK. Instructions to identify the USB ports on the nRF52840 board can be found in the top level README file.
 
 ## The nRF52840
 
@@ -20,7 +20,7 @@ Some details about the nRF52840 microcontroller that are relevant to this worksh
 
 ## Parts of an embedded program
 
-Open the `beginner/apps` folder in VS Code. 
+Open the `beginner/apps` folder in VS Code.
 
 ``` console
 $ # or use "File > Open Folder" in VS Code
@@ -369,6 +369,8 @@ The Dongle will respond differently depending on the length of the incoming pack
 - On one-byte sized packets it will respond with the *direct* mapping from a *plaintext* letter -- the letter contained in the packet -- to the *ciphertext* letter.
 - On packets of any other length the Dongle will respond with the string `correct` if it received the decrypted string, otherwise it will respond with the `incorrect` string.
 
+The Dongle will always respond with packets that are valid UTF-8.
+
 Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the maps in the [`heapless`] crate. To make this crate available in your application get the latest version from [crates.io] and add it to the `beginner/apps/Cargo.toml` file, for example:
 
 [`heapless`]: https://docs.rs/heapless
@@ -423,9 +425,9 @@ The `thumb` targets listed above are all the currently supported ARM Cortex-M ta
 | `thumbv8m.main-none-eabihf` | ARM Cortex-M33F, ARM Cortex-M35PF  |
 
 
-The ARM Cortex-M ISA is backwards compatible so for example you could compile a program using the `thumbv6m-none-eabi` target and run it on an ARM Cortex-M4 microcontroller. This will work but using the `thumbv7em-none-eabi` results in better performance (ARMv7-M instructions will be emitted by the compiler) so it should be preferred. The opposite, compiling for `thumbv7em-none-eabi` and running the resulting 
+The ARM Cortex-M ISA is backwards compatible so for example you could compile a program using the `thumbv6m-none-eabi` target and run it on an ARM Cortex-M4 microcontroller. This will work but using the `thumbv7em-none-eabi` results in better performance (ARMv7-M instructions will be emitted by the compiler) so it should be preferred. The opposite, compiling for `thumbv7em-none-eabi` and running the resulting
 
-2. Its memory layout. 
+2. Its memory layout.
 
 In particular, you need to identify how much Flash and RAM memory the device has and at which address the memory is exposed. You'll find this information in the device's data sheet or reference manual.
 
@@ -477,7 +479,7 @@ MEMORY
 
 If there's no template or signs of support for a particular architecture under the rust-embedded organization then you can follow the [embedonomicon] to bootstrap support for the new architecture by yourself.
 
-[embedonomicon]:https://docs.rust-embedded.org/embedonomicon/ 
+[embedonomicon]:https://docs.rust-embedded.org/embedonomicon/
 
 ### Flashing the program
 
