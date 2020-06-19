@@ -18,7 +18,7 @@ debug = 1
 debug-assertions = true # !
 incremental = false
 lto = "fat"
-opt-level = 0
+opt-level = 'z' # !
 overflow-checks = false
 
 [profile.release]
