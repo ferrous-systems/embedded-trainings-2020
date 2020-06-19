@@ -64,7 +64,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
 
     let mut debug_frame = None;
     let mut range_names = None;
-    let mut rtt = None;
+    let mut rtt_addr = None;
     let mut sections = vec![];
     let mut dotdata = None;
     let mut registers = None;
@@ -77,9 +77,9 @@ fn notmain() -> Result<i32, anyhow::Error> {
 
             if name == ".symtab" {
                 if let Ok(symtab) = sect.get_data(&elf) {
-                    let (rn, rtt_) = range_names_from(&elf, symtab, text)?;
+                    let (rn, rtt_addr_) = range_names_from(&elf, symtab, text)?;
                     range_names = Some(rn);
-                    rtt = rtt_;
+                    rtt_addr = rtt_addr_;
                 }
             }
 
@@ -195,8 +195,9 @@ fn notmain() -> Result<i32, anyhow::Error> {
     let mut rtt = Rtt::attach_region(
         core.clone(),
         &sess,
-        &ScanRegion::Exact(rtt.ok_or_else(|| anyhow!("RTT control block not found"))?),
+        &ScanRegion::Exact(rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?),
     )?;
+
     let channel = rtt
         .up_channels()
         .take(0)
