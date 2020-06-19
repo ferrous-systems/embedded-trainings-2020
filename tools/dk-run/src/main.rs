@@ -192,32 +192,33 @@ fn notmain() -> Result<i32, anyhow::Error> {
     // run
 
     let core = Rc::new(core);
-    let rtt_addr_result = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
-    let mut rtt: Result<Rtt, probe_rs_rtt::Error>;
-    let mut num_retries = 3; // picked at random, increase if necessary
+    let rtt_addr_res = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
+    let mut rtt_res: Result<Rtt, probe_rs_rtt::Error> =
+        Err(probe_rs_rtt::Error::ControlBlockNotFound);
+    const NUM_RETRIES: usize = 3; // picked at random, increase if necessary
 
-    loop {
-        rtt = Rtt::attach_region(
-            core.clone(),
-            &sess,
-            &ScanRegion::Exact(rtt_addr_result),
-        );
-
-        match rtt {
-            Ok(_) => { break; }
-            Err(res) => {
-                num_retries -= 1;
-                if num_retries == 0 {
-                    log::info!("Max number of retries exceeded. Giving up.");
-                    return Err(anyhow!(res));
+    for try_index in 0..NUM_RETRIES {
+        rtt_res = Rtt::attach_region(core.clone(), &sess, &ScanRegion::Exact(rtt_addr_res));
+        match rtt_res {
+            Ok(_) => {
+                log::info!("Successfully attached RTT");
+                break;
+            }
+            Err(probe_rs_rtt::Error::ControlBlockNotFound) => {
+                if try_index < NUM_RETRIES {
+                    log::info!("Attaching RTT failed. retrying");
+                } else {
+                    log::info!("Max number of retries exceeded. Giving up");
+                    return Err(anyhow!(probe_rs_rtt::Error::ControlBlockNotFound));
                 }
-                log::info!("Attaching RTT failed. retrying");
+            }
+            Err(e) => {
+                return Err(anyhow!(e));
             }
         }
     }
-    log::info!("Successfully attached RTT");
 
-    let channel = rtt
+    let channel = rtt_res
         .unwrap() // using ? instead wouldn't show the user any helpful error message
         .up_channels()
         .take(0)
