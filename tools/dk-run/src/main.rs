@@ -192,29 +192,30 @@ fn notmain() -> Result<i32, anyhow::Error> {
     // run
 
     let core = Rc::new(core);
-    let mut num_retries = 5;
-
+    let rtt_addr_result = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
     let mut rtt: Result<Rtt, probe_rs_rtt::Error>;
+    let mut num_retries = 3; // picked at random, increase if necessary
 
     loop {
         rtt = Rtt::attach_region(
             core.clone(),
             &sess,
-            &ScanRegion::Exact(rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?), // todo only do this once?
+            &ScanRegion::Exact(rtt_addr_result),
         );
 
-        // todo clean up control flow
-        if rtt.is_ok() {
-            log::info!("Successfully attached RTT");
-            break;
+        match rtt {
+            Ok(_) => { break; }
+            Err(res) => {
+                num_retries -= 1;
+                if num_retries == 0 {
+                    log::info!("Max number of retries exceeded. Giving up.");
+                    return Err(anyhow!(res));
+                }
+                log::info!("Attaching RTT failed. retrying");
+            }
         }
-
-        num_retries -= 1;
-        if num_retries == 0 {
-            break;
-        }
-        log::info!("Attaching RTT failed. retrying");
     }
+    log::info!("Successfully attached RTT");
 
     let channel = rtt
         .unwrap() // using ? instead wouldn't show the user any helpful error message
