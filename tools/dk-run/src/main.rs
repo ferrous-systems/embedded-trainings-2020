@@ -13,6 +13,7 @@ use std::{
     process,
     rc::Rc,
 };
+use core::fmt::Error;
 
 use anyhow::{anyhow, bail};
 use arrayref::array_ref;
@@ -192,16 +193,41 @@ fn notmain() -> Result<i32, anyhow::Error> {
     // run
 
     let core = Rc::new(core);
-    let mut rtt = Rtt::attach_region(
-        core.clone(),
-        &sess,
-        &ScanRegion::Exact(rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?),
-    )?;
+    let mut num_retries = 5;
+
+    let mut rtt: Result<Rtt, probe_rs_rtt::Error>;
+
+    loop {
+        // TODO how do i best to this without allocating two rtts
+        rtt = Rtt::attach_region(
+            core.clone(),
+            &sess,
+            &ScanRegion::Exact(rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?), // todo only do this once?
+        );
+
+        // todo clean up control flow
+        if rtt.is_ok() {
+            log::info!("successfully attached rtt");
+            break;
+        }
+
+        num_retries -= 1;
+        if num_retries == 0 {
+            // todo return last err instead
+            break;
+        }
+        log::info!("Rtt::attach_region failed. retrying.");
+    }
+
+    log::info!("go rtt");
 
     let channel = rtt
+        .unwrap()
         .up_channels()
         .take(0)
         .ok_or_else(|| anyhow!("RTT up channel 0 not found"))?;
+
+    log::info!("chan");
 
     static CONTINUE: AtomicBool = AtomicBool::new(true);
 

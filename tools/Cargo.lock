@@ -169,6 +169,7 @@ dependencies = [
  "probe-rs",
  "probe-rs-rtt",
  "rustc-demangle",
+ "thiserror",
  "xmas-elf",
 ]
 
