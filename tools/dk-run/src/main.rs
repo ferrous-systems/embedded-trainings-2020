@@ -197,7 +197,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
         Err(probe_rs_rtt::Error::ControlBlockNotFound);
     const NUM_RETRIES: usize = 3; // picked at random, increase if necessary
 
-    for try_index in 0..NUM_RETRIES {
+    for try_index in 0..=NUM_RETRIES {
         rtt_res = Rtt::attach_region(core.clone(), &sess, &ScanRegion::Exact(rtt_addr_res));
         match rtt_res {
             Ok(_) => {
