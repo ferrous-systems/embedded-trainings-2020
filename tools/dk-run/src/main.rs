@@ -219,7 +219,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
     }
 
     let channel = rtt_res
-        .unwrap() // using ? instead wouldn't show the user any helpful error message
+        .expect("unreachable") // this block is only executed when rtt was successfully attached before
         .up_channels()
         .take(0)
         .ok_or_else(|| anyhow!("RTT up channel 0 not found"))?;
