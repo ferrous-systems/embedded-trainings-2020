@@ -323,6 +323,8 @@ received 5 bytes (LQI=49)
 
 The program broadcasts a radio packet that contains the 5-byte string `Hello` over channel 20 (which has a center frequency of 2450 MHz). The `loopback` program running on the Dongle is listening to all packets sent over channel 20; every time it receives a new packet it reports its length and the Link Quality Indicator (LQI) metric of the transmission over the USB/serial interface. As the name implies the LQI metric indicates how good the connection between the sender and the device is.
 
+*Important note* about `b"Hello"` vs `"Hello"`. The first one is a *byte* string literal value that has type `&[u8; N]`; the second one is a *string* literal value that has type `&str` (`str` is Rust string type). The latter type, `str`, must always be valid UTF-8 data. The former type, `&[u8; N]`, does not place any constraint on its contents. However, the byte string literal syntax (`b".."`) will only accept *non-escaped* characters in the ASCII range (`0x00`..=`0x7F`) so it can *not* contain CJK (Chinese Japanese Korean) characters or emoji for example. String literals (`".."`) can contain any valid UTF-8 content so they can contain CJK characters, emoji, Greek letters, Cyrillic script, etc.
+
 Now run the `radio-send` program several times with different variations:
 
 - change the distance between the Dongle and the DK -- move the DK closer to or further away from the Dongle.
@@ -339,23 +341,25 @@ The radio interface we are using follows the IEEE 802.15.4 specification but it'
 
 ## Radio in
 
-In this section we'll explore the `recv` method of the Radio API. As the name implies, this is used to listen for packets. The method will block the program execution until a packet is received. We'll continue to use the Dongle in this section; it should be running the `loopback` application; and the `serial-term` application should also be running in the background.
+In this section we'll explore the `recv_timeout` method of the Radio API. As the name implies, this is used to listen for packets. The method will block the program execution until a packet is received or the specified timeout has expired. We'll continue to use the Dongle in this section; it should be running the `loopback` application; and the `serial-term` application should also be running in the background.
 
 The `loopback` application running on the Dongle will broadcast a radio packet after receiving one over channel 20. The contents of this outgoing packet will be the contents of the received one but reversed.
 
 Open the `src/bin/radio-recv.rs` file and click the "Run" button.
 
-The Dongle will response as soon as it receives a packet. If you insert a delay between the `send` operation and the `recv` operation in the `radio-recv` program this will result in the DK not seeing the Dongle's response.
+*Important note* the Dongle expects the packet to contain only ASCII characters and will not respond to packets that contain non-ASCII data. If you only send packets that contain byte string literals *with no escaped characters* (e.g. `b"hello"`) then this requirement will be satisfied. At the same time the Dongle will always respond with ASCII data so calling `str::from_utf8` on the response should never fail, unless the packet contents got corrupted in the transmission but the CRC should detect this scenario.
 
-In a fully IEEE 802.15.4 compliant implementation one can mark a packet as "requires acknowledgment". The recipient must respond to these packets with an acknowledgment packet; if the sender doesn't receive the acknowledgment packet it will re-transmit the packet. This feature is part of the MAC layer and not implemented in the `Radio` API we are using so packet loss is possible even when the radios are close enough to communicate.
+The Dongle will respond as soon as it receives a packet. If you insert a delay between the `send` operation and the `recv` operation in the `radio-recv` program this will result in the DK not seeing the Dongle's response. So try this: add a `timer.delay(x)` call before the `recv_timeout` call; try different values of `x` and observe what happens.
+
+Having log statements between `send` and `recv_timeout` can also cause packets to be missed so try to keep those two calls as close to each other as possible and with as little code in between as possible.
+
+> NOTE In a fully IEEE 802.15.4 compliant implementation one can mark a packet as "requires acknowledgment". The recipient must respond to these packets with an acknowledgment packet; if the sender doesn't receive the acknowledgment packet it will re-transmit the packet. This feature is part of the MAC layer and improves packet delivery rate but it is not implemented in the `Radio` API we are using so packet loss is possible even when the radios are close enough to communicate.
 
 ## Radio puzzle
 
-> TODO(japaric) before this section maybe cover collision avoidance
-
 For this section you'll need to flash the `puzzle.hex` program on the Dongle. Follow the instructions from the "nRF52840 Dongle" section but flash the `puzzle.hex` program instead of the `loopback.hex` one -- don't forget to put the Dongle in bootloader mode before invoking `dongle-flash`.
 
-Like in the previous sections the Dongle will listen for radio packets over channel 20 while also logging messages over a USB/serial interface.
+Like in the previous sections the Dongle will listen for radio packets -- this time over channel 25 -- while also logging messages over a USB/serial interface.
 
 Open the `beginner/apps` folder in VS Code; then open the `src/bin/radio-puzzle.rs` file.
 
@@ -371,7 +375,7 @@ The Dongle will respond differently depending on the length of the incoming pack
 
 The Dongle will always respond with packets that are valid UTF-8.
 
-Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the maps in the [`heapless`] crate. To make this crate available in your application get the latest version from [crates.io] and add it to the `beginner/apps/Cargo.toml` file, for example:
+Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the maps in the [`heapless`] crate. This crate is already declared as a dependency in the Cargo.toml (shown below) so you can directly import it into the application code using a `use` statement.
 
 [`heapless`]: https://docs.rs/heapless
 [crates.io]: https://crates.io/crates/heapless
@@ -379,10 +383,14 @@ Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not 
 ``` toml
 # Cargo.toml
 [dependencies]
-heapless = "0.5.0"
+heapless = "0.5.5"
 ```
 
 If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The crate level documentation of the `heapless` crate has some examples.
+
+Something you will likely run into while solving this exercise are *character* literals (`'c'`) and *byte* literals (`b'c'`). The former has type [`char`] and represent a single Unicode "scalar value". The latter has type `u8` (1-byte integer) and it's mainly a convenience for getting the value of ASCII characters, for instance `b'A'` is the same as the `65u8` literal.
+
+[`char`]: https://doc.rust-lang.org/std/primitive.char.html
 
 *IMPORTANT* you do not need to use the `str` or `char` API to solve this problem, other than for printing purposes. Work directly with slices of bytes (`[u8]`) and bytes (`u8`); and only convert those to `str` or `char` when you are about to print them.
 

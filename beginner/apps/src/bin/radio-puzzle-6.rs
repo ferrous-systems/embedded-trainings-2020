@@ -19,7 +19,7 @@ fn main() -> ! {
 
     /* # Build a dictionary */
     // TODO increase capacity
-    let mut dict = LinearMap::<u8, u8, consts::U2>::new();
+    let dict = LinearMap::<u8, u8, consts::U2>::new();
 
     // puzzle.hex uses channel 25
     radio.set_channel(Channel::_25);
@@ -34,7 +34,7 @@ fn main() -> ! {
         if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_ok() {
             // response should be one byte large
             if packet.len() == 1 {
-                let destination = packet[0];
+                let _destination = packet[0];
 
             // TODO insert the key-value pair
             // dict.insert(/* ? */, /* ? */).expect("dictionary full");

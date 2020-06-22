@@ -49,7 +49,7 @@ fn main() -> ! {
     // TODO next do the whole ASCII range [0, 127]
     // start small: just 'A' and 'B' at first
     // OR for source in b'A'..=b'B' (NOTE: inclusive range)
-    for source in 65..67 {
+    for _source in 65..67 {
         // TODO similar procedure as above
     }
 
