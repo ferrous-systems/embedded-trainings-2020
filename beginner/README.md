@@ -386,6 +386,22 @@ If you haven't use a stack-allocated collection before note that you'll need to 
 
 P.S. The plaintext string is *not* stored in `puzzle.hex` so running `strings` on it will not give you the answer.
 
+These are our recommended steps to tackle the problem. Each step is demonstrated in a separate example:
+
+1. Send a one letter packet (e.g. `A`) to the radio to get a feel for how the mapping works. Then do a few more letters. Check out example `radio-puzzle-1`
+
+2. Get familiar with the dictionary API. Do some insertions and look ups. What happens if the dictionary gets full? See `radio-puzzle-2`
+
+3. Next, get mappings from the radio and insert them into the dictionary. See `radio-puzzle-3`
+
+4. You'll probably want a buffer to place the plaintext in. We suggest using `heapless::Vec` for this. See `radio-puzzle-4` (NB It is also possible to decrypt the packet in place)
+
+5. Simulate decryption: fetch the encrypted string and "process" each of its bytes. See `radio-puzzle-5`
+
+6. Now merge steps 3 and 5: build a dictionary, retrieve the secret string and do the reverse mapping to decrypt the message. See `radio-puzzle-6`
+
+7. As a final step, send the decrypted string to the Dongle and check if it was correct or not. See `radio-puzzle-7`
+
 ## Starting a project from scratch
 
 So far we have been using a pre-made Cargo project to work with the nRF52840 DK. In this section we'll see how to create a new embedded project for any microcontroller.
