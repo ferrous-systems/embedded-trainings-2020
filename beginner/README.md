@@ -384,6 +384,8 @@ heapless = "0.5.0"
 
 If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The crate level documentation of the `heapless` crate has some examples.
 
+*IMPORTANT* you do not need to use the `str` or `char` API to solve this problem, other than for printing purposes. Work directly with slices of bytes (`[u8]`) and bytes (`u8`); and only convert those to `str` or `char` when you are about to print them.
+
 P.S. The plaintext string is *not* stored in `puzzle.hex` so running `strings` on it will not give you the answer.
 
 These are our recommended steps to tackle the problem. Each step is demonstrated in a separate example:
