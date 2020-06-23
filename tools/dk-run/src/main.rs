@@ -64,7 +64,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
 
     let mut debug_frame = None;
     let mut range_names = None;
-    let mut rtt = None;
+    let mut rtt_addr = None;
     let mut sections = vec![];
     let mut dotdata = None;
     let mut registers = None;
@@ -77,9 +77,9 @@ fn notmain() -> Result<i32, anyhow::Error> {
 
             if name == ".symtab" {
                 if let Ok(symtab) = sect.get_data(&elf) {
-                    let (rn, rtt_) = range_names_from(&elf, symtab, text)?;
+                    let (rn, rtt_addr_) = range_names_from(&elf, symtab, text)?;
                     range_names = Some(rn);
-                    rtt = rtt_;
+                    rtt_addr = rtt_addr_;
                 }
             }
 
@@ -192,12 +192,34 @@ fn notmain() -> Result<i32, anyhow::Error> {
     // run
 
     let core = Rc::new(core);
-    let mut rtt = Rtt::attach_region(
-        core.clone(),
-        &sess,
-        &ScanRegion::Exact(rtt.ok_or_else(|| anyhow!("RTT control block not found"))?),
-    )?;
-    let channel = rtt
+    let rtt_addr_res = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
+    let mut rtt_res: Result<Rtt, probe_rs_rtt::Error> =
+        Err(probe_rs_rtt::Error::ControlBlockNotFound);
+    const NUM_RETRIES: usize = 3; // picked at random, increase if necessary
+
+    for try_index in 0..=NUM_RETRIES {
+        rtt_res = Rtt::attach_region(core.clone(), &sess, &ScanRegion::Exact(rtt_addr_res));
+        match rtt_res {
+            Ok(_) => {
+                log::info!("Successfully attached RTT");
+                break;
+            }
+            Err(probe_rs_rtt::Error::ControlBlockNotFound) => {
+                if try_index < NUM_RETRIES {
+                    log::info!("Could not attach because the target's RTT control block isn't initialized (yet). retrying");
+                } else {
+                    log::info!("Max number RTT attach of retries exceeded. Did you call dk::init() first thing in your program?");
+                    return Err(anyhow!(probe_rs_rtt::Error::ControlBlockNotFound));
+                }
+            }
+            Err(e) => {
+                return Err(anyhow!(e));
+            }
+        }
+    }
+
+    let channel = rtt_res
+        .expect("unreachable") // this block is only executed when rtt was successfully attached before
         .up_channels()
         .take(0)
         .ok_or_else(|| anyhow!("RTT up channel 0 not found"))?;
