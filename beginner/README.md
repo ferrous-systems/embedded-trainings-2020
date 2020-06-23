@@ -353,7 +353,7 @@ The Dongle will respond as soon as it receives a packet. If you insert a delay b
 
 Having log statements between `send` and `recv_timeout` can also cause packets to be missed so try to keep those two calls as close to each other as possible and with as little code in between as possible.
 
-> NOTE In a fully IEEE 802.15.4 compliant implementation one can mark a packet as "requires acknowledgment". The recipient must respond to these packets with an acknowledgment packet; if the sender doesn't receive the acknowledgment packet it will re-transmit the packet. This feature is part of the MAC layer and improves packet delivery rate but it is not implemented in the `Radio` API we are using so packet loss is possible even when the radios are close enough to communicate.
+> NOTE Packet loss can always occur in wireless networks, even if the radios are close to each other. The `Radio` API we are using will not detect lost packets because it does not implement IEEE 802.15.4 Acknowledgement Requests. If you are having trouble with lost packets, consider adding a retry loop.
 
 ## Radio puzzle
 
