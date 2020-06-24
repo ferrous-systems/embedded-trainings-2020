@@ -301,6 +301,7 @@ fn RTC0() {
 /// Exits the application and prints a backtrace when the program is executed through the `dk-run`
 /// Cargo runner
 pub fn exit() -> ! {
+    log::info!("`dk::exit() called; exiting ...`");
     loop {
         asm::bkpt()
     }
