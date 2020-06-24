@@ -3,7 +3,7 @@
 #![no_std]
 
 use cortex_m_rt::entry;
-use dk::ieee802154::{Packet, Channel, TxPower};
+use dk::ieee802154::{Channel, Packet, TxPower};
 use panic_log as _; // the panicking behavior
 
 #[entry]
