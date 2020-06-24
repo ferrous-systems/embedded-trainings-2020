@@ -178,9 +178,9 @@ pub fn init() -> Result<Board, ()> {
         // NOTE this must be executed as early as possible or the tool will timeout
         // NOTE the unsafety of this macro is incorrect; it must be run at most once
         #[cfg(feature = "beginner")]
-        rtt_init_print!(BlockIfFull, 4096);
+        rtt_init_print!(BlockIfFull, 16384);
         #[cfg(feature = "advanced")]
-        rtt_init_print!(NoBlockSkip, 4096);
+        rtt_init_print!(NoBlockSkip, 16384);
 
         log::set_logger(&Logger).unwrap();
 

@@ -195,7 +195,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
     let rtt_addr_res = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
     let mut rtt_res: Result<Rtt, probe_rs_rtt::Error> =
         Err(probe_rs_rtt::Error::ControlBlockNotFound);
-    const NUM_RETRIES: usize = 3; // picked at random, increase if necessary
+    const NUM_RETRIES: usize = 5; // picked at random, increase if necessary
 
     for try_index in 0..=NUM_RETRIES {
         rtt_res = Rtt::attach_region(core.clone(), &sess, &ScanRegion::Exact(rtt_addr_res));
