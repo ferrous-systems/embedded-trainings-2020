@@ -394,7 +394,7 @@ So far we have been using a pre-made Cargo project to work with the nRF52840 DK.
 
 The first step is to identify the microcontroller you'll be working with. The information about the microcontroller you'll need is:
 
-1. Its processor architecture and sub-architecture.
+#### 1. Its processor architecture and sub-architecture.
 
 This information should be in the device's data sheet or manual. In the case of the nRF52840, the processor is an ARM Cortex-M4 core. With this information you'll need to select a compatible *compilation target*. `rustup target list` will show all the supported compilation targets.
 
@@ -410,7 +410,7 @@ thumbv8m.main-none-eabi
 thumbv8m.main-none-eabihf
 ```
 
-The compilation targets will usually be named using the following format: `$ARCHITECTURE-$VENDOR-$OS-$ABI`, where the `$VENDOR` field is sometimes omitted. Bare metal and `no_std` targets, like microcontrollers, will often use `none` for the `$OS` field. When the `$ABI` field ends in `hf` it indicates that the output ELF uses the *hardfloat* ABI
+The compilation targets will usually be named using the following format: `$ARCHITECTURE-$VENDOR-$OS-$ABI`, where the `$VENDOR` field is sometimes omitted. Bare metal and `no_std` targets, like microcontrollers, will often use `none` for the `$OS` field. When the `$ABI` field ends in `hf` it indicates that the output ELF uses the *hardfloat* Application Binary Interface (ABI).
 
 The `thumb` targets listed above are all the currently supported ARM Cortex-M targets. The table below shows the mapping between compilation targets and ARM Cortex-M processors.
 
@@ -426,12 +426,14 @@ The `thumb` targets listed above are all the currently supported ARM Cortex-M ta
 
 
 The ARM Cortex-M ISA is backwards compatible so for example you could compile a program using the `thumbv6m-none-eabi` target and run it on an ARM Cortex-M4 microcontroller. This will work but using the `thumbv7em-none-eabi` results in better performance (ARMv7-M instructions will be emitted by the compiler) so it should be preferred. The opposite, compiling for `thumbv7em-none-eabi` and running the resulting
+> TODO delete or finish last sentence
 
-2. Its memory layout.
+#### 2. Its memory layout.
 
 In particular, you need to identify how much Flash and RAM memory the device has and at which address the memory is exposed. You'll find this information in the device's data sheet or reference manual.
 
-In the case of the nRF52840, this information is in section 4.2 (Figure 2) of its Product Specification (see the References section at the bottom of this document). The nRF52840 has:
+In the case of the nRF52840, this information is in section 4.2 (Figure 2) of its [Product Specification](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf).
+It has:
 
 - 1 MB of Flash that spans the address range: `0x0000_0000` - `0x0010_0000`.
 - 256 KB of RAM that spans the address range: `0x2000_0000` - `0x2004_0000`.
@@ -455,7 +457,7 @@ But it may be difficult to install the `cargo-generate` tool on Windows due to i
 
 Once you have instantiated a project using the template you'll need to fill in the device-specific information you collected in the two previous steps:
 
-1. Change the default compilation target in `.cargo/config`
+#### 1. Change the default compilation target in `.cargo/config`
 
 ``` toml
 [build]
@@ -464,7 +466,7 @@ target = "thumbv7em-none-eabi"
 
 For the nRF52840 you can choose either `thumbv7em-none-eabi` or `thumbv7em-none-eabihf`. If you are going to use the FPU then select the `hf` variant.
 
-2. Enter the memory layout of the chip in `memory.x`
+#### 2. Enter the memory layout of the chip in `memory.x`
 
 ```
 MEMORY
@@ -475,7 +477,7 @@ MEMORY
 }
 ```
 
-3. `cargo build` now will cross compile programs for your target device.
+#### 3. `cargo build` now will cross compile programs for your target device.
 
 If there's no template or signs of support for a particular architecture under the rust-embedded organization then you can follow the [embedonomicon] to bootstrap support for the new architecture by yourself.
 
