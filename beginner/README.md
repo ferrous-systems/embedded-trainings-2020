@@ -426,6 +426,7 @@ The `thumb` targets listed above are all the currently supported ARM Cortex-M ta
 
 
 The ARM Cortex-M ISA is backwards compatible so for example you could compile a program using the `thumbv6m-none-eabi` target and run it on an ARM Cortex-M4 microcontroller. This will work but using the `thumbv7em-none-eabi` results in better performance (ARMv7-M instructions will be emitted by the compiler) so it should be preferred. The opposite, compiling for `thumbv7em-none-eabi` and running the resulting
+> TODO delete or finish last sentence
 
 #### 2. Its memory layout.
 
