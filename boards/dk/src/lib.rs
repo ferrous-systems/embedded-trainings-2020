@@ -6,7 +6,7 @@
 
 use core::{
     ops,
-    sync::atomic::{AtomicU32, Ordering},
+    sync::atomic::{self, AtomicU32, Ordering},
     time::Duration,
 };
 
@@ -302,6 +302,8 @@ fn RTC0() {
 /// Cargo runner
 pub fn exit() -> ! {
     log::info!("`dk::exit() called; exiting ...`");
+    // force any pending memory operation to complete before the BKPT instruction that follows
+    atomic::compiler_fence(Ordering::SeqCst);
     loop {
         asm::bkpt()
     }
