@@ -431,7 +431,8 @@ The ARM Cortex-M ISA is backwards compatible so for example you could compile a 
 
 In particular, you need to identify how much Flash and RAM memory the device has and at which address the memory is exposed. You'll find this information in the device's data sheet or reference manual.
 
-In the case of the nRF52840, this information is in section 4.2 (Figure 2) of its Product Specification (see the References section at the bottom of this document). The nRF52840 has:
+In the case of the nRF52840, this information is in section 4.2 (Figure 2) of its [Product Specification](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf).
+It has:
 
 - 1 MB of Flash that spans the address range: `0x0000_0000` - `0x0010_0000`.
 - 256 KB of RAM that spans the address range: `0x2000_0000` - `0x2004_0000`.
