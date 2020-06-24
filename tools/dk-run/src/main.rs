@@ -208,7 +208,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
                 if try_index < NUM_RETRIES {
                     log::info!("Could not attach because the target's RTT control block isn't initialized (yet). retrying");
                 } else {
-                    log::info!("Max number RTT attach of retries exceeded. Did you call dk::init() first thing in your program?");
+                    log::info!("Max number of RTT attach retries exceeded. Did you call dk::init() first thing in your program?");
                     return Err(anyhow!(probe_rs_rtt::Error::ControlBlockNotFound));
                 }
             }
