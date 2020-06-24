@@ -21,9 +21,14 @@ fn main() -> ! {
 
     let mut packet = Packet::new();
 
-    // try these
+    // try one of these 3 options
     let msg = b"";
-    // let msg = b"A";
+
+    // these 3 lines are equivalent
+    // let msg: &[u8; 1] = b"A";
+    // let msg: &[u8; 1] = &[b'A'];
+    // let msg: &[u8; 1] = &[65];
+
     // let msg = b"Hello?";
 
     packet.copy_from_slice(msg);
