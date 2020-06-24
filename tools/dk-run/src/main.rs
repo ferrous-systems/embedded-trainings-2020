@@ -195,7 +195,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
     let rtt_addr_res = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
     let mut rtt_res: Result<Rtt, probe_rs_rtt::Error> =
         Err(probe_rs_rtt::Error::ControlBlockNotFound);
-    const NUM_RETRIES: usize = 3; // picked at random, increase if necessary
+    const NUM_RETRIES: usize = 5; // picked at random, increase if necessary
 
     for try_index in 0..=NUM_RETRIES {
         rtt_res = Rtt::attach_region(core.clone(), &sess, &ScanRegion::Exact(rtt_addr_res));
@@ -208,7 +208,7 @@ fn notmain() -> Result<i32, anyhow::Error> {
                 if try_index < NUM_RETRIES {
                     log::info!("Could not attach because the target's RTT control block isn't initialized (yet). retrying");
                 } else {
-                    log::info!("Max number RTT attach of retries exceeded. Did you call dk::init() first thing in your program?");
+                    log::info!("Max number of RTT attach retries exceeded. Did you call dk::init() first thing in your program?");
                     return Err(anyhow!(probe_rs_rtt::Error::ControlBlockNotFound));
                 }
             }
