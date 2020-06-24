@@ -325,7 +325,9 @@ The program broadcasts a radio packet that contains the 5-byte string `Hello` ov
 
 ### Slices
 
-The `send` method takes a *slice of bytes* (`&[u8]`). A slice is a *reference* -- in Rust, a reference (`&`) is a non-null pointer that's compile-time known to point into valid (e.g. non-freed) memory -- into a list of elements stored in contiguous memory. One way to create a slice is to take a reference to an *array*, a fixed-size list of elements stored in contiguous memory.
+The `send` method takes a *reference* -- in Rust, a reference (`&`) is a non-null pointer that's compile-time known to point into valid (e.g. non-freed) memory --  to a `Packet` as argument. A `Packet` is a stack-allocated, fixed-size buffer. You can fill the `Packet` (buffer) with data using the `copy_from_slice` method -- this will overwrite previously stored data.
+
+This `copy_from_slice` method takes a *slice of bytes* (`&[u8]`). A slice is a reference into a list of elements stored in contiguous memory. One way to create a slice is to take a reference to an *array*, a fixed-size list of elements stored in contiguous memory.
 
 ``` rust
 // stack allocated array
@@ -337,7 +339,7 @@ let slice: &[u8] = &array;
 
 `slice` and `ref_to_array` are constructed in the same way but have different types. `ref_to_array` is represented in memory as a single pointer (1 word / 4 bytes); `slice` is represented as a pointer + length (2 words / 8 bytes).
 
-Because slices track length at runtime rather than in their type they can point to chunks of memory of any length.
+Because slices track length at runtime -- in their value -- rather than in their type they can point to chunks of memory of any length.
 
 ``` rust
 let array1: [u8; 3] = [0, 1, 2];
@@ -346,6 +348,7 @@ let array2: [u8; 4] = [0, 1, 2, 3];
 let mut slice: &[u8] = &array1;
 log::info!("{:?}", slice); // length = 3
 
+// now point to the other array
 slice = &array2;
 log::info!("{:?}", slice); // length = 4
 ```
@@ -377,6 +380,8 @@ In this workshop we'll work with ASCII strings so byte string literals that cont
 You'll note that `log::info!("{:?}", b"Hello")` will print `[72, 101, 108, 108, 111]` rather than `"Hello"` and that the `{}` format specifier (`Display`) does not work. This is because the type of the literal is `&[u8; N]` and in Rust this type means "bytes"; those bytes could be ASCII data, UTF-8 data or something else.
 
 To print this you'll need to convert the slice `&[u8]` into a string (`&str`) using the `str::from_utf8` function. This function will verify that the slice contains well formed UTF-8 data and interpret it as a UTF-8 string (`&str`). As long as we use ASCII data (printable ASCII characters) this conversion will not fail.
+
+Something similar will happen with byte literals: `log::info!("{}", b'A')` will print `65` rather than `A`. To get the `A` output you can cast the byte literal (`u8` value) to the `char` type: `log::info!("{}", b'A' as char)`.
 
 ### Link Quality Indicator (LQI)
 
@@ -434,7 +439,7 @@ The Dongle will respond differently depending on the length of the incoming pack
 
 The Dongle will always respond with packets that are valid UTF-8 so you can use the `str::from_utf8` on the response packets.
 
-Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. A `Vec`-like buffer may also come in handy; `heapless` provides a stack-allocated, fixed-capacity `Vec` type.
+Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. A `Vec`-like buffer may also come in handy; `heapless` provides a stack-allocated, fixed-capacity version of the `std::Vec` type.
 
 `heapless` is already declared as a dependency in the Cargo.toml of the project so you can directly import it into the application code using a `use` statement.
 
@@ -446,7 +451,7 @@ use heapless::IndexMap; // a dictionary / map
 use heapless::Vec; // like `std::Vec` but stack-allocated
 ```
 
-If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The crate level documentation of the `heapless` crate has some examples.
+If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [crate level documentation][`heapless`] of the `heapless` crate has some examples.
 
 Something you will likely run into while solving this exercise are *character* literals (`'c'`) and *byte* literals (`b'c'`). The former has type [`char`] and represent a single Unicode "scalar value". The latter has type `u8` (1-byte integer) and it's mainly a convenience for getting the value of ASCII characters, for instance `b'A'` is the same as the `65u8` literal.
 
@@ -456,7 +461,7 @@ Something you will likely run into while solving this exercise are *character* l
 
 P.S. The plaintext string is *not* stored in `puzzle.hex` so running `strings` on it will not give you the answer.
 
-These are our recommended steps to tackle the problem. Each step is demonstrated in a separate example:
+These are our recommended steps to tackle the problem. Each step is demonstrated in a separate example so if for example you only need a quick reference of how to use the map API you can step / example number 2.
 
 1. Send a one letter packet (e.g. `A`) to the radio to get a feel for how the mapping works. Then do a few more letters. Check out example `radio-puzzle-1`
 
@@ -471,6 +476,12 @@ These are our recommended steps to tackle the problem. Each step is demonstrated
 6. Now merge steps 3 and 5: build a dictionary, retrieve the secret string and do the reverse mapping to decrypt the message. See `radio-puzzle-6`
 
 7. As a final step, send the decrypted string to the Dongle and check if it was correct or not. See `radio-puzzle-7`
+
+For your reference, we have provided a complete solution in the `src/bin/radio-puzzle-solution.rs` file. That solution is based on the seven steps outlined above. Did you solve the puzzle in a different way?
+
+If you solved the puzzle using a `Vec` buffer you can try solving it without the buffer as a stretch goal. You may find the [slice methods][slice] that let you mutate its data useful. A solution that does not use the `Vec` buffer can be found in the `radio-puzzle-solution-2` file.
+
+[slice]: https://doc.rust-lang.org/std/primitive.slice.html#methods
 
 ## Starting a project from scratch
 
