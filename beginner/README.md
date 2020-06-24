@@ -410,7 +410,7 @@ thumbv8m.main-none-eabi
 thumbv8m.main-none-eabihf
 ```
 
-The compilation targets will usually be named using the following format: `$ARCHITECTURE-$VENDOR-$OS-$ABI`, where the `$VENDOR` field is sometimes omitted. Bare metal and `no_std` targets, like microcontrollers, will often use `none` for the `$OS` field. When the `$ABI` field ends in `hf` it indicates that the output ELF uses the *hardfloat* ABI
+The compilation targets will usually be named using the following format: `$ARCHITECTURE-$VENDOR-$OS-$ABI`, where the `$VENDOR` field is sometimes omitted. Bare metal and `no_std` targets, like microcontrollers, will often use `none` for the `$OS` field. When the `$ABI` field ends in `hf` it indicates that the output ELF uses the *hardfloat* Application Binary Interface (ABI).
 
 The `thumb` targets listed above are all the currently supported ARM Cortex-M targets. The table below shows the mapping between compilation targets and ARM Cortex-M processors.
 
