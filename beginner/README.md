@@ -446,7 +446,7 @@ Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not 
 [`heapless`]: https://docs.rs/heapless
 [crates.io]: https://crates.io/crates/heapless
 
-``` toml
+``` rust
 use heapless::IndexMap; // a dictionary / map
 use heapless::Vec; // like `std::Vec` but stack-allocated
 ```
