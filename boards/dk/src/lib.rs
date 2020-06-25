@@ -5,7 +5,8 @@
 #![no_std]
 
 use core::{
-    sync::atomic::{AtomicU32, Ordering},
+    ops,
+    sync::atomic::{self, AtomicU32, Ordering},
     time::Duration,
 };
 
@@ -118,7 +119,7 @@ impl Led {
     }
 }
 
-/// A timer for blocking delay
+/// A timer for creating blocking delays
 pub struct Timer {
     inner: hal::Timer<hal::target::TIMER0, OneShot>,
 }
@@ -157,7 +158,19 @@ impl Timer {
     }
 }
 
-// add Instant API
+impl ops::Deref for Timer {
+    type Target = hal::Timer<hal::target::TIMER0, OneShot>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
+}
+
+impl ops::DerefMut for Timer {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.inner
+    }
+}
 
 /// Initializes the board
 ///
@@ -291,6 +304,9 @@ fn RTC0() {
 /// Exits the application and prints a backtrace when the program is executed through the `dk-run`
 /// Cargo runner
 pub fn exit() -> ! {
+    log::info!("`dk::exit() called; exiting ...`");
+    // force any pending memory operation to complete before the BKPT instruction that follows
+    atomic::compiler_fence(Ordering::SeqCst);
     loop {
         asm::bkpt()
     }

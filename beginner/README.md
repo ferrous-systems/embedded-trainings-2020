@@ -321,7 +321,89 @@ deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
 received 5 bytes (LQI=49)
 ```
 
-The program broadcasts a radio packet that contains the 5-byte string `Hello` over channel 20 (which has a center frequency of 2450 MHz). The `loopback` program running on the Dongle is listening to all packets sent over channel 20; every time it receives a new packet it reports its length and the Link Quality Indicator (LQI) metric of the transmission over the USB/serial interface. As the name implies the LQI metric indicates how good the connection between the sender and the device is.
+The program broadcasts a radio packet that contains the 5-byte string `Hello` over channel 20 (which has a center frequency of 2450 MHz). The `loopback` program running on the Dongle is listening to all packets sent over channel 20; every time it receives a new packet it reports its length and the Link Quality Indicator (LQI) metric of the transmission over the USB/serial interface. As the name implies the LQI metric indicates how good the connection between the sender and the receiver is.
+
+### Slices
+
+The `send` method takes a *reference* -- in Rust, a reference (`&`) is a non-null pointer that's compile-time known to point into valid (e.g. non-freed) memory --  to a `Packet` as argument. A `Packet` is a stack-allocated, fixed-size buffer. You can fill the `Packet` (buffer) with data using the `copy_from_slice` method -- this will overwrite previously stored data.
+
+This `copy_from_slice` method takes a *slice of bytes* (`&[u8]`). A slice is a reference into a list of elements stored in contiguous memory. One way to create a slice is to take a reference to an *array*, a fixed-size list of elements stored in contiguous memory.
+
+``` rust
+// stack allocated array
+let array: [u8; 3] = [0, 1, 2];
+
+let ref_to_array: &[u8; 3] = &array;
+let slice: &[u8] = &array;
+```
+
+`slice` and `ref_to_array` are constructed in the same way but have different types. `ref_to_array` is represented in memory as a single pointer (1 word / 4 bytes); `slice` is represented as a pointer + length (2 words / 8 bytes).
+
+Because slices track length at runtime rather than in their type they can point to chunks of memory of any length.
+
+``` rust
+let array1: [u8; 3] = [0, 1, 2];
+let array2: [u8; 4] = [0, 1, 2, 3];
+
+let mut slice: &[u8] = &array1;
+log::info!("{:?}", slice); // length = 3
+
+// now point to the other array
+slice = &array2;
+log::info!("{:?}", slice); // length = 4
+```
+
+### Byte literals
+
+In the example we sent the list of bytes: `[72, 101, 108, 108, 111]`, which can be interpreted as the string `"Hello"`. To see why this is the case check this [list of printable ASCII characters][ascii]. You'll see that letter `H` is represented by the (single-byte) value `72`, `e` by `101`, etc.
+
+[ascii]: https://en.wikipedia.org/wiki/ASCII#Printable_characters
+
+Rust provides a more convenient way to write ASCII characters: byte literals. `b'H'` is syntactic sugar for the literal `72u8`, `b'e'` is equivalent to `101u8`, etc.. So we can rewrite `[72, 101, 108, 108, 111]` as `[b'H', b'e', b'l', b'l', b'o']`. Note that byte literals can also represent `u8` values that are not printable ASCII characters: those values are written using escaped sequences like `b'\x7F'`, which is equivalent to `0x7F`.
+
+### Byte string literals
+
+`[b'H', b'e', b'l', b'l', b'o']` can be further rewritten as `b"Hello"`. This is called a *byte* string literal (note that unlike a string literal like `"Hello"` this one has a `b` before the opening double quote). A byte string literal is a series of byte literals (`u8` values); these literals have type `&[u8; N]` where `N` is the number of byte literals in the string.
+
+Because byte string literals are references you need to *dereference* them to get an array type.
+
+``` rust
+let reftoarray: &[u8; 2] = b"Hi";
+
+// these two are equivalent
+let array1:  [u8; 2] = [b'H', 'i'];
+let array2:  [u8; 2] = *b"Hi";
+//          ^          ^ dereference
+```
+
+Or if you want to go the other way around: you need to take a reference to an array to get the same type as a byte string literal.
+
+``` rust
+// these two are equivalent
+let reftoarray1: &[u8; 2] = b"Hi";
+let reftoarray2: &[u8; 2] = &[b'H', 'i'];
+//               ^          ^
+```
+
+### Character constrains in byte string vs. string literals
+
+You can encode text as `b"Hello"` or as `"Hello"`.
+
+`b"Hello"` is by definition a string (series) of byte literals so each character has to be a byte literal like `b'A'` or `b'\x7f'`. You cannot use "Unicode characters" (`char` type) like emoji or CJK (Chinese Japanese Korean) in byte string literals.
+
+On the other hand, `"Hello"` is a string literal with type `&str`. `str` strings in Rust contain UTF-8 data so these string literals can contain CJK characters, emoji, Greek letters, Cyrillic script, etc.
+
+### Printing strings and characters
+
+In this workshop we'll work with ASCII strings so byte string literals that contain no escaped characters are OK to use as packet payloads.
+
+You'll note that `log::info!("{:?}", b"Hello")` will print `[72, 101, 108, 108, 111]` rather than `"Hello"` and that the `{}` format specifier (`Display`) does not work. This is because the type of the literal is `&[u8; N]` and in Rust this type means "bytes"; those bytes could be ASCII data, UTF-8 data or something else.
+
+To print this you'll need to convert the slice `&[u8]` into a string (`&str`) using the `str::from_utf8` function. This function will verify that the slice contains well formed UTF-8 data and interpret it as a UTF-8 string (`&str`). As long as we use ASCII data (printable ASCII characters) this conversion will not fail.
+
+Something similar will happen with byte literals: `log::info!("{}", b'A')` will print `65` rather than `A`. To get the `A` output you can cast the byte literal (`u8` value) to the `char` type: `log::info!("{}", b'A' as char)`.
+
+### Link Quality Indicator (LQI)
 
 Now run the `radio-send` program several times with different variations:
 
@@ -331,60 +413,97 @@ Now run the `radio-send` program several times with different variations:
 - change the length of the packet
 - different combinations of all of the above
 
-> NOTE if you decide to send many packets in a single program then you should use the `Timer` API to insert a delay of at least five milliseconds between the transmissions. This is required because the Dongle will use the radio medium right after it receives a packet. Not including the delay will result in the Dongle missing packets
+Take note of how LQI changes with these changes. Do packet loss occur in any of these configurations?
 
-The radio interface we are using follows the IEEE 802.15.4 specification but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
+> NOTE if you decide to send many packets in a single program then you should use the `Timer` API to insert a delay of at least five milliseconds between the transmissions. This is required because the Dongle will use the radio medium right after it receives a packet. Not including the delay will result in the Dongle missing packets
 
 802.15.4 radios are often used in mesh networks like Wireless Sensors Networks (WSN). The devices, or *nodes*, in these networks can be mobile so the distance between nodes can change in time. To prevent a link between two nodes getting broken due to mobility the LQI metric is used to decide the transmission power -- if the metric degrades power should be increased, etc. At the same time, the nodes in these networks often need to be power efficient (e.g. are battery powered) so the transmission power is often set as low as possible -- again the LQI metric is used to pick an adequate transmission power.
 
+### 802.15.4 compatibility
+
+The radio API we are using follows the PHY layer of the IEEE 802.15.4 specification but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
+
+This is not an issue for the workshop exercises but it's something to consider if you would like to continue from here and build a 802.15.4 compliant network API.
+
 ## Radio in
 
-In this section we'll explore the `recv` method of the Radio API. As the name implies, this is used to listen for packets. The method will block the program execution until a packet is received. We'll continue to use the Dongle in this section; it should be running the `loopback` application; and the `serial-term` application should also be running in the background.
+In this section we'll explore the `recv_timeout` method of the Radio API. As the name implies, this is used to listen for packets. The method will block the program execution until a packet is received or the specified timeout has expired. We'll continue to use the Dongle in this section; it should be running the `loopback` application; and the `serial-term` application should also be running in the background.
 
 The `loopback` application running on the Dongle will broadcast a radio packet after receiving one over channel 20. The contents of this outgoing packet will be the contents of the received one but reversed.
 
 Open the `src/bin/radio-recv.rs` file and click the "Run" button.
 
-The Dongle will response as soon as it receives a packet. If you insert a delay between the `send` operation and the `recv` operation in the `radio-recv` program this will result in the DK not seeing the Dongle's response.
+The Dongle expects the packet to contain only ASCII characters and will not respond to packets that contain non-ASCII data. If you only send packets that contain byte string literals *with no escaped characters* (e.g. `b"hello"`) then this requirement will be satisfied. At the same time the Dongle will always respond with ASCII data so calling `str::from_utf8` on the response should never fail, unless the packet contents got corrupted in the transmission but the CRC should detect this scenario.
 
-In a fully IEEE 802.15.4 compliant implementation one can mark a packet as "requires acknowledgment". The recipient must respond to these packets with an acknowledgment packet; if the sender doesn't receive the acknowledgment packet it will re-transmit the packet. This feature is part of the MAC layer and not implemented in the `Radio` API we are using so packet loss is possible even when the radios are close enough to communicate.
+The Dongle will respond as soon as it receives a packet. If you insert a delay between the `send` operation and the `recv` operation in the `radio-recv` program this will result in the DK not seeing the Dongle's response. So try this: add a `timer.delay(x)` call before the `recv_timeout` call; try different values of `x` and observe what happens.
+
+Having log statements between `send` and `recv_timeout` can also cause packets to be missed so try to keep those two calls as close to each other as possible and with as little code in between as possible.
+
+> NOTE Packet loss can always occur in wireless networks, even if the radios are close to each other. The `Radio` API we are using will not detect lost packets because it does not implement IEEE 802.15.4 Acknowledgement Requests. If you are having trouble with lost packets, consider adding a retry loop.
 
 ## Radio puzzle
 
-> TODO(japaric) before this section maybe cover collision avoidance
-
 For this section you'll need to flash the `puzzle.hex` program on the Dongle. Follow the instructions from the "nRF52840 Dongle" section but flash the `puzzle.hex` program instead of the `loopback.hex` one -- don't forget to put the Dongle in bootloader mode before invoking `dongle-flash`.
 
-Like in the previous sections the Dongle will listen for radio packets over channel 20 while also logging messages over a USB/serial interface.
+Like in the previous sections the Dongle will listen for radio packets -- this time over *channel 25* -- while also logging messages over a USB/serial interface.
 
 Open the `beginner/apps` folder in VS Code; then open the `src/bin/radio-puzzle.rs` file.
 
-Your task in this section is to decrypt the [substitution cipher] encrypted *ascii* string stored in the Dongle. The string has been encrypted using *simple substitution*.
+Your task in this section is to decrypt the [substitution cipher] encrypted *ASCII* string stored in the Dongle. The string has been encrypted using *simple substitution*.
 
 [substitution cipher]: https://en.wikipedia.org/wiki/Substitution_cipher
 
 The Dongle will respond differently depending on the length of the incoming packet:
 
 - On zero-sized packets it will respond with the encrypted string.
-- On one-byte sized packets it will respond with the *direct* mapping from a *plaintext* letter -- the letter contained in the packet -- to the *ciphertext* letter.
+- On one-byte sized packets it will respond with the *direct* mapping from a *plaintext* letter (single `u8` value) -- the letter contained in the packet -- to the *ciphertext* letter (`u8` value).
 - On packets of any other length the Dongle will respond with the string `correct` if it received the decrypted string, otherwise it will respond with the `incorrect` string.
 
-The Dongle will always respond with packets that are valid UTF-8.
+The Dongle will always respond with packets that are valid UTF-8 so you can use `str::from_utf8` on the response packets.
 
-Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the maps in the [`heapless`] crate. To make this crate available in your application get the latest version from [crates.io] and add it to the `beginner/apps/Cargo.toml` file, for example:
+Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. A `Vec`-like buffer may also come in handy; `heapless` provides a stack-allocated, fixed-capacity version of the `std::Vec` type.
+
+`heapless` is already declared as a dependency in the Cargo.toml of the project so you can directly import it into the application code using a `use` statement.
 
 [`heapless`]: https://docs.rs/heapless
 [crates.io]: https://crates.io/crates/heapless
 
-``` toml
-# Cargo.toml
-[dependencies]
-heapless = "0.5.0"
+``` rust
+use heapless::IndexMap; // a dictionary / map
+use heapless::Vec; // like `std::Vec` but stack-allocated
 ```
 
-If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The crate level documentation of the `heapless` crate has some examples.
+If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [crate level documentation][`heapless`] of the `heapless` crate has some examples.
+
+Something you will likely run into while solving this exercise are *character* literals (`'c'`) and *byte* literals (`b'c'`). The former has type [`char`] and represent a single Unicode "scalar value". The latter has type `u8` (1-byte integer) and it's mainly a convenience for getting the value of ASCII characters, for instance `b'A'` is the same as the `65u8` literal.
+
+[`char`]: https://doc.rust-lang.org/std/primitive.char.html
+
+*IMPORTANT* you do not need to use the `str` or `char` API to solve this problem, other than for printing purposes. Work directly with slices of bytes (`[u8]`) and bytes (`u8`); and only convert those to `str` or `char` when you are about to print them.
 
 P.S. The plaintext string is *not* stored in `puzzle.hex` so running `strings` on it will not give you the answer.
+
+These are our recommended steps to tackle the problem. Each step is demonstrated in a separate example so if for example you only need a quick reference of how to use the map API you can step / example number 2.
+
+1. Send a one letter packet (e.g. `A`) to the radio to get a feel for how the mapping works. Then do a few more letters. Check out example `radio-puzzle-1`
+
+2. Get familiar with the dictionary API. Do some insertions and look ups. What happens if the dictionary gets full? See `radio-puzzle-2`
+
+3. Next, get mappings from the radio and insert them into the dictionary. See `radio-puzzle-3`
+
+4. You'll probably want a buffer to place the plaintext in. We suggest using `heapless::Vec` for this. See `radio-puzzle-4` (NB It is also possible to decrypt the packet in place)
+
+5. Simulate decryption: fetch the encrypted string and "process" each of its bytes. See `radio-puzzle-5`
+
+6. Now merge steps 3 and 5: build a dictionary, retrieve the secret string and do the reverse mapping to decrypt the message. See `radio-puzzle-6`
+
+7. As a final step, send the decrypted string to the Dongle and check if it was correct or not. See `radio-puzzle-7`
+
+For your reference, we have provided a complete solution in the `src/bin/radio-puzzle-solution.rs` file. That solution is based on the seven steps outlined above. Did you solve the puzzle in a different way?
+
+If you solved the puzzle using a `Vec` buffer you can try solving it without the buffer as a stretch goal. You may find the [slice methods][slice] that let you mutate its data useful. A solution that does not use the `Vec` buffer can be found in the `radio-puzzle-solution-2` file.
+
+[slice]: https://doc.rust-lang.org/std/primitive.slice.html#methods
 
 ## Starting a project from scratch
 
