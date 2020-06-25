@@ -3,7 +3,7 @@
 
 use dk::{
     peripheral::USBD,
-    usbd::{self, Event},
+    usbd::{self, Ep0In, Event},
 };
 use panic_log as _; // panic handler
 use usb::{Descriptor, Request};
@@ -12,6 +12,7 @@ use usb::{Descriptor, Request};
 const APP: () = {
     struct Resources {
         usbd: USBD,
+        ep0in: Ep0In,
     }
 
     #[init]
@@ -20,30 +21,32 @@ const APP: () = {
 
         usbd::init(board.power, &board.usbd);
 
-        usbd::connect(&board.usbd);
-
-        init::LateResources { usbd: board.usbd }
+        init::LateResources {
+            ep0in: board.ep0in,
+            usbd: board.usbd,
+        }
     }
 
-    #[task(binds = USBD, resources = [usbd])]
-    fn on_usbd(cx: on_usbd::Context) {
+    #[task(binds = USBD, resources = [usbd, ep0in])]
+    fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
+        let ep0in = cx.resources.ep0in;
 
         while let Some(event) = usbd::next_event(usbd) {
-            on_event(usbd, event)
+            on_event(usbd, ep0in, event)
         }
     }
 };
 
-fn on_event(usbd: &USBD, event: Event) {
-    log::info!("USB: {:?}", event);
+fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
+    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         Event::UsbReset => {
             // nothing to do here at the moment
         }
 
-        Event::UsbEp0DataDone => usbd::todo(usbd),
+        Event::UsbEp0DataDone => todo!(), // <- TODO
 
         Event::UsbEp0Setup => {
             let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
@@ -53,7 +56,7 @@ fn on_event(usbd: &USBD, event: Event) {
             let wvalue = usbd::wvalue(usbd);
 
             log::info!(
-                "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
+                "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                 bmrequesttype,
                 brequest,
                 wlength,
@@ -66,16 +69,17 @@ fn on_event(usbd: &USBD, event: Event) {
             {
                 match descriptor {
                     Descriptor::Device => {
-                        // GOAL
                         log::info!("GET_DESCRIPTOR Device [length={}]", length);
 
-                        usbd::todo(usbd)
+                        // FIXME send back a valid device descriptor, truncated to `length` bytes
+                        // let desc = usb2::device::Descriptor { .. };
+                        let resp = [];
+                        ep0in.start(&resp, usbd);
                     }
-
-                    _ => usbd::todo(usbd),
                 }
             } else {
-                usbd::todo(usbd)
+                log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
+                dk::exit()
             }
         }
     }

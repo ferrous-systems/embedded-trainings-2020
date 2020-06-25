@@ -8,7 +8,7 @@ use dk::{
     usbd::{self, Ep0In, Event},
 };
 use panic_log as _; // panic handler
-use usb2::{GetDescriptor, StandardRequest, State};
+use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -24,8 +24,6 @@ const APP: () = {
 
         usbd::init(board.power, &board.usbd);
 
-        usbd::connect(&board.usbd);
-
         init::LateResources {
             usbd: board.usbd,
             state: State::Default,
@@ -34,7 +32,7 @@ const APP: () = {
     }
 
     #[task(binds = USBD, resources = [state, usbd, ep0in])]
-    fn usb(cx: usb::Context) {
+    fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
         let state = cx.resources.state;
         let ep0in = cx.resources.ep0in;
@@ -46,7 +44,7 @@ const APP: () = {
 };
 
 fn on_event(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In, event: Event) {
-    log::info!("USB: {:?}", event);
+    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         Event::UsbReset => {
@@ -69,7 +67,7 @@ fn on_event(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In, event: Event) {
 }
 
 /// The `bConfigurationValue` of the only supported configuration
-const CONFIG_VAL: u8 = 1;
+const CONFIG_VAL: u8 = 42;
 
 fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()> {
     let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
@@ -78,14 +76,14 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
     let windex = usbd::windex(usbd);
     let wvalue = usbd::wvalue(usbd);
 
-    let request = StandardRequest::parse(bmrequesttype, brequest, wvalue, windex, wlength)?;
-    log::info!("{:?}", request);
+    let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)?;
+    log::info!("EP0: {:?}", request);
 
     match request {
         // section 9.4.3
         // this request is valid in any state
-        StandardRequest::GetDescriptor { descriptor, length } => match descriptor {
-            GetDescriptor::Device => {
+        Request::GetDescriptor { descriptor, length } => match descriptor {
+            Descriptor::Device => {
                 let desc = usb2::device::Descriptor {
                     bDeviceClass: 0,
                     bDeviceProtocol: 0,
@@ -100,15 +98,17 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
                     idVendor: consts::VID,
                 };
                 let bytes = desc.bytes();
-                ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd)?
+                ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd);
             }
 
-            GetDescriptor::Configuration { index } => {
+            Descriptor::Configuration { index } => {
                 if index == 0 {
-                    let mut full_desc = heapless::Vec::<u8, heapless::consts::U64>::new();
+                    let mut resp = heapless::Vec::<u8, heapless::consts::U64>::new();
 
                     let conf_desc = usb2::configuration::Descriptor {
-                        wTotalLength: usb2::configuration::Descriptor::SIZE.into(),
+                        wTotalLength: (usb2::configuration::Descriptor::SIZE
+                            + usb2::interface::Descriptor::SIZE)
+                            .into(),
                         bNumInterfaces: NonZeroU8::new(1).unwrap(),
                         bConfigurationValue: core::num::NonZeroU8::new(CONFIG_VAL).unwrap(),
                         iConfiguration: None,
@@ -129,12 +129,9 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
                         iInterface: None,
                     };
 
-                    full_desc.extend_from_slice(&conf_desc.bytes()).unwrap();
-                    full_desc.extend_from_slice(&iface_desc.bytes()).unwrap();
-                    ep0in.start(
-                        &full_desc[..core::cmp::min(full_desc.len(), length.into())],
-                        usbd,
-                    )?;
+                    resp.extend_from_slice(&conf_desc.bytes()).unwrap();
+                    resp.extend_from_slice(&iface_desc.bytes()).unwrap();
+                    ep0in.start(&resp[..core::cmp::min(resp.len(), length.into())], usbd);
                 } else {
                     // out of bounds access: stall the endpoint
                     return Err(());
@@ -144,7 +141,7 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
             _ => return Err(()),
         },
 
-        StandardRequest::SetAddress { address } => {
+        Request::SetAddress { address } => {
             match state {
                 State::Default => {
                     if let Some(address) = address {
@@ -170,9 +167,7 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
             // the response to this request is handled in hardware
         }
 
-        StandardRequest::SetConfiguration { value } => {
-            log::info!("SET_CONFIGURATION {:?} ({:?})", value, state);
-
+        Request::SetConfiguration { value } => {
             match *state {
                 // unspecified behavior
                 State::Default => return Err(()),

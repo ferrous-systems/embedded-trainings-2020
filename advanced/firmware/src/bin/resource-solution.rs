@@ -9,6 +9,7 @@ use panic_log as _; // panic handler
 const APP: () = {
     struct Resources {
         power: POWER,
+        counter: usize, // <- new resource
     }
 
     #[init]
@@ -21,11 +22,14 @@ const APP: () = {
 
         log::info!("USBDETECTED interrupt enabled");
 
-        init::LateResources { power }
+        init::LateResources {
+            power,
+            counter: 0, // <- initialize the new resource
+        }
     }
 
     #[idle]
-    fn idle(_cx: idle::Context) -> ! {
+    fn main(_cx: main::Context) -> ! {
         loop {
             log::info!("idle: going to sleep");
             asm::wfi();
@@ -33,11 +37,23 @@ const APP: () = {
         }
     }
 
-    #[task(binds = POWER_CLOCK, resources = [power])]
+    #[task(binds = POWER_CLOCK, resources = [power, counter])]
+    //                                              ^^^^^^^ we want to access the resource from here
     fn on_power_event(cx: on_power_event::Context) {
-        log::info!("POWER event occurred");
+        log::debug!("POWER event occurred");
+
+        let power = cx.resources.power;
+        let counter = cx.resources.counter;
+
+        *counter += 1;
+        let n = *counter;
+        log::info!(
+            "on_power_event: cable connected {} time{}",
+            n,
+            if n != 1 { "s" } else { "" }
+        );
 
         // clear the interrupt flag; otherwise this task will run again after it returns
-        cx.resources.power.events_usbdetected.reset();
+        power.events_usbdetected.reset();
     }
 };

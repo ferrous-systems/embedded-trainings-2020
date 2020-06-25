@@ -3,19 +3,15 @@
 
 use dk::{
     peripheral::USBD,
-    usbd::{self, Ep0In, Event},
+    usbd::{self, Event},
 };
 use panic_log as _; // panic handler
-
-// use one of these
-// use usb::{Descriptor, Request}; // your implementation
-use usb2::{GetDescriptor as Descriptor, StandardRequest as Request}; // crates.io impl
+use usb::{Descriptor, Request};
 
 #[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         usbd: USBD,
-        ep0in: Ep0In,
     }
 
     #[init]
@@ -24,44 +20,41 @@ const APP: () = {
 
         usbd::init(board.power, &board.usbd);
 
-        usbd::connect(&board.usbd);
-
-        init::LateResources {
-            ep0in: board.ep0in,
-            usbd: board.usbd,
-        }
+        init::LateResources { usbd: board.usbd }
     }
 
-    #[task(binds = USBD, resources = [usbd, ep0in])]
-    fn on_usbd(cx: on_usbd::Context) {
+    #[task(binds = USBD, resources = [usbd])]
+    fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
-        let ep0in = cx.resources.ep0in;
 
         while let Some(event) = usbd::next_event(usbd) {
-            on_event(usbd, ep0in, event)
+            on_event(usbd, event)
         }
     }
 };
 
-fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
-    log::info!("USB: {:?}", event);
+fn on_event(usbd: &USBD, event: Event) {
+    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         Event::UsbReset => {
             // nothing to do here at the moment
         }
 
-        Event::UsbEp0DataDone => usbd::todo(usbd),
+        Event::UsbEp0DataDone => todo!(),
 
         Event::UsbEp0Setup => {
             let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
             let brequest = usbd.brequest.read().brequest().bits();
-            let wlength = usbd::wlength(usbd);
-            let windex = usbd::windex(usbd);
-            let wvalue = usbd::wvalue(usbd);
+            let wlength = (u16::from(usbd.wlengthh.read().wlengthh().bits()) << 8)
+                | u16::from(usbd.wlengthl.read().wlengthl().bits());
+            let windex = (u16::from(usbd.windexh.read().windexh().bits()) << 8)
+                | u16::from(usbd.windexl.read().windexl().bits());
+            let wvalue = (u16::from(usbd.wvalueh.read().wvalueh().bits()) << 8)
+                | u16::from(usbd.wvaluel.read().wvaluel().bits());
 
             log::info!(
-                "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
+                "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                 bmrequesttype,
                 brequest,
                 wlength,
@@ -76,16 +69,12 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                     Descriptor::Device => {
                         log::info!("GET_DESCRIPTOR Device [length={}]", length);
 
-                        // FIXME send back a valid device descriptor, truncated to `length` bytes
-                        // let desc = usb2::device::Descriptor { .. };
-                        let resp = [];
-                        let _ = ep0in.start(&resp, usbd);
+                        log::info!("Goal reached; move to the next section");
+                        dk::exit()
                     }
-
-                    _ => usbd::todo(usbd),
                 }
             } else {
-                usbd::todo(usbd)
+                unreachable!() // don't care about this for now
             }
         }
     }

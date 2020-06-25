@@ -8,16 +8,14 @@ use dk::{
 use panic_log as _; // panic handler
 
 // use one of these
-// use usb::{Descriptor, Request}; // your implementation
-use usb2::State;
-use usb2::{GetDescriptor as Descriptor, StandardRequest as Request}; // crates.io impl
+use usb::{Descriptor, Request};
 
 #[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         usbd: USBD,
         ep0in: Ep0In,
-        state: State,
+        state: usb2::State,
     }
 
     #[init]
@@ -26,17 +24,15 @@ const APP: () = {
 
         usbd::init(board.power, &board.usbd);
 
-        usbd::connect(&board.usbd);
-
         init::LateResources {
             usbd: board.usbd,
-            state: State::Default,
+            state: usb2::State::Default,
             ep0in: board.ep0in,
         }
     }
 
     #[task(binds = USBD, resources = [usbd, ep0in, state])]
-    fn on_usbd(cx: on_usbd::Context) {
+    fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
         let ep0in = cx.resources.ep0in;
         let state = cx.resources.state;
@@ -47,13 +43,12 @@ const APP: () = {
     }
 };
 
-fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
-    log::info!("USB: {:?}", event);
+fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut usb2::State, event: Event) {
+    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
-        Event::UsbReset => {
-            // TODO change `state`
-        }
+        // TODO change `state`
+        Event::UsbReset => todo!(),
 
         Event::UsbEp0DataDone => ep0in.end(usbd),
 
@@ -61,13 +56,12 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
             if ep0setup(usbd, ep0in, state).is_err() {
                 // unsupported or invalid request: stall the endpoint
                 log::warn!("EP0IN: stalled");
-                usbd::todo(usbd)
             }
         }
     }
 }
 
-fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut State) -> Result<(), ()> {
+fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<(), ()> {
     let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
     let brequest = usbd.brequest.read().brequest().bits();
     let wlength = usbd::wlength(usbd);
@@ -106,15 +100,13 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut State) -> Result<(), ()
                 let _ = ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd);
             }
 
-            _ => usbd::todo(usbd),
+            // TODO Configuration descriptor
+            // Descriptor::Configuration => todo!(),
         },
 
-        Request::SetAddress { .. } => usbd::todo(usbd),
-
-        Request::SetConfiguration { .. } => usbd::todo(usbd),
-
-        // this request is not supported
-        _ => return Err(()),
+        // TODO
+        // Request::SetAddress { .. } => todo!(),
+        // Request::SetConfiguration { .. } => todo!(),
     }
 
     Ok(())

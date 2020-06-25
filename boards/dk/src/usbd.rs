@@ -27,16 +27,14 @@ impl Ep0In {
     ///
     /// # Panics
     ///
-    /// This function panics if the last transfer was not finished by calling the `end` function
-    pub fn start(&mut self, bytes: &[u8], usbd: &USBD) -> Result<(), ()> {
-        if self.busy {
-            panic!("EP0IN: last transfer has not completed");
-        }
-
-        if bytes.len() > self.buffer.len() {
-            log::error!("EP0IN: multi-packet data transfers are not supported");
-            return Err(());
-        }
+    /// - This function panics if the last transfer was not finished by calling the `end` function
+    /// - This function panics if `bytes` is larger than the maximum packet size (64 bytes)
+    pub fn start(&mut self, bytes: &[u8], usbd: &USBD) {
+        assert!(!self.busy, "EP0IN: last transfer has not completed");
+        assert!(
+            bytes.len() <= self.buffer.len(),
+            "EP0IN: multi-packet data transfers are not supported"
+        );
 
         let n = bytes.len();
         self.buffer[..n].copy_from_slice(bytes);
@@ -58,8 +56,6 @@ impl Ep0In {
         // start DMA transfer
         dma_start();
         usbd.tasks_startepin[0].write(|w| w.tasks_startepin().set_bit());
-
-        Ok(())
     }
 
     /// Completes a data transfer
@@ -79,6 +75,7 @@ impl Ep0In {
             usbd.events_ep0datadone.reset();
 
             self.busy = false;
+            log::info!("EP0IN: transfer done");
         }
     }
 }
@@ -87,7 +84,7 @@ impl Ep0In {
 // caller's memory operations
 //
 // This function call *must* be *followed* by a memory *store* operation. Memory operations that
-// follow this function call will *not* be moved, by the compiler or the instruction pipeline, to
+// *precede* this function call will *not* be moved, by the compiler or the instruction pipeline, to
 // *after* the function call.
 fn dma_start() {
     atomic::fence(Ordering::Release);
@@ -97,7 +94,7 @@ fn dma_start() {
 // memory operations
 //
 // This function call *must* be *preceded* by a memory *load* operation. Memory operations that
-// follow this function call will *not* be moved, by the compiler or the instruction pipeline, to
+// *follow* this function call will *not* be moved, by the compiler or the instruction pipeline, to
 // *before* the function call.
 fn dma_end() {
     atomic::fence(Ordering::Acquire);
@@ -110,7 +107,7 @@ fn dma_end() {
 pub fn init(power: POWER, usbd: &USBD) {
     let mut once = true;
 
-    // wait until the USB has been connected
+    // wait until the USB cable has been connected
     while power.events_usbdetected.read().bits() == 0 {
         if once {
             log::info!("waiting for USB connection on port J3");
@@ -153,16 +150,9 @@ pub fn init(power: POWER, usbd: &USBD) {
         w.ep0setup().set_bit();
         w.usbreset().set_bit()
     });
-}
 
-/// Connects the device to the host (enables the D+ line pull-up)
-pub fn connect(usbd: &USBD) {
+    // enable the D+ line pull-up
     usbd.usbpullup.write(|w| w.connect().set_bit());
-}
-
-/// Disconnects the device from the host (disables the D+ line pull-up)
-pub fn disconnect(usbd: &USBD) {
-    usbd.usbpullup.reset();
 }
 
 /// Stalls endpoint 0
@@ -208,13 +198,6 @@ pub fn next_event(usbd: &USBD) -> Option<Event> {
     }
 
     None
-}
-
-/// Use this instead of the `todo!` / `unimplemented!` macro
-pub fn todo(usbd: &USBD) {
-    disconnect(usbd);
-    log::error!("unimplemented");
-    crate::exit()
 }
 
 /// Reads the WLENGTHL and WLENGTHH registers and returns the 16-bit WLENGTH component of a setup packet

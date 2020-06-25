@@ -1,4 +1,5 @@
 //! Some USB 2.0 data types
+// NOTE this is a solution to exercise `usb-2`
 
 #![deny(missing_docs)]
 #![deny(warnings)]
@@ -43,14 +44,40 @@ impl Request {
     /// Returns `Err` if the SETUP data doesn't match a supported standard request
     // see section 9.4 of the USB specification; in particular tables 9-3, 9-4 and 9-5
     pub fn parse(
-        _bmrequesttype: u8,
-        _brequest: u8,
-        _wvalue: u16,
-        _windex: u16,
-        _wlength: u16,
+        bmrequesttype: u8,
+        brequest: u8,
+        wvalue: u16,
+        windex: u16,
+        wlength: u16,
     ) -> Result<Self, ()> {
-        // FIXME
-        Err(())
+        // see table 9-4
+        const GET_DESCRIPTOR: u8 = 6;
+
+        if bmrequesttype == 0b10000000 && brequest == GET_DESCRIPTOR {
+            // see table 9-5
+            const DEVICE: u8 = 1;
+            const CONFIGURATION: u8 = 2;
+
+            let desc_ty = (wvalue >> 8) as u8;
+            let desc_index = wvalue as u8;
+            let langid = windex;
+
+            if desc_ty == DEVICE && desc_index == 0 && langid == 0 {
+                Ok(Request::GetDescriptor {
+                    descriptor: Descriptor::Device,
+                    length: wlength,
+                })
+            } else if desc_ty == CONFIGURATION && langid == 0 {
+                Ok(Request::GetDescriptor {
+                    descriptor: Descriptor::Configuration { index: desc_index },
+                    length: wlength,
+                })
+            } else {
+                Err(())
+            }
+        } else {
+            Err(())
+        }
     }
 }
 
@@ -61,7 +88,6 @@ pub enum Descriptor {
     Device,
 
     /// Configuration descriptor
-    #[cfg(TODO)]
     Configuration {
         /// Index of the descriptor
         index: u8,
@@ -96,7 +122,6 @@ mod tests {
         //                                                 ^^^^
     }
 
-    #[cfg(TODO)]
     #[test]
     fn get_descriptor_configuration() {
         // OK: GET_DESCRIPTOR Configuration 0 [length=9]

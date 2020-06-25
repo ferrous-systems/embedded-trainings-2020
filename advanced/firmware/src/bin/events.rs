@@ -26,7 +26,7 @@ const APP: () = {
     }
 
     #[idle]
-    fn idle(_cx: idle::Context) -> ! {
+    fn main(_cx: main::Context) -> ! {
         log::info!("idle: going to sleep");
 
         // sleep in the background

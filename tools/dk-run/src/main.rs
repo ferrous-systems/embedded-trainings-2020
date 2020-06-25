@@ -158,6 +158,8 @@ fn notmain() -> Result<i32, anyhow::Error> {
     core.reset_and_halt()?;
     log::info!("reset and halted the core");
 
+    eprintln!("flashing program ..");
+
     // load program into memory
     for section in &sections {
         core.write_32(section.start, &section.data)?;
@@ -177,6 +179,8 @@ fn notmain() -> Result<i32, anyhow::Error> {
 
         log::info!("loaded program into RAM");
 
+        eprintln!("DONE");
+
         core.run()?;
     } else {
         // XXX the device may have already loaded SP and PC at this point in this case?
@@ -186,10 +190,12 @@ fn notmain() -> Result<i32, anyhow::Error> {
 
         log::info!("flashed program");
 
+        eprintln!("DONE");
+
         core.reset()?;
     }
 
-    // run
+    eprintln!("resetting device");
 
     let core = Rc::new(core);
     let rtt_addr_res = rtt_addr.ok_or_else(|| anyhow!("RTT control block not available"))?;
