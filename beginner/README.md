@@ -437,7 +437,7 @@ The Dongle will respond differently depending on the length of the incoming pack
 - On one-byte sized packets it will respond with the *direct* mapping from a *plaintext* letter (single `u8` value) -- the letter contained in the packet -- to the *ciphertext* letter (`u8` value).
 - On packets of any other length the Dongle will respond with the string `correct` if it received the decrypted string, otherwise it will respond with the `incorrect` string.
 
-The Dongle will always respond with packets that are valid UTF-8 so you can use the `str::from_utf8` on the response packets.
+The Dongle will always respond with packets that are valid UTF-8 so you can use `str::from_utf8` on the response packets.
 
 Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. A `Vec`-like buffer may also come in handy; `heapless` provides a stack-allocated, fixed-capacity version of the `std::Vec` type.
 
