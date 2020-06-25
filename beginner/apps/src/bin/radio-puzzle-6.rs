@@ -17,16 +17,14 @@ fn main() -> ! {
     let mut radio = board.radio;
     let mut timer = board.timer;
 
-    /* # Build a dictionary */
-    // TODO increase capacity
-    let dict = LinearMap::<u8, u8, consts::U2>::new();
-
     // puzzle.hex uses channel 25
     radio.set_channel(Channel::_25);
 
+    /* # Build a dictionary */
+    let dict = LinearMap::<u8, u8, consts::U128>::new();
+
     let mut packet = Packet::new();
-    // TODO do the whole ASCII range [0, 127]
-    for source in b'A'..=b'B' {
+    for source in 0..=127 {
         packet.copy_from_slice(&[source]);
 
         radio.send(&packet);

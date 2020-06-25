@@ -18,8 +18,8 @@ fn main() -> ! {
     // puzzle.hex uses channel 25
     radio.set_channel(Channel::_25);
 
-    // TODO increase capacity
-    let dict = LinearMap::<u8, u8, consts::U2>::new();
+    // capacity (128) should be large enough for the ASCII range
+    let dict = LinearMap::<u8, u8, consts::U128>::new();
 
     let mut packet = Packet::new();
     // TODO do the whole ASCII range [0, 127]

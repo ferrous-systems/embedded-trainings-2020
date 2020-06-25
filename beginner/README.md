@@ -339,7 +339,7 @@ let slice: &[u8] = &array;
 
 `slice` and `ref_to_array` are constructed in the same way but have different types. `ref_to_array` is represented in memory as a single pointer (1 word / 4 bytes); `slice` is represented as a pointer + length (2 words / 8 bytes).
 
-Because slices track length at runtime -- in their value -- rather than in their type they can point to chunks of memory of any length.
+Because slices track length at runtime rather than in their type they can point to chunks of memory of any length.
 
 ``` rust
 let array1: [u8; 3] = [0, 1, 2];
@@ -363,7 +363,27 @@ Rust provides a more convenient way to write ASCII characters: byte literals. `b
 
 ### Byte string literals
 
-`[b'H', b'e', b'l', b'l', b'o']` can be further rewritten as `b"Hello"`. This is called a byte string literal; note that there's a `b` before the opening double quote. A byte string literal is a series of byte literals; these literals have type `&[u8; N]` where `N` is the number of byte (literals) in the string.
+`[b'H', b'e', b'l', b'l', b'o']` can be further rewritten as `b"Hello"`. This is called a *byte* string literal (note that unlike a string literal like `"Hello"` this one has a `b` before the opening double quote). A byte string literal is a series of byte literals (`u8` values); these literals have type `&[u8; N]` where `N` is the number of byte literals in the string.
+
+Because byte string literals are references you need to *dereference* them to get an array type.
+
+``` rust
+let reftoarray: &[u8; 2] = b"Hi";
+
+// these two are equivalent
+let array1:  [u8; 2] = [b'H', 'i'];
+let array2:  [u8; 2] = *b"Hi";
+//          ^          ^ dereference
+```
+
+Or if you want to go the other way around: you need to take a reference to an array to get the same type as a byte string literal.
+
+``` rust
+// these two are equivalent
+let reftoarray1: &[u8; 2] = b"Hi";
+let reftoarray2: &[u8; 2] = &[b'H', 'i'];
+//               ^          ^
+```
 
 ### Character constrains in byte string vs. string literals
 
@@ -401,7 +421,9 @@ Take note of how LQI changes with these changes. Do packet loss occur in any of 
 
 ### 802.15.4 compatibility
 
-The radio interface we are using follows the IEEE 802.15.4 specification but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
+The radio API we are using follows the PHY layer of the IEEE 802.15.4 specification but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
+
+This is not an issue for the workshop exercises but it's something to consider if you would like to continue from here and build a 802.15.4 compliant network API.
 
 ## Radio in
 

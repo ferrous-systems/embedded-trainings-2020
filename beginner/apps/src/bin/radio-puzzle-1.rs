@@ -19,9 +19,11 @@ fn main() -> ! {
 
     let mut packet = Packet::new();
 
+    // first exchange a single packet with the Dongle
     // letter 'A' (uppercase)
     let source = 65;
     // let source = b'A'; // this is the same as above
+
     // TODO try other letters
 
     // single letter (byte) packet
@@ -48,8 +50,9 @@ fn main() -> ! {
 
     // TODO next do the whole ASCII range [0, 127]
     // start small: just 'A' and 'B' at first
-    // OR for source in b'A'..=b'B' (NOTE: inclusive range)
-    for _source in 65..67 {
+    // NOTE: `a..=b` means inclusive range; `a` and `b` are included in the range
+    // `a..b` means open-ended range; `a` is included in the range but `b` isn't
+    for _source in b'A'..=b'B' {
         // TODO similar procedure as above
     }
 
