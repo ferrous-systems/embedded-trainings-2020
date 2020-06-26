@@ -530,16 +530,23 @@ If no HAL is available for your device then you'll need to build one yourself. T
 ## Hello, 💡
 Now that you've set up your own project from scratch, you could start playing around with it by turning on one of the DK's on-board LEDs using only the HAL. Some hints that might be helpful there:
 
-- Before you dive into interrupt handling on your own, work through the advanced material of this course to learn about [RTIC][rtic]
-- The [Embedded Rust Book][embedded rust] is a great reference, especially the Concurrency chapter.
+- The [Nordic Infocenter][infocenter] tells you which LED is connected to which pin.
 
-[rtic]: https://docs.rs/cortex-m-rtic/0.5.3/rtic/
-[embedded rust]: https://rust-embedded.github.io/book/
+[infocenter]: https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrf52840_dk%2FUG%2Fnrf52840_DK%2Fhw_buttons_leds.html
+
 
 ## (extra) adding addresses to packets
 
 > have people use the `ieee802154` crate to add a MAC header to the radio packet. New dongle firmware would be required to respond differently to broadcast packets and addressed packets
 
-## References
+## References and Resources
 
 - [nRF52840 Product Specification 1.1](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
+- The [Embedded Rust Book][embedded rust] is a great learning resource, especially the Concurrency chapter.
+- If you are looking to write an interrupt handler, look at the [`#[interrupt]` attribute][interrupt]. All interrupts implemented by the nrf52840 hal are listed in [`nrf52840-pac/src/lib.rs`][pac].  
+It is also recommended that you work through the advanced material of this course to learn about [RTIC][rtic].
+
+[pac]: https://github.com/nrf-rs/nrf52840-pac/blob/9558a3ed032b2aec7e57c2f42330f1dee0000a04/src/lib.rs#L167
+[interrupt]: https://docs.rs/cortex-m-rt-macros/0.1.5/cortex_m_rt_macros/attr.interrupt.html
+[rtic]: https://docs.rs/cortex-m-rtic/0.5.3/rtic/
+[embedded rust]: https://rust-embedded.github.io/book/
