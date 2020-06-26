@@ -527,6 +527,15 @@ If no HAL is available for your device then you'll need to build one yourself. T
 
 > NOTE additional content, if needed / desired
 
+## Hello, 💡
+Now that you've set up your own project from scratch, you could start playing around with it by turning on one of the DK's on-board LEDs using only the HAL. Some hints that might be helpful there:
+
+- Before you dive into interrupt handling on your own, work through the advanced material of this course to learn about [RTIC][rtic]
+- The [Embedded Rust Book][embedded rust] is a great reference, especially the Concurrency chapter.
+
+[rtic]: https://docs.rs/cortex-m-rtic/0.5.3/rtic/
+[embedded rust]: https://rust-embedded.github.io/book/
+
 ## (extra) adding addresses to packets
 
 > have people use the `ieee802154` crate to add a MAC header to the radio packet. New dongle firmware would be required to respond differently to broadcast packets and addressed packets
