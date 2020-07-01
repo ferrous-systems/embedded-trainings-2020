@@ -64,8 +64,9 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                 wvalue
             );
 
-            let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
-                .expect("Error parsing request");
+            let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength).expect(
+                "Error parsing request (goal achieved if GET_DESCRIPTOR Device was handled before)",
+            );
             match request {
                 Request::GetDescriptor { descriptor, length }
                     if descriptor == Descriptor::Device =>
@@ -96,7 +97,7 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                 }
                 _ => {
                     log::error!(
-                        "unknown request (goal achieved if GET_DESCRIPTOR Device was handled)"
+                        "unknown request (goal achieved if GET_DESCRIPTOR Device was handled before)"
                     );
                     dk::exit()
                 }
