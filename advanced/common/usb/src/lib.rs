@@ -6,6 +6,9 @@
 
 use core::num::NonZeroU8;
 
+/// Device address assigned by the host; will be in the range 1..=127
+pub type Address = NonZeroU8;
+
 /// Standard USB request
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Request {
@@ -22,7 +25,7 @@ pub enum Request {
     // see section 9.4.6 of the USB specification
     SetAddress {
         /// New device address, in the range `1..=127`
-        address: Option<NonZeroU8>,
+        address: Option<Address>,
     },
 
     /// SET_CONFIGURATION
@@ -101,8 +104,6 @@ pub enum Descriptor {
     // there are even more descriptor types but we don't need to support them
 }
 
-/// Device address assigned by the host; will be in the range 1..=127
-pub type Address = NonZeroU8;
 /// The state of the USB device
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum DeviceState {
@@ -122,6 +123,7 @@ pub enum DeviceState {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(TODO)]
     use core::num::NonZeroU8;
 
     use crate::{Descriptor, Request};
