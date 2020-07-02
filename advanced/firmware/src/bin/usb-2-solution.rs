@@ -6,11 +6,12 @@ use dk::{
     usbd::{self, Event},
 };
 use panic_log as _; // panic handler
-use usb::{Descriptor, Request};
+use usb::{Descriptor, Request, DeviceState};
 
 #[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
+        state: DeviceState,
         usbd: USBD,
     }
 
@@ -20,20 +21,24 @@ const APP: () = {
 
         usbd::init(board.power, &board.usbd);
 
-        init::LateResources { usbd: board.usbd }
+        init::LateResources {
+            usbd: board.usbd,
+            state: DeviceState::Default,
+        }
     }
 
-    #[task(binds = USBD, resources = [usbd])]
+    #[task(binds = USBD, resources = [state, usbd])]
     fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
+        let state = cx.resources.state; // used to store the device address sent by the host
 
         while let Some(event) = usbd::next_event(usbd) {
-            on_event(usbd, event)
+            on_event(usbd, state, event)
         }
     }
 };
 
-fn on_event(usbd: &USBD, event: Event) {
+fn on_event(usbd: &USBD, state: &mut DeviceState, event: Event) {
     log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
@@ -62,16 +67,31 @@ fn on_event(usbd: &USBD, event: Event) {
                 wvalue
             );
 
-            if let Ok(Request::GetDescriptor { descriptor, length }) =
-                Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
-            {
-                match descriptor {
-                    Descriptor::Device => {
+            // todo handle less indentedly?
+            if let Ok(request) = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength) {
+                match request {
+                    Request::GetDescriptor { descriptor, length }
+                        if descriptor == Descriptor::Device =>
+                    {
                         log::info!("GET_DESCRIPTOR Device [length={}]", length);
 
                         log::info!("Goal reached; move to the next section");
                         dk::exit()
                     }
+                    Request::SetAddress { address } => {
+                        log::info!("SETUP: device state is {:?}", state);
+
+                        // todo hide this in a helper?
+                        // todo check for state configured -> err
+                        if let Some(address) = address {
+                            log::info!("SETUP: assigning address {}", address);
+                            *state = DeviceState::Address(address);
+                        } else {
+                            log::info!("SETUP: address was None; assigning Default");
+                            *state = DeviceState::Default;
+                        }
+                    }
+                    _ => unreachable!(), // we don't handle any other Requests
                 }
             } else {
                 unreachable!() // don't care about this for now

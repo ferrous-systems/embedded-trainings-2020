@@ -103,7 +103,6 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<
             // TODO Configuration descriptor
             // Descriptor::Configuration => todo!(),
         },
-
         // TODO
         // Request::SetAddress { .. } => todo!(),
         // Request::SetConfiguration { .. } => todo!(),

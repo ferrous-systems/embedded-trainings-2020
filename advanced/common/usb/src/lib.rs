@@ -4,7 +4,6 @@
 #![deny(warnings)]
 #![no_std]
 
-#[cfg(TODO)]
 use core::num::NonZeroU8;
 
 /// Standard USB request
@@ -21,7 +20,6 @@ pub enum Request {
 
     /// SET_ADDRESS
     // see section 9.4.6 of the USB specification
-    #[cfg(TODO)]
     SetAddress {
         /// New device address, in the range `1..=127`
         address: Option<NonZeroU8>,
@@ -43,14 +41,48 @@ impl Request {
     /// Returns `Err` if the SETUP data doesn't match a supported standard request
     // see section 9.4 of the USB specification; in particular tables 9-3, 9-4 and 9-5
     pub fn parse(
-        _bmrequesttype: u8,
-        _brequest: u8,
-        _wvalue: u16,
-        _windex: u16,
-        _wlength: u16,
+        bmrequesttype: u8,
+        brequest: u8,
+        wvalue: u16,
+        windex: u16,
+        wlength: u16,
     ) -> Result<Self, ()> {
-        // FIXME
-        Err(())
+        // see table 9-4 (USB specification)
+        const SET_ADDRESS: u8 = 5;
+        const GET_DESCRIPTOR: u8 = 6; // todo deleteme
+
+        // TODO löschen und durch instructions ersetzen
+        if bmrequesttype == 0b10000000 && brequest == GET_DESCRIPTOR {
+            // see table 9-5
+            const DEVICE: u8 = 1;
+
+            let desc_ty = (wvalue >> 8) as u8;
+            let desc_index = wvalue as u8;
+            let langid = windex;
+
+            if desc_ty == DEVICE && desc_index == 0 && langid == 0 {
+                Ok(Request::GetDescriptor {
+                    descriptor: Descriptor::Device,
+                    length: wlength,
+                })
+            } else {
+                Err(())
+            }
+        } else if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
+
+            // Set the device address for all future accesses.
+            // Needed to successfully init when using Apple devices.
+            if wvalue < 128 && windex == 0 && wlength == 0 {
+                Ok(Request::SetAddress {
+                    address: NonZeroU8::new(wvalue as u8),
+                })
+            } else {
+                Err(())
+            }
+        } else {
+            Err(())
+        }
+
     }
 }
 
@@ -69,9 +101,27 @@ pub enum Descriptor {
     // there are even more descriptor types but we don't need to support them
 }
 
+/// Device address assigned by the host; will be in the range 1..=127
+pub type Address = NonZeroU8;
+/// The state of the USB device
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum DeviceState {
+    /// The default state
+    Default,
+    /// The address-ed state
+    Address(Address),
+    /// The configured state
+    Configured {
+        /// The address of the device
+        address: Address,
+        /// The configuration value
+        value: NonZeroU8,
+    },
+}
+
+
 #[cfg(test)]
 mod tests {
-    #[cfg(TODO)]
     use core::num::NonZeroU8;
 
     use crate::{Descriptor, Request};
