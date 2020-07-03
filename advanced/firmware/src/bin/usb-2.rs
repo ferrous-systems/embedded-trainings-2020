@@ -60,13 +60,15 @@ fn on_event(_usbd: &USBD, event: Event) {
                 wvalue
             );
 
-            // TODO modify `advanced/common/usb` to make this work
             let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
                 .expect("Error parsing request");
             match request {
                 Request::GetDescriptor { descriptor, length }
                     if descriptor == Descriptor::Device =>
                 {
+                    // TODO modify `Request::parse()` in `advanced/common/usb/lib.rs`
+                    // so that this branch is reached
+
                     log::info!("GET_DESCRIPTOR Device [length={}]", length);
 
                     log::info!("Goal reached; move to the next section");
