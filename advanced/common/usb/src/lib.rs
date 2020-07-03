@@ -96,7 +96,6 @@ pub enum Descriptor {
 
 #[cfg(test)]
 mod tests {
-    #[cfg(TODO)]
     use core::num::NonZeroU8;
 
     use crate::{Descriptor, Request};
@@ -121,24 +120,6 @@ mod tests {
         //                                                 ^^^^
     }
 
-    #[cfg(TODO)]
-    #[test]
-    fn get_descriptor_configuration() {
-        // OK: GET_DESCRIPTOR Configuration 0 [length=9]
-        assert_eq!(
-            Request::parse(0b1000_0000, 0x06, 0x02_00, 0, 9),
-            Ok(Request::GetDescriptor {
-                descriptor: Descriptor::Configuration { index: 0 },
-                length: 9
-            })
-        );
-
-        // has language ID but shouldn't
-        assert!(Request::parse(0b1000_0000, 0x06, 0x02_00, 1033, 9).is_err());
-        //                                                 ^^^^
-    }
-
-    #[cfg(TODO)]
     #[test]
     fn set_address() {
         // OK: SET_ADDRESS 16
@@ -166,6 +147,23 @@ mod tests {
         // length should be zero
         assert!(Request::parse(0b0000_0000, 0x05, 0x00_10, 0, 1).is_err());
         //                                                    ^
+    }
+
+    #[cfg(TODO)]
+    #[test]
+    fn get_descriptor_configuration() {
+        // OK: GET_DESCRIPTOR Configuration 0 [length=9]
+        assert_eq!(
+            Request::parse(0b1000_0000, 0x06, 0x02_00, 0, 9),
+            Ok(Request::GetDescriptor {
+                descriptor: Descriptor::Configuration { index: 0 },
+                length: 9
+            })
+        );
+
+        // has language ID but shouldn't
+        assert!(Request::parse(0b1000_0000, 0x06, 0x02_00, 1033, 9).is_err());
+        //                                                 ^^^^
     }
 
     #[cfg(TODO)]
