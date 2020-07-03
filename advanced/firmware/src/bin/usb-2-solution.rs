@@ -20,9 +20,7 @@ const APP: () = {
 
         usbd::init(board.power, &board.usbd);
 
-        init::LateResources {
-            usbd: board.usbd,
-        }
+        init::LateResources { usbd: board.usbd }
     }
 
     #[task(binds = USBD, resources = [usbd])]
@@ -79,7 +77,7 @@ fn on_event(usbd: &USBD, event: Event) {
                     // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
                     // need to catch it here. We'll properly handle this request later
                     // but for now it's OK to do nothing.
-                },
+                }
                 _ => unreachable!(), // we don't handle any other Requests
             }
         }

@@ -81,9 +81,11 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                     // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
                     // need to catch it here. We'll properly handle this request later
                     // but for now it's OK to do nothing.
-                },
+                }
                 _ => {
-                    log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
+                    log::error!(
+                        "unknown request (goal achieved if GET_DESCRIPTOR Device was handled)"
+                    );
                     dk::exit()
                 }
             }

@@ -86,8 +86,7 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                         idVendor: consts::VID,
                     };
                     let desc_bytes = desc.bytes();
-                    let resp =
-                        &desc_bytes[..core::cmp::min(desc_bytes.len(), usize::from(length))];
+                    let resp = &desc_bytes[..core::cmp::min(desc_bytes.len(), usize::from(length))];
                     ep0in.start(&resp, usbd);
                 }
                 Request::SetAddress { .. } => {
@@ -96,7 +95,9 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                     // but for now it's OK to do nothing.
                 }
                 _ => {
-                    log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
+                    log::error!(
+                        "unknown request (goal achieved if GET_DESCRIPTOR Device was handled)"
+                    );
                     dk::exit()
                 }
             }
