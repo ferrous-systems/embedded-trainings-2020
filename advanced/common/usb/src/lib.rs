@@ -65,7 +65,9 @@ impl Request {
 
         if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
             // Set the device address for all future accesses.
-            // Needed to successfully init when using Apple devices.
+            // (Needed to successfully init when conected to Apple devices)
+            // Section 9.4.6 Set Address of the USB specification explains which values for wvalue,
+            // windex and wlength are valid.
             if wvalue < 128 && windex == 0 && wlength == 0 {
                 Ok(Request::SetAddress {
                     address: NonZeroU8::new(wvalue as u8),
