@@ -64,35 +64,41 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                 wvalue
             );
 
-            if let Ok(Request::GetDescriptor { descriptor, length }) =
-                Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
-            {
-                match descriptor {
-                    Descriptor::Device => {
-                        log::info!("GET_DESCRIPTOR Device [length={}]", length);
+            let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
+                .expect("Error parsing request");
+            match request {
+                Request::GetDescriptor { descriptor, length }
+                    if descriptor == Descriptor::Device =>
+                {
+                    log::info!("GET_DESCRIPTOR Device [length={}]", length);
 
-                        let desc = usb2::device::Descriptor {
-                            bDeviceClass: 0,
-                            bDeviceProtocol: 0,
-                            bDeviceSubClass: 0,
-                            bMaxPacketSize0: usb2::device::bMaxPacketSize0::B64,
-                            bNumConfigurations: core::num::NonZeroU8::new(1).unwrap(),
-                            bcdDevice: 0x01_00, // 1.00
-                            iManufacturer: None,
-                            iProduct: None,
-                            iSerialNumber: None,
-                            idProduct: consts::PID,
-                            idVendor: consts::VID,
-                        };
-                        let desc_bytes = desc.bytes();
-                        let resp =
-                            &desc_bytes[..core::cmp::min(desc_bytes.len(), usize::from(length))];
-                        ep0in.start(&resp, usbd);
-                    }
+                    let desc = usb2::device::Descriptor {
+                        bDeviceClass: 0,
+                        bDeviceProtocol: 0,
+                        bDeviceSubClass: 0,
+                        bMaxPacketSize0: usb2::device::bMaxPacketSize0::B64,
+                        bNumConfigurations: core::num::NonZeroU8::new(1).unwrap(),
+                        bcdDevice: 0x01_00, // 1.00
+                        iManufacturer: None,
+                        iProduct: None,
+                        iSerialNumber: None,
+                        idProduct: consts::PID,
+                        idVendor: consts::VID,
+                    };
+                    let desc_bytes = desc.bytes();
+                    let resp =
+                        &desc_bytes[..core::cmp::min(desc_bytes.len(), usize::from(length))];
+                    ep0in.start(&resp, usbd);
                 }
-            } else {
-                log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
-                dk::exit()
+                Request::SetAddress { .. } => {
+                    // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
+                    // need to catch it here. We'll properly handle this request later
+                    // but for now it's OK to do nothing.
+                },
+                _ => {
+                    log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
+                    dk::exit()
+                }
             }
         }
     }

@@ -64,22 +64,28 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                 wvalue
             );
 
-            if let Ok(Request::GetDescriptor { descriptor, length }) =
-                Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
-            {
-                match descriptor {
-                    Descriptor::Device => {
-                        log::info!("GET_DESCRIPTOR Device [length={}]", length);
+            let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
+                .expect("Error parsing request");
+            match request {
+                Request::GetDescriptor { descriptor, length }
+                    if descriptor == Descriptor::Device =>
+                {
+                    log::info!("GET_DESCRIPTOR Device [length={}]", length);
 
-                        // FIXME send back a valid device descriptor, truncated to `length` bytes
-                        // let desc = usb2::device::Descriptor { .. };
-                        let resp = [];
-                        ep0in.start(&resp, usbd);
-                    }
+                    // TODO send back a valid device descriptor, truncated to `length` bytes
+                    // let desc = usb2::device::Descriptor { .. };
+                    let resp = [];
+                    ep0in.start(&resp, usbd);
                 }
-            } else {
-                log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
-                dk::exit()
+                Request::SetAddress { .. } => {
+                    // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
+                    // need to catch it here. We'll properly handle this request later
+                    // but for now it's OK to do nothing.
+                },
+                _ => {
+                    log::error!("unknown request (goal achieved if GET_DESCRIPTOR Device was handled)");
+                    dk::exit()
+                }
             }
         }
     }
