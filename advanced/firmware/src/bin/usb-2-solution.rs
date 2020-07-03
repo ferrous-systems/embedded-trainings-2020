@@ -6,12 +6,11 @@ use dk::{
     usbd::{self, Event},
 };
 use panic_log as _; // panic handler
-use usb::{Address, Descriptor, DeviceState, Request};
+use usb::{Descriptor, Request};
 
 #[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
-        state: DeviceState,
         usbd: USBD,
     }
 
@@ -23,22 +22,20 @@ const APP: () = {
 
         init::LateResources {
             usbd: board.usbd,
-            state: DeviceState::Default,
         }
     }
 
-    #[task(binds = USBD, resources = [state, usbd])]
+    #[task(binds = USBD, resources = [usbd])]
     fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
-        let state = cx.resources.state; // used to store the device address sent by the host
 
         while let Some(event) = usbd::next_event(usbd) {
-            on_event(usbd, state, event)
+            on_event(usbd, event)
         }
     }
 };
 
-fn on_event(usbd: &USBD, state: &mut DeviceState, event: Event) {
+fn on_event(usbd: &USBD, event: Event) {
     log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
@@ -78,24 +75,13 @@ fn on_event(usbd: &USBD, state: &mut DeviceState, event: Event) {
                     log::info!("Goal reached; move to the next section");
                     dk::exit()
                 }
-                Request::SetAddress { address } => set_device_address(state, address),
+                Request::SetAddress { .. } => {
+                    // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
+                    // need to catch it here. We'll properly handle this request later
+                    // but for now it's OK to do nothing.
+                },
                 _ => unreachable!(), // we don't handle any other Requests
             }
         }
-    }
-}
-
-fn set_device_address(state: &mut DeviceState, address: Option<Address>) {
-    match state {
-        DeviceState::Default | DeviceState::Address(..) => {
-            if let Some(address) = address {
-                log::info!("SETUP: assigning device address {}", address);
-                *state = DeviceState::Address(address);
-            } else {
-                log::info!("SETUP: address was None; assigning Default");
-                *state = DeviceState::Default;
-            }
-        }
-        DeviceState::Configured { .. } => panic!(), // unspecified behavior
     }
 }
