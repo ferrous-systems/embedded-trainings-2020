@@ -62,6 +62,7 @@ impl Request {
             - has descriptor index 0 (i.e. it is the first implemented descriptor for this type) and
             - has wIndex 0 (i.e. no language ID since it's not a string descriptor)
         */
+
         if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
             // Set the device address for all future accesses.
             // Needed to successfully init when using Apple devices.
@@ -92,23 +93,6 @@ pub enum Descriptor {
     },
     // there are even more descriptor types but we don't need to support them
 }
-
-/// The state of the USB device
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum DeviceState {
-    /// The default state
-    Default,
-    /// The address-ed state
-    Address(Address),
-    /// The configured state
-    Configured {
-        /// The address of the device
-        address: Address,
-        /// The configuration value
-        value: NonZeroU8,
-    },
-}
-
 
 #[cfg(test)]
 mod tests {
