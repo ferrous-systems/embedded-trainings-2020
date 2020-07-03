@@ -60,20 +60,26 @@ fn on_event(_usbd: &USBD, event: Event) {
                 wvalue
             );
 
-            // FIXME modify `advanced/common/usb` to make this work
-            if let Ok(Request::GetDescriptor { descriptor, length }) =
-                Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
-            {
-                match descriptor {
-                    Descriptor::Device => {
-                        log::info!("GET_DESCRIPTOR Device [length={}]", length);
+            let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
+                .expect("Error parsing request");
+            match request {
+                Request::GetDescriptor { descriptor, length }
+                    if descriptor == Descriptor::Device =>
+                {
+                    // TODO modify `Request::parse()` in `advanced/common/usb/lib.rs`
+                    // so that this branch is reached
 
-                        log::info!("Goal reached; move to the next section");
-                        dk::exit()
-                    }
+                    log::info!("GET_DESCRIPTOR Device [length={}]", length);
+
+                    log::info!("Goal reached; move to the next section");
+                    dk::exit()
                 }
-            } else {
-                unreachable!() // don't care about this for now
+                Request::SetAddress { .. } => {
+                    // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
+                    // need to catch it here. We'll properly handle this request later
+                    // but for now it's OK to do nothing.
+                }
+                _ => unreachable!(), // we don't handle any other Requests
             }
         }
     }

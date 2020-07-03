@@ -256,9 +256,11 @@ So that's what we'll do here. In the `advanced/common/usb` folder you'll find st
 
 To sum up the work to do here:
 
-1. write a SETUP data parser in `advanced/common/usb`. You only need to handle the GET_DESCRIPTOR request and make the `get_descriptor_device` test pass for now.
+1. write a SETUP data parser in `advanced/common/usb`. You only need to handle the GET_DESCRIPTOR request and make the `get_descriptor_device` test pass for now. Note that the parser already handles SET_ADDRESS requests.
 
-2. modify `usb-1` to read (USBD registers) and parse the SETUP data when the EPSETUP event is received.
+2. modify `usb-1` to read (USBD registers) and parse the SETUP data when the EPSETUP event is received. 
+
+> Note: If you're using a Mac, you need to catch `SetAddress` requests returned by the parser as these are sent before the first GetDescriptor request. You can handle them by doing nothing.
 
 3. when you have successfully received a GET_DESCRIPTOR request for a Device descriptor you are done and can move to the next section.
 
@@ -269,6 +271,7 @@ If you are logging like the `usb-2` starter code does then you should see an out
 ``` console
 INFO:usb_2 -- USB: UsbReset @ 438.842772ms
 INFO:usb_2 -- USB: UsbEp0Setup @ 514.984128ms
+...
 INFO:usb_2 -- SETUP: bmrequesttype: 128, brequest: 6, wlength: 64, windex: 0, wvalue: 256
 INFO:usb_2 -- GET_DESCRIPTOR Device [length=64]
 INFO:usb_2 -- Goal reached; move to the next section

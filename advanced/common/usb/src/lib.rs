@@ -4,8 +4,10 @@
 #![deny(warnings)]
 #![no_std]
 
-#[cfg(TODO)]
 use core::num::NonZeroU8;
+
+/// Device address assigned by the host; will be in the range 1..=127
+pub type Address = NonZeroU8;
 
 /// Standard USB request
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -21,10 +23,9 @@ pub enum Request {
 
     /// SET_ADDRESS
     // see section 9.4.6 of the USB specification
-    #[cfg(TODO)]
     SetAddress {
         /// New device address, in the range `1..=127`
-        address: Option<NonZeroU8>,
+        address: Option<Address>,
     },
 
     /// SET_CONFIGURATION
@@ -43,14 +44,39 @@ impl Request {
     /// Returns `Err` if the SETUP data doesn't match a supported standard request
     // see section 9.4 of the USB specification; in particular tables 9-3, 9-4 and 9-5
     pub fn parse(
-        _bmrequesttype: u8,
-        _brequest: u8,
-        _wvalue: u16,
-        _windex: u16,
-        _wlength: u16,
+        bmrequesttype: u8,
+        brequest: u8,
+        wvalue: u16,
+        windex: u16,
+        wlength: u16,
     ) -> Result<Self, ()> {
-        // FIXME
-        Err(())
+        // see table 9-4 (USB specification)
+        const SET_ADDRESS: u8 = 5;
+
+        // TODO implement another branch handling GET_DESCRIPTOR requests:
+
+        // 1. get descriptor type and descriptor index from wValue
+
+        // 2. confirm that the descriptor
+        //    - is of type DEVICE and
+        //    - has descriptor index 0 (i.e. it is the first implemented descriptor for this type) and
+        //    - has wIndex 0 (i.e. no language ID since it's not a string descriptor)
+
+        if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
+            // Set the device address for all future accesses.
+            // (Needed to successfully init when conected to Apple devices)
+            // Section 9.4.6 Set Address of the USB specification explains which values for wvalue,
+            // windex and wlength are valid.
+            if wvalue < 128 && windex == 0 && wlength == 0 {
+                Ok(Request::SetAddress {
+                    address: NonZeroU8::new(wvalue as u8),
+                })
+            } else {
+                Err(())
+            }
+        } else {
+            Err(())
+        }
     }
 }
 
@@ -71,7 +97,6 @@ pub enum Descriptor {
 
 #[cfg(test)]
 mod tests {
-    #[cfg(TODO)]
     use core::num::NonZeroU8;
 
     use crate::{Descriptor, Request};
@@ -96,24 +121,6 @@ mod tests {
         //                                                 ^^^^
     }
 
-    #[cfg(TODO)]
-    #[test]
-    fn get_descriptor_configuration() {
-        // OK: GET_DESCRIPTOR Configuration 0 [length=9]
-        assert_eq!(
-            Request::parse(0b1000_0000, 0x06, 0x02_00, 0, 9),
-            Ok(Request::GetDescriptor {
-                descriptor: Descriptor::Configuration { index: 0 },
-                length: 9
-            })
-        );
-
-        // has language ID but shouldn't
-        assert!(Request::parse(0b1000_0000, 0x06, 0x02_00, 1033, 9).is_err());
-        //                                                 ^^^^
-    }
-
-    #[cfg(TODO)]
     #[test]
     fn set_address() {
         // OK: SET_ADDRESS 16
@@ -141,6 +148,23 @@ mod tests {
         // length should be zero
         assert!(Request::parse(0b0000_0000, 0x05, 0x00_10, 0, 1).is_err());
         //                                                    ^
+    }
+
+    #[cfg(TODO)]
+    #[test]
+    fn get_descriptor_configuration() {
+        // OK: GET_DESCRIPTOR Configuration 0 [length=9]
+        assert_eq!(
+            Request::parse(0b1000_0000, 0x06, 0x02_00, 0, 9),
+            Ok(Request::GetDescriptor {
+                descriptor: Descriptor::Configuration { index: 0 },
+                length: 9
+            })
+        );
+
+        // has language ID but shouldn't
+        assert!(Request::parse(0b1000_0000, 0x06, 0x02_00, 1033, 9).is_err());
+        //                                                 ^^^^
     }
 
     #[cfg(TODO)]

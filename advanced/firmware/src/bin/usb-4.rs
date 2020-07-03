@@ -77,10 +77,11 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<
         wvalue
     );
 
-    let req = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)?;
-    log::info!("{:?}", req);
+    let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
+        .expect("Error parsing request");
+    log::info!("EP0: {:?}", request);
 
-    match req {
+    match request {
         Request::GetDescriptor { descriptor, length } => match descriptor {
             Descriptor::Device => {
                 let desc = usb2::device::Descriptor {
@@ -100,12 +101,17 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<
                 let _ = ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd);
             }
 
-            // TODO Configuration descriptor
-            // Descriptor::Configuration => todo!(),
+            // TODO implement Configuration descriptor
+            // Descriptor::Configuration { .. } => todo!(),
         },
+        Request::SetAddress { .. } => {
+            // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
+            // need to catch it here.
 
-        // TODO
-        // Request::SetAddress { .. } => todo!(),
+            // TODO: handle this request properly now.
+            todo!()
+        }
+        // TODO handle SET_CONFIGURATION request
         // Request::SetConfiguration { .. } => todo!(),
     }
 
