@@ -53,15 +53,14 @@ impl Request {
         // see table 9-4 (USB specification)
         const SET_ADDRESS: u8 = 5;
 
-        /* TODO implement another branch handling GET_DESCRIPTOR requests: */
+        // TODO implement another branch handling GET_DESCRIPTOR requests:
 
-        /* 1. get descriptor type and descriptor index from wValue */
+        // 1. get descriptor type and descriptor index from wValue
 
-        /* 2. confirm that the descriptor
-            - is of type DEVICE and
-            - has descriptor index 0 (i.e. it is the first implemented descriptor for this type) and
-            - has wIndex 0 (i.e. no language ID since it's not a string descriptor)
-        */
+        // 2. confirm that the descriptor
+        //    - is of type DEVICE and
+        //    - has descriptor index 0 (i.e. it is the first implemented descriptor for this type) and
+        //    - has wIndex 0 (i.e. no language ID since it's not a string descriptor)
 
         if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
             // Set the device address for all future accesses.
