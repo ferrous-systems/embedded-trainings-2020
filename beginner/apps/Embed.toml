@@ -1,6 +1,6 @@
-[general]
+[default.general]
 chip = "nRF52840_xxAA"
 
-[rtt]
+[default.rtt]
 enabled = true
-channels = [{ up = 0 }] 
+channels = [{ up = 0 }]
