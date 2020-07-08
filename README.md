@@ -226,7 +226,7 @@ The `root root` part in `crw-rw-r-- 1 root root` indicates the device can only b
 2. Create the following file with the displayed contents. You'll need root permissions to create the file.
 
 ``` console
-$ cat /dev/udev/rules.d/50-oxidize-global.conf
+$ cat /etc/udev/rules.d/50-oxidize-global.rules
 # udev rules to allow access to USB devices as a non-root user
 
 # nRF52840 Dongle in bootloader mode
