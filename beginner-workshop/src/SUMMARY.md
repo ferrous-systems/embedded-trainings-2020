@@ -1,0 +1,18 @@
+# Summary
+
+- [Intro](./intro.md)
+- [Hardware](./hardware.md)
+- [Parts of an Embedded Program](./parts-embedded-programm.md)
+- [Building an Embedded Program](./building-programm.md)
+- [Flashing the Program](./flashing-programm.md)
+- [Viewing Logs](./viewing-logs.md)
+- [Runnging the Program from VS Code](./running-from-vsc.md)
+- [Panicking](./panicking.md)
+- [Using a Hardware Abstraction Layer](./using-hal.md)
+- [Timers and Time](./time.md)
+- [nRF52840 Dongle](./dongle.md)
+- [Radio Out](./radio-out.md)
+- [Radio In ](./radio-in.md)
+- [Radio Puzzle](./radio-puzzle.md)
+- [Starting a Project from Scatch](./from-scatch.md)
+- [References and Ressources](./references-ressources.md)
