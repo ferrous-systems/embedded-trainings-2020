@@ -1,5 +1,6 @@
 # Using a Hardware Abstraction Layer
 
+[❗️Idea: explain HAL, run program, open doc with an assignment to change led pattern]
 In this section we'll start using the hardware features of the nRF52840 and the board.
 
 Open the `src/bin/led.rs` file.
