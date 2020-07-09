@@ -1,5 +1,8 @@
 # Building an Embedded Program
 
+[❗️Intro ]
+
+[❗️Do you want the people to use this command?]
 
 The following command cross compiles the program to the ARM Cortex-M4 architecture. The `--target` arguments instructs Cargo to cross compile the program.
 
