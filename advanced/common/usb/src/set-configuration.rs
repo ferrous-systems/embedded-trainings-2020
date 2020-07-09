@@ -7,6 +7,9 @@
 
 use core::num::NonZeroU8;
 
+/// Device address assigned by the host; will be in the range 1..=127
+pub type Address = NonZeroU8;
+
 /// Standard USB request
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Request {
@@ -24,7 +27,7 @@ pub enum Request {
     #[cfg(TODO)]
     SetAddress {
         /// New device address, in the range `1..=127`
-        address: Option<NonZeroU8>,
+        address: Option<Address>,
     },
 
     /// SET_CONFIGURATION

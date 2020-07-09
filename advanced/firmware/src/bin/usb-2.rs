@@ -45,11 +45,11 @@ fn on_event(_usbd: &USBD, event: Event) {
 
         Event::UsbEp0Setup => {
             // TODO read USBD registers
-            let bmrequesttype = 0;
-            let brequest = 0;
-            let wlength = 0;
-            let windex = 0;
-            let wvalue = 0;
+            let bmrequesttype: u8 = 0;
+            let brequest: u8 = 0;
+            let wlength: u16 = 0;
+            let windex: u16 = 0;
+            let wvalue: u16 = 0;
 
             log::info!(
                 "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",

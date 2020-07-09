@@ -8,7 +8,7 @@ use dk::{
 use panic_log as _; // panic handler
 
 // use one of these
-use usb::{Descriptor, Request};
+use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -47,15 +47,16 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut usb2::State, event: Even
     log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
-        // TODO change `state`
+        // TODO change `state` as specified in chapter 9.1 USB Device States, of the USB specification
         Event::UsbReset => todo!(),
 
         Event::UsbEp0DataDone => ep0in.end(usbd),
 
         Event::UsbEp0Setup => {
             if ep0setup(usbd, ep0in, state).is_err() {
-                // unsupported or invalid request: stall the endpoint
-                log::warn!("EP0IN: stalled");
+                // unsupported or invalid request:
+                // TODO: add code to stall the endpoint
+                log::warn!("EP0: unexpected request; stalling the endpoint");
             }
         }
     }
@@ -103,6 +104,9 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<
 
             // TODO implement Configuration descriptor
             // Descriptor::Configuration { .. } => todo!(),
+
+            // stall any other request
+            _ => return Err(()),
         },
         Request::SetAddress { .. } => {
             // On Mac OS you'll get this request before the GET_DESCRIPTOR request so we
@@ -111,8 +115,9 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<
             // TODO: handle this request properly now.
             todo!()
         }
-        // TODO handle SET_CONFIGURATION request
-        // Request::SetConfiguration { .. } => todo!(),
+
+        // stall any other request
+        _ => return Err(()),
     }
 
     Ok(())

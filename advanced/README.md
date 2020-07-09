@@ -18,7 +18,7 @@ Some details about the nRF52840 microcontroller that are relevant to this worksh
 
 ## The nRF52840 Development Kit
 
-The development board we'll use has two USB ports: J2 and J3 -- you can find a description of the board in the top-level README of this repository -- and an on-board J-Link programmer / debugger. USB port J2 is the J-Link's USB port. USB port J3 is the nRF52840's USB port.
+The development board we'll use has two USB ports: J2 and J3 -- you can find a description of the board in the top-level README of this repository -- and an on-board J-Link programmer / debugger. USB port J2 is the J-Link's USB port. USB port J3 is the nRF52840's USB port. Connect the Development Kit to your computer using both ports.
 
 ## Code organization
 
@@ -65,11 +65,11 @@ Bus 001 Device 059: ID 2020:0717 <- nRF52840 on the nRF52840 Development Kit
 
 First, open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
 
-Next open the `advanced/firmware` folder in VS Code. If have already opened the root of the repository (`embedded-trainings-2020`) then please also open the `advanced/firmware` folder: right click the left side panel, select "Add folder to workspace" and add the `advanced/apps` folder.
+Next open the `advanced/firmware` folder in VS Code and open the `src/bin/hello.rs` file from the `advanced/apps` folder.
 
-Now, on the left side panel, open the `src/bin/hello.rs` file from under the `advanced/apps` folder.
+> Note: To ensure full Rust-Analyzer support, do not open the whole `embedded-trainings-2020` folder.
 
-Give Rust Analyzer some time to analyze the file and its dependency graph. When it's done, a "Run" button will appear over the `main` function -- you may need to edit the file contents to make the "Run" button appear.
+Give Rust Analyzer some time to analyze the file and its dependency graph. When it's done, a "Run" button will appear over the `main` function. If it doesn't appear on its own, type something in the file, delete and save. This should trigger a re-load.
 
 Click the "Run" button to run the application on the microcontroller.
 
@@ -85,13 +85,15 @@ Note that when the `dk-run` tool sees the device enter the halted state it will 
 
 ## Checking the API documentation
 
-We'll be using the `dk` Hardware Abstraction Layer. It's good to have handy its API documentation. You can generate the documentation for that crate from the command line:
+We'll be using the `dk` Hardware Abstraction Layer. It's good to have its API documentation handy. You can generate the documentation for that crate from the command line:
 
 ``` console
 $ cargo doc -p dk --open
 ```
 
 Run this command from within the `advanced/firmware` folder. It will open the generated documentation in your default web browser.
+
+> NOTE if you are using Safari and the documentation is hard to read due to missing CSS, try opening it in a different browser.
 
 ## RTIC hello
 
@@ -105,7 +107,7 @@ RTIC makes a clearer distinction between the application's initialization phase,
 
 `rtic::app` is a procedural macro that generates extra Rust code, in addition to the user's functions. The fully expanded version of the macro can be found in the file `target/rtic-expansion.rs`. This file will contain the expansion of the procedural macro for the last compiled RTIC application.
 
-If you look at the `rtic-expansion.rs` file generated for the build of the `rtic-hello` example you can confirm that interrupts are disabled during the execution of the `init` function.
+If you build the `rtic-hello` example and look at the generated `rtic-expansion.rs` file you can confirm that interrupts are disabled during the execution of the `init` function:
 
 ``` rust
 fn main() -> ! {
@@ -129,9 +131,9 @@ The example application enables the signaling of this "USB power" event in the `
 
 In the `svd2rust` API, peripherals are represented as structs. The fields of each peripheral struct are the registers associated to that peripheral. Each register field exposes methods to `read` and `write` to the register in a *single* memory operation.
 
-The `read` and `write` methods take closure arguments. These closures in turn grant access to a "constructor" value, usually named `r` or `w`, which provides methods to modify the bitfields of a register. At the same time the API of these "constructors" prevent you from modifying the reserved parts of the register: that is you cannot write arbitrary values into registers; you can only write valid values into registers.
+The `read` and `write` methods take closure arguments. These closures in turn grant access to a "constructor" value, usually named `r` or `w`, which provides methods to modify the bitfields of a register. At the same time the API of these "constructors" prevent you from modifying the reserved parts of the register: you cannot write arbitrary values into registers; you can only write valid values into registers.
 
-Apart from the `read` and `write` methods there's a `modify` method that performs a read-modify-write operation on the register; this API is also closure-based. The `svd2rust`-generated API is documented in detail in the `svd2rust` crate starting at [this section][svd2rust-api].
+Apart from the `read` and `write` methods there's a `modify` method that performs a read-modify-write operation on the register; this API is also closure-based. The `svd2rust`-generated API is documented in detail in the `svd2rust` crate starting at [the Peripheral API section][svd2rust-api].
 
 [svd2rust-api]: https://docs.rs/svd2rust/0.17.0/svd2rust/#peripheral-api
 
@@ -145,7 +147,7 @@ Below the `idle` function you'll see a `#[task]` handler, a function. This *task
 
 Note that all tasks will be prioritized over the `idle` function so the execution of `idle` will be interrupted (paused) by the `on_power_event` task. When the `on_power_event` task finishes (returns) the execution of the `idle` will be resumed. This will become more obvious in the next section.
 
-Try this: add an infinite loop to the end of `init` so that it never returns. Now run the program and connect the USB cable. What behavior do you observe? How would you explain this behavior? (hint: look at the `rtfm-expansion.rs` file: under what conditions is the `init` function executed?)
+Try this: add an infinite loop to the end of `init` so that it never returns. Now run the program and connect the USB cable. What behavior do you observe? How would you explain this behavior? (hint: look at the `rtic-expansion.rs` file: under what conditions is the `init` function executed?)
 
 ## Task state
 
@@ -157,7 +159,7 @@ To get the desired behavior we'll want to store some counter in the state of the
 
 Open the `src/bin/resource.rs` file. The starter code shows the syntax to declare a resource, the `Resources` struct, and the syntax to associate a resource to a task, the `resources` list in the `#[task]` attribute.
 
-In the starter code a resource is used to *move* (by value) the POWER peripheral from `init` to the `on_power_event` task. The POWER peripheral then becomes part of the state of the `on_power_event` task. The resources of a task are available via the `Context` argument of the task.
+In the starter code a resource is used to *move* (by value) the POWER peripheral from `init` to the `on_power_event` task. The POWER peripheral then becomes part of the state of the `on_power_event` task and can be persistently accessed throughout calls to `on_power_event()` through a *reference*. The resources of a task are available via the `Context` argument of the task.
 
 To elaborate more on this *move* action: in the `svd2rust` API, peripheral types like `POWER` are *singletons* (only a single instance of the type can ever exist). The consequence of this design is that holding a peripheral instance, like `POWER`, *by value* means that the function (or task) has exclusive access, or ownership, over the peripheral. This is the case of the `init` function: it owns the `POWER` peripheral but then transfer ownership over it to a task using the resource initialization mechanism.
 
@@ -190,19 +192,24 @@ Each OS may perform the enumeration process slightly differently but the process
 - GET_DESCRIPTOR request to get the device descriptor.
 - SET_ADDRESS request to assign an address to the device.
 
-These host actions will be perceived as *events* by the nRF52840. There are more USB concepts involved that we'll need to cover like descriptors, configurations, interfaces and endpoints but for now let's see how to handle USB events.
+These host actions will be perceived as *events* by the nRF52840. During this workshop, we will gradually parse and handle these events and learn more about Embedded Rust along the way.
 
-## Dealing with USB events
+There are more USB concepts involved that we'll need to cover like descriptors, configurations, interfaces and endpoints but for now let's see how to handle USB events.
+
+For each step of the course, we've prepared a `usb-<n>.rs` file that gives you a base structure and hints on how to proceed. The matching `usb-<n>-solution.rs` contains a sample solution should you need it. Switch from `usb-<n>.rs` to `usb-<n+1>.rs` when instructed and continue working from there.
+
+
+## USB-1: Dealing with USB events
 
 The USBD peripheral on the nRF52840 contains a series of registers, called EVENTS registers, that indicate the reason for entering the USBD event handler. These events must be handled by the application to complete the enumeration process.
 
-Open the `src/bin/usb-1.rs` file. In this starter code the USBD peripheral is initialized in `init` and a task, named `main`, is bound to the interrupt signal USBD. This task will be called every time a new USBD event needs to be handled. The `main` task uses a helper `next_event` function to check all the event registers; if any event is set (occurred) then the function returns the event, represented by the `Event` enum, wrapped in the `Some` variant. This `Event` is then passed to the `on_event` function for further processing.
+Open the `firmware/src/bin/usb-1.rs` file. In this starter code the USBD peripheral is initialized in `init` and a task, named `main`, is bound to the interrupt signal USBD. This task will be called every time a new USBD event needs to be handled. The `main` task uses `usbd::next_event()` to check all the event registers; if any event is set (occurred) then the function returns the event, represented by the `Event` enum, wrapped in the `Some` variant. This `Event` is then passed to the `on_event` function for further processing.
 
 Connect the USB cable to the port J3 then run the starter code.
 
 In this section as a warm-up exercise you'll need to deal with the following USB events until you reach the EP0SETUP event.
 
-- `USBRESET`. This event indicates that the host issued a USB reset signal. According to the USB specification this will move the device from any state to the `Default` state. Where are not dealing with any other state so doing nothing in response to this event is OK for now.
+- `USBRESET`. This event indicates that the host issued a USB reset signal. According to the USB specification this will move the device from any state to the `Default` state. Since we are currently not dealing with any other state, you can handle this state by doing nothing.
 
 - `EP0SETUP`. The USBD peripheral has detected the SETUP stage of a control transfer. If you get to this point move to the next section.
 
@@ -216,7 +223,7 @@ INFO:usb_1 -- USB: UsbEp0Setup
 INFO:usb_1 -- goal reached; move to the next section
 ```
 
-Do not overthink this exercise; it is not a trick question. There is very little to do and literally nothing to add.
+Do not overthink this exercise; it is not a trick question. There is very little to do and no new functionality to add.
 
 You can find the solution in the `usb-1-solution.rs` file.
 
@@ -226,13 +233,15 @@ Before we continue we need to discuss how data transfers work under the USB prot
 
 Under the USB protocol data transfers occur over *endpoints*.
 
-Endpoints are similar to UDP or TCP ports on a PC in that they allow logical multiplexing of data over a single physical USB bus. USB endpoints, however, have directions: an endpoint can either be an IN endpoint or an OUT endpoint. The direction is always from the perspective of the host so in an IN endpoint data travels from the device to the host and in an OUT endpoint data travels from the host to the device.
+Endpoints are similar to UDP or TCP ports in that they allow logical multiplexing of data over a single physical USB bus. USB endpoints, however, have directions: an endpoint can either be an IN endpoint or an OUT endpoint. The direction is always from the perspective of the host so at an IN endpoint data travels from the device to the host and at an OUT endpoint data travels from the host to the device.
 
 Endpoints are identified by their address, a zero-based index, and direction. There are four types of endpoints: control endpoints, bulk endpoints, interrupt endpoints and isochronous endpoints. Each endpoint type has different properties: reliability, latency, etc. In this workshop we'll only need to deal with control endpoints.
 
 All USB devices must use "endpoint 0" as the default control endpoint. "Endpoint 0" actually refers to two endpoints: endpoint 0 IN and endpoint 0 OUT. This endpoint pair is used to establish a *control pipe*, a bidirectional communication channel between the host and device where data is exchanged using a predefined format. The default control pipe over endpoint 0 is mandatory: it must always be present and must always be active.
 
-For detailed information about endpoints check section 5.3.1, Device Endpoints, of the USB specification.
+For detailed information about endpoints check section 5.3.1, Device Endpoints, of the [USB 2.0 specification][usb20].
+
+[usb20]: https://www.usb.org/document-library/usb-20-specification
 
 ## Control transfers
 
@@ -240,33 +249,51 @@ The control pipe handles *control transfers*, a special kind of data transfer us
 
 During the SETUP stage the host sends 8 bytes of data that identify the control request. Depending on the issued request there may be a DATA stage or not; during the DATA stage data is transferred either from the device to the host or the other way around. During the STATUS stage the device acknowledges, or not, the whole control request.
 
-For detailed information about control transfers check section 5.5, Control Transfers, of the USB specification.
+For detailed information about control transfers check section 5.5, Control Transfers, of the [USB 2.0 specification][usb20].
 
-## SETUP stage
+## USB-2: SETUP stage
 
-At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the following registers: BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}. These registers are documented in sections 6.35.13.31 to 6.35.13.38 of the nRF52840 Product Specification.
+At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the following registers: BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}. These registers are documented in sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec].
 
-The format of this setup data is documented in section 9.3 of the USB specification. Your next task is to parse the setup data according to section 9.4, Standard Descriptor Requests, of the USB specification (tables 9-3, 9-4 and 9-5 are the most relevant part of the section).
+[nrf product spec]: https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf
 
-Note that you won't need to be able to parse *all* the standard requests in this workshop. For now you should be able to parse the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification.
+The format of this setup data is documented in section 9.3 of the USB specification. Your next task is to parse it. We will start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
 
-When you need to write some `no_std` code that does not involve device-specific I/O you should consider writing it as a separate crate. Having this kind of code in a separate crate lets you test it on your development machine (e.g. `x86_64`) using the standard `cargo test` functionality.
+> NOTE: If you'd like to learn more, take a look at Section 9.4, Standard Descriptor Requests, of the USB specification.
 
-So that's what we'll do here. In the `advanced/common/usb` folder you'll find starter code for writing a `no_std` SETUP data parser. The starter code contains some unit tests; you can run them with `cargo test` (from within the `usb` folder) or you can use Rust Analyzer's "Test" button if you have the file open in VS code.
+When you need to write some `no_std` code that does not involve device-specific I/O you should consider writing it as a separate crate. This way, you can test it on your development machine (e.g. `x86_64`) using the standard `cargo test` functionality.
 
-To sum up the work to do here:
+So that's what we'll do here. In `advanced/common/usb/lib.rs` you'll find starter code for writing a `no_std` SETUP data parser. The starter code contains some unit tests; you can run them with `cargo test` (from within the `usb` folder) or you can use Rust Analyzer's "Test" button in VS code.
 
-1. write a SETUP data parser in `advanced/common/usb`. You only need to handle the GET_DESCRIPTOR request and make the `get_descriptor_device` test pass for now. Note that the parser already handles SET_ADDRESS requests.
+If you run these tests, you'll notice this error:
+```rust
+error[E0599]: no variant named `Configuration` found for enum `Descriptor`
+   --> src/lib.rs:73:45
+    |
+73  |                     descriptor: Descriptor::Configuration {index: desc_index },
+    |                                             ^^^^^^^^^^^^^ variant not found in `Descriptor`
+...
+100 | pub enum Descriptor {
+    | ------------------- variant `Configuration` not found here
+```
+That's because the definition of `Descriptor::Configuration` has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see the error message again.
 
-2. modify `usb-1` to read (USBD registers) and parse the SETUP data when the EPSETUP event is received. 
+Now, proceed as follows:
 
-> Note: If you're using a Mac, you need to catch `SetAddress` requests returned by the parser as these are sent before the first GetDescriptor request. You can handle them by doing nothing.
+1. **Parse GET_DESCRIPTOR requests:**  
+Modify `Request::parse()` in `advanced/common/usb` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
+    - check table 9-4 in the USB specification for Request Codes
+    - remember that you can define binary literals by prefixing them with `0b`
+    - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of a `u16`
 
-3. when you have successfully received a GET_DESCRIPTOR request for a Device descriptor you are done and can move to the next section.
+2. **Read incoming request information and pass it to the parser:**  
+modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EPSETUP event is received.
+    - for a mapping of register names to the `USBD` API, check the entry for `nrf52840_hal::target::usbd` in the documentation you've created using `cargo doc`
+    - remember that we've learned how to read registers in `events.rs`
+    - you will need to put together the higher and lower bits of `wlength`, `windex` and `wvalue` to get the whole field
+    - > Note: If you're using a Mac, you need to catch `SetAddress` requests returned by the parser as these are sent before the first GetDescriptor request. You can handle them by doing nothing.
 
-Alternatively, you can start from `usb-2` instead of `usb-1`. In either case, the tasks are the same.
-
-If you are logging like the `usb-2` starter code does then you should see an output like this once you are done:
+3. when you have successfully received a GET_DESCRIPTOR request for a Device descriptor you are done. You should see an output like this:
 
 ``` console
 INFO:usb_2 -- USB: UsbReset @ 438.842772ms
@@ -279,9 +306,8 @@ INFO:usb_2 -- Goal reached; move to the next section
 
 `wlength` / `length` can vary depending on the OS, USB port (USB 2.0 vs USB 3.0) or the presence of a USB hub so you may see a different value.
 
-You can find a solution to task (1) in `advanced/common/usb/get-device-descriptor.rs`.
-
-You can find a solution to task (2) in `advanced/firmware/src/bin/usb-2-solution.rs`.
+You can find a solution to step 1. in `advanced/common/usb/get-descriptor-device.rs`.  
+You can find a solution to step 2. in `advanced/firmware/src/bin/usb-2-solution.rs`.
 
 ## Device descriptor
 
@@ -297,7 +323,7 @@ A *configuration* is akin to an operation mode. USB devices usually have a singl
 
 The specification mandates that a device must have at least one available configuration so we can report a single configuration in the device descriptor.
 
-## DATA stage
+## USB-3: DATA stage
 
 The next step is to respond to the GET_DESCRIPTOR request with a device descriptor. To do this we'll use the `dk::usb::Ep0In` abstraction -- we'll look into what the abstraction does in a future section; for now we'll just use it.
 
@@ -305,26 +331,26 @@ An instance of this abstraction is available in the `board` value (`#[init]` fun
 
 The `Ep0In` API has two methods: `start` and `end` (also see their API documentation). `start` is used to start a DATA stage; this method takes a *slice of bytes* (`[u8]`) as argument; this argument is the response data. The `end` method needs to be called after `start`, when the EP0DATADONE event is raised, to complete the control transfer. `Ep0In` will automatically issue the STATUS stage that must follow the DATA stage.
 
-To goal of this section is to use `Ep0In` to respond to the `GET_DESCRIPTOR Device` request (and only to that request). The response must be a device descriptor with its fields set to these values:
+To implement responding to a GET_DESCRIPTOR request, do the following:
 
-- `bLength = 18`, size of this descriptor (see table 9-8 of the USB spec)
-- `bDescriptorType = 1`, means device descriptor (see table 9-5 of the USB spec)
-- `bcdUSB = 0x0200`, means USB 2.0
+1. **Extend the parser implementation to handle a GET_DESCRIPTOR request:** make the `common/usb/lib.rs::get_descriptor_configuration()` test run successfully.
+2. **Answer the Descriptor Request:** extend `usb-3.rs` so that it uses `Ep0In` to respond to the `GET_DESCRIPTOR Device` request (and only to that request). The response must be a device descriptor with its fields set to these values:
+
 - `bDeviceClass = bDeviceSubClass = bDeviceProtocol = 0`, these are unimportant for enumeration
 - `bMaxPacketSize0 = 64`, this is the most performant option (minimizes exchanges between the device and the host) and it's assumed by the `Ep0In` abstraction
-- `idVendor = common::VID`, value expected by the `usb-list` tool (\*)
-- `idProduct = common::PID`, value expected by the `usb-list` tool (\*)
+- `idVendor = consts::VID`, value expected by the `usb-list` tool (\*)
+- `idProduct = consts::PID`, value expected by the `usb-list` tool (\*)
 - `bcdDevice = 0x0100`, this means version 1.0 but any value should do
-- `iManufacturer = iProduct = iSerialNumber = 0`, string descriptors not supported
+- `iManufacturer = iProduct = iSerialNumber = None`, string descriptors not supported
 - `bNumConfigurations = 1`, must be at least `1` so this is the minimum value
 
-(\*) the `common` crate refers to the crate in the `advanced/common` folder. It is already part of the `firmware` crate dependencies.
+>(\*) the `common` crate refers to the crate in the `advanced/common` folder. It is already part of the `firmware` crate dependencies.
 
-Although you can create the device descriptor by hand as an array filled with magic values we *strongly* recommend you use the `usb2::device::Descriptor` abstraction.  The crate is already in the dependency list of the project; you can open its API documentation with the following command: `cargo doc -p usb2 --open`.
+Although you can create the device descriptor by hand as an array filled with magic values we *strongly* recommend you use the `usb2::device::Descriptor` abstraction. The crate is already in the dependency list of the project; you can open its API documentation with the following command: `cargo doc -p usb2 --open`.
 
-Note that the device descriptor is 18 bytes long but the host may ask for fewer bytes (see `wlength` field in the SETUP data). In that case you must respond with the amount of bytes the host asked for. The opposite may also happen: `wlength` may be larger than the size of the device descriptor; in this case you must answer must be 18 bytes long (do *not* pad the response with zeroes).
+Note that the device descriptor is 18 bytes long but the host may ask for fewer bytes (see `wlength` field in the SETUP data). In that case you must respond with the amount of bytes the host asked for. The opposite may also happen: `wlength` may be larger than the size of the device descriptor; in this case your answer must be 18 bytes long (do *not* pad the response with zeroes).
 
-If you need help getting the `Ep0In` value into the `on_event` function check out the `src/bin/usb-3.rs` file.
+Don't forget to also handle the `EP0DATADONE` event!
 
 Once you have successfully responded to the GET_DESCRIPTOR Device request you should get logs like these (if you are logging like `usb-3` does):
 
@@ -343,66 +369,60 @@ ERROR:usb_3 -- unknown request (goal achieved if GET_DESCRIPTOR Device was handl
 INFO:dk -- `dk::exit() called; exiting ...`
 ```
 
-A solution to this exercise can be found in `src/bin/usb-3-solution.rs`
+A solution to this exercise can be found in `src/bin/usb-3-solution.rs`.
 
-## DMA
+## DMA (Direct Memory Access)
 
-Let's zoom into the `Ep0In` abstraction next. You can use the "go to definition" to see the implementation of the `Ep0In.start` method. What this method does is start a DMA transfer to send `bytes` to the host. The data (`bytes`) is first copied into an internal buffer and then the DMA is configured to move the data from that internal buffer to the USBD peripheral.
+Let's zoom into the `Ep0In` abstraction used in `usb4.rs` next. You can use VSCode's "Go to Definition" to see the implementation of the `Ep0In.start()` method. What this method does is start a DMA transfer to send `bytes` to the host. The data (`bytes`) is first copied into an internal buffer and then the DMA is configured to move the data from that internal buffer to the USBD peripheral.
 
-The signature of the `start` method does *not* ensure that:
+The signature of the `start()` method does *not* ensure that:
 
 - `bytes` won't be deallocated before the DMA transfer is over (e.g. `bytes` could be pointing into the stack), or that
 - `bytes` won't be modified right after the DMA transfer starts (this would be a data race in the general case).
 
-For these two safety reasons the API is implemented using an internal buffer. The internal buffer has a `'static` lifetime so it's guaranteed to never be deallocated -- this prevents issue (a). The `busy` flag prevents any further modification to the internal buffer -- from the public API -- while the DMA transfer is in progress.
+For these two safety reasons the API is implemented using an internal buffer called `buffer`. The internal buffer has a `'static` lifetime so it's guaranteed to never be deallocated -- this prevents issue (a). The `busy` flag prevents any further modification to the internal buffer -- from the public API -- while the DMA transfer is in progress.
 
 Apart from thinking about lifetimes and explicit data races in the surface API one must internally use memory fences to prevent reordering of memory operations (e.g. by the compiler), which can also cause data races. DMA transfers run in parallel to the instructions performed by the processor and are "invisible" to the compiler.
 
-In the implementation of the `start` method, data is copied from `bytes` to the internal buffer, `memcpy` operation, and then the DMA transfer is started with a write to the `TASKS_STARTEPIN0` register. The compiler sees the start of the DMA transfer (register write) as an unrelated memory operation so it may move the `memcpy` to *after* the DMA transfer has started. This reordering results in a data race: the processor modifies the internal buffer while the DMA is reading data out from it.
+In the implementation of the `start` method, data is copied from `bytes` to the internal buffer (a `memcpy()` operation) and then the DMA transfer is started with a write to the `TASKS_STARTEPIN0` register. The compiler sees the start of the DMA transfer (register write) as an unrelated memory operation so it may move the `memcpy()` to *after* the DMA transfer has started. This reordering results in a data race: the processor modifies the internal buffer while the DMA is reading data out from it.
 
-To avoid this reordering a memory fence, `dma_start`, is used. The fence pairs with the *store* operation (register write) that starts the DMA transfer and prevents the previous `memcpy`, and any other memory operation, from being move to *after* the store operation.
+To avoid this reordering a memory fence, `dma_start()`, is used. The fence pairs with the *store* operation (register write) that starts the DMA transfer and prevents the previous `memcpy()`, and any other memory operation, from being move to *after* the store operation.
 
-Another memory fence, `dma_end`, is needed at the end of the DMA transfer. In the general case, this prevents instruction reordering that would result in the processor accessing the internal buffer *before* the DMA transfer has finished. This is particularly problematic with DMA transfers that modify a region of memory which the processor intends to read after the transfer.
+Another memory fence, `dma_end()`, is needed at the end of the DMA transfer. In the general case, this prevents instruction reordering that would result in the processor accessing the internal buffer *before* the DMA transfer has finished. This is particularly problematic with DMA transfers that modify a region of memory which the processor intends to read after the transfer.
 
-Not relevant to the DMA operation but relevant to the USB specification, the `start` method sets a shortcut in the USBD peripheral to issue a STATUS stage right after the DATA stage is finished. Thanks to this it is not necessary to manually start a STATUS stage after calling the `end` method.
+> Note: Not relevant to the DMA operation but relevant to the USB specification, the `start()` method sets a shortcut in the USBD peripheral to issue a STATUS stage right after the DATA stage is finished. Thanks to this it is not necessary to manually start a STATUS stage after calling the `end` method.
 
-## More standard requests
+## USB-4: Supporting more standard requests
 
 After responding to the `GET_DESCRIPTOR Device` request the host will start sending different requests. The parser in `common/usb` will need to be updated to handle these requests:
 
-1. `SET_ADDRESS`, see section 9.4.6 of the USB spec
-2. `GET_DESCRIPTOR Configuration`, see section 9.4.3 of the USB spec
-3. `SET_CONFIGURATION`, see section 9.4.7 of the USB spec -- this request is likely to only be observed on Linux during enumeration
-
-We suggest you incrementally extend the parser to handle these requests in that order. So, for example, add `SET_ADDRESS` support first and then check how far the `usb` program goes.
+1. `GET_DESCRIPTOR Configuration`, see section 9.4.3 of the USB spec
+2. `SET_CONFIGURATION`, see section 9.4.7 of the USB spec -- this request is likely to only be observed on Linux during enumeration
 
 The starter `common/usb` code contains unit tests for these other requests as well as extra `Request` variants for these requests. All of them have been commented out using a `#[cfg(TODO)]` attribute which you can remove once you need any new variant or new unit test.
 
-If at any point you need them you can find solution to parsing the above three requests in the following files:
+For each green test, you can extend `usb-4.rs` to handle the new requests your parser is now able to recognize. **Make sure to read the next sections as you're working**, since they contain explanations about the concepts used and needed to complete this task.
 
-- `advanced/common/src/set-address.rs`
+If you need a reference, you can find solutions to parsing `GET_DESCRIPTOR Configuration` and `SET_CONFIGURATION` requests in the following files:
+
 - `advanced/common/src/get-descriptor-configuration.rs`
 - `advanced/common/src/set-configuration.rs`
 
-Each file contains just enough code to parse the request in its name and the `GET_DESCRIPTOR Device` request. So you can refer to `set-configuration.rs` without getting "spoiled" about how to parse the `SET_ADDRESS` request.
+Each file contains just enough code to parse the request in its name and the `GET_DESCRIPTOR Device` request. So you can refer to `set-configuration.rs` without getting "spoiled" about how to parse the `SET_CONFIGURATION` request.
 
-## Error handling: stalling the endpoint
+## Error handling in embedded Rust
 
-You may come across host requests other than the ones listed in the previous section. Here's what you should do if you encounter any of those.
-
-The USB specification defines a device-side procedure for "stalling a endpoint", which amounts to the device telling the host that it doesn't support some request. This procedure should be used to deal with invalid requests, requests whose SETUP stage doesn't match any USB 2.0 standard request, and requests not supported by the device, for instance the SET_DESCRIPTOR request is not mandatory.
-
-You can use the `dk::usbd:ep0stall` helper function or write 1 to the `TASKS_EP0STALL` register to stall endpoint 0. This is what you should use
-
-The logic of the `EP0SETUP` event handling is going to get rather complex so we suggest this refactor to add error handling: move the event handling logic into a separate function *that returns a `Result`*. That function should return the `Err` variant when it encounters an invalid host request. So in code that may look like this:
+Since the logic of the `EP0SETUP` event handling is getting more complex with each added event, you can see that `usb-4.rs` was refactored to add error handling: the event handling now happens in a separate function *that returns a `Result`*. When it encounters an invalid host request, it returns the `Err` variant which can be handled by stalling the endpoint:
 
 ``` rust
 fn on_event(/* parameters */) {
     match event {
-        Event::EP0SETUP => {
+        /* ... */
+        Event::UsbEp0Setup => {
             if ep0setup(/* arguments */).is_err() {
-                log::error!("EP0: unexpected request; stalling the endpoint");
-                // TODO stall the endpoint
+                // unsupported or invalid request:
+                // TODO add code to stall the endpoint
+                log::warn!("EP0: unexpected request; stalling the endpoint");
             }
         }
     }
@@ -418,25 +438,41 @@ fn ep0setup(/* parameters */) -> Result<(), ()> {
 }
 ```
 
-Note that there's a difference between the error handling done here and the error handling commonly done in `std` programs. In `std` programs you usually bubble up errors to the top `main` function (using the `?` operator), report the error, or chain of errors, and then exit the application with non-zero exit code. This approach is usually not appropriate for embedded programs as (1) `main` cannot return, (2) there may not be a console to print the error to and/or (3) stopping the program, and e.g. requiring the user to reset it to make it work again, may not be desirable behavior. For these reasons in embedded software errors tend to be handled as early as possible than propagated all the way up.
+Note that there's a difference between the error handling done here and the error handling commonly done in `std` programs. `std` programs usually bubble up errors to the top `main` function (using the `?` operator), report the error (or chain of errors) and then exit the application with a non-zero exit code. This approach is usually not appropriate for embedded programs as  
+(1) `main` cannot return,  
+(2) there may not be a console to print the error to and/or  
+(3) stopping the program, and e.g. requiring the user to reset it to make it work again, may not be desirable behavior.  
+For these reasons in embedded software errors tend to be handled as early as possible rather than propagated all the way up.
 
-This does not preclude error reporting. The above snippet includes error reporting in the form of a `log::error!` statement. This log statement may not be included in the final release of the program as it may not be useful, or even visible, to an end user but error reporting is possible and certainly useful during development.
+This does not preclude error *reporting*. The above snippet includes error reporting in the form of a `log::warn!` statement. This log statement may not be included in the final release of the program as it may not be useful, or even visible, to an end user but it is useful during development.
 
-## Device state
+## Updating Device state
 
-Eventually you'll receive a `SET_ADDRESS` request that will move the device from the `Default` state to the `Address` state and if you are working on Linux you'll receive a `SET_CONFIGURATION` request that will move the device from the `Address` state to the `Configured` state. Also, some requests are only valid in certain states, for example `SET_CONFIGURATION` is only valid if the device is in the `Address` state. For this reason the firmware will need to keep track of the device's current state.
+At some point during the initialization you'll receive a `SET_ADDRESS` request that will move the device from the `Default` state to the `Address` state. If you are working on Linux, you'll also receive a `SET_CONFIGURATION` request that will move the device from the `Address` state to the `Configured` state. Additionally, some requests are only valid in certain states– for example `SET_CONFIGURATION` is only valid if the device is in the `Address` state. For this reason `usb-4.rs` will need to keep track of the device's current state.
 
-The device state should be tracked using a resource so that it's preserved across many executions of the `USBD` event handler. The `usb2` crate has a `State` enum with the 3 possible USB states: `Default`, `Address` and `Configured`. You can use that enum or roll your own.
+The device state should be tracked using a resource so that it's preserved across multiple executions of the `USBD` event handler. The `usb2` crate has a `State` enum with the 3 possible USB states: `Default`, `Address` and `Configured`. You can use that enum or roll your own.
 
-Once you start tracking the device state don't forget to update the handling of the `USBRESET` event. This event changes the state of the USB device. See section 9.1, USB Device States, of the USB specification for more details.
+Start tracking and updating the device state to move your request handling forward:
 
-## A code hint
+1. **Update the handling of the `USBRESET` event:** Instead of ignoring it, we now want it to change the state of the USB device. See section 9.1 USB Device States of the USB specification for details on what to do.
 
-If you would like a hint about how device state and error handling should be integrated into your code, check out the `src/bin/usb-4.rs` file.
+2. **Update the handling of `SET_ADDRESS` requests:** See the section on [Handling SET_ADDRESS Requests](#handling-set_address-requests) of this tutorial for details.
 
-## SET_ADDRESS
+3. **Implement the handling of `GET_DESCRIPTOR Configuration` requests:** See the section on [Handling GET_DESCRIPTOR Configuration Requests](#handling-get_descriptor-configuration-requests) of this tutorial for details.
 
-This request should come right after the `GET_DESCRIPTOR Device` request, though some OSes may issue a USB reset in between.
+## Dealing with unknown requests: Stalling the endpoint
+
+You may come across host requests other than the ones listed in previous sections.
+
+For this situation, the USB specification defines a device-side procedure for "stalling an endpoint", which amounts to the device telling the host that it doesn't support some request.
+> This procedure should be used to deal with invalid requests, requests whose SETUP stage doesn't match any USB 2.0 standard request, and requests not supported by the device– for instance the SET_DESCRIPTOR request is not mandatory.
+
+You can use the `dk::usbd::ep0stall()` helper function to stall endpoint 0.
+Your task is to do this in the right place in `usb-4.rs`.
+
+## Handling SET_ADDRESS Requests
+
+> This request should come right after the `GET_DESCRIPTOR Device` request if you're using Linux, or be the first request sent to the device by Mac OS.
 
 Section 9.4.6, Set Address, describes how to handle this request but below you can find a summary:
 
@@ -448,15 +484,16 @@ Section 9.4.6, Set Address, describes how to handle this request but below you c
   - if the requested address was `0` (`None` in the `usb` API) then the device should return to the `Default` state
   - otherwise the device should remain in the `Address` state but start using the new address
 
-- If the device is in the `Configured` state this request results in "unspecified" behavior according to the USB specication. You should stall the endpoint in this case.
+- If the device is in the `Configured` state this request results in "unspecified" behavior according to the USB specification. You should stall the endpoint in this case.
 
-According to the USB specification the device needs to respond to this request with a STATUS stage -- the DATA stage is omitted. The nRF52840 USBD peripheral will automatically issue the STATUS stage and switch to listening to the requested address (see the USBADDR register) so no interaction with the USBD peripheral is required for this request.
+> Note: According to the USB specification the device needs to respond to this request with a STATUS stage -- the DATA stage is omitted. The nRF52840 USBD peripheral will automatically issue the STATUS stage and switch to listening to the requested address (see the USBADDR register) so no interaction with the USBD peripheral is required for this request.
+>
+> For more details, read the introduction of section 6.35.9 of the nRF52840 Product Specification 1.0 (pages 486 and 487).
 
-For more details, read the introduction of section 6.35.9 of the nRF52840 Product Specification 1.0 (pages 486 and 487).
 
-## GET_DESCRIPTOR Configuration
+## Handling GET_DESCRIPTOR Configuration Requests
 
-When the host issues a GET_DESCRIPTOR request to request a configuration descriptor the device needs to respond with the requested configuration descriptor *plus* all the interface and endpoint descriptors associated to that configuration descriptor during the DATA stage.
+When the host issues a GET_DESCRIPTOR request the device needs to respond with the requested configuration descriptor *plus* all the interface and endpoint descriptors associated to that configuration descriptor during the DATA stage.
 
 We have covered configurations and endpoints but what is an *interface*?
 
@@ -473,13 +510,13 @@ For detailed information about interfaces check section 9.6.5, Interface, of the
 The configuration descriptor describes one of the device configurations to the host. The descriptor contains the following information about a particular configuration:
 
 - the total length of the configuration: this is the number of bytes required to transfer this configuration descriptor and the interface and endpoint descriptors associated to it
-- its number of interfaces
+- its number of interfaces -- must be >= 1
 - its configuration value -- this is *not* an index and can be any non-zero value
 - whether the configuration is self-powered
 - whether the configuration supports remote wakeup
 - its maximum power consumption
 
-The format of the configuration descriptor is specified in section 9.6.3, Configuration, of the USB specification. What may not be obvious from that section is that number of interfaces must be greater than or equal to one and that the configuration value cannot be zero.
+> The full format of the configuration descriptor is specified in section 9.6.3, Configuration, of the USB specification.
 
 ### Interface descriptor
 
@@ -490,7 +527,8 @@ The interface descriptor describes one of the device interfaces to the host. The
 - its number of endpoints
 - class, subclass and protocol -- these define the interface (HID, or TTY ACM, or DFU, etc.) according to the USB specification
 
-The format of the interface descriptor is specified in section 9.6.5, Interface, of the USB specification. The most relevant parts of that section are: the number of endpoints can be zero and endpoint zero must not be accounted when counting endpoints.
+The number of endpoints can be zero and endpoint zero must not be accounted when counting endpoints.
+> The full format of the interface descriptor is specified in section 9.6.5, Interface, of the USB specification.
 
 ### Endpoint descriptor
 
@@ -498,13 +536,15 @@ We will not need to deal with endpoint descriptors in this workshop but they are
 
 ### Response
 
-So how should we respond to the host? As the goal is to be enumerated we'll respond with the minimum amount of information possible.
+So how should we respond to the host? As our only goal is to be enumerated we'll respond with the minimum amount of information possible.
 
-First, configuration descriptors are requested by *index*, not by their configuration value. The index specified in the host request should be checked. As we reported a single configuration in the device descriptor the index in the request must be zero. Any other value should be rejected by stalling the endpoint.
+**First, check the request:**  
+Configuration descriptors are requested by *index*, not by their configuration value. Since we reported a single configuration in our device descriptor the index in the request must be zero. Any other value should be rejected by stalling the endpoint (see section [Dealing with unknown requests: Stalling the endpoint](#dealing-with-unknown-requests-stalling-the-endpoint) for more information).
 
-Next the response should continue a concatenation of the configuration descriptor, followed by interface descriptors and then by endpoint descriptors. The minimum amount of interfaces a device must have is one so we'll include a single interface descriptor in the response. The interface does not need to have any endpoint associated to it so we'll include zero endpoint descriptors in the response.
+**Next, create and send a response:**  
+The response should consist of the configuration descriptor, followed by interface descriptors and then by (optional) endpoint descriptors. We'll include a minimal single interface descriptor in the response. Since endpoints are optional we will include none.
 
-Thus the response will be one configuration descriptor and one interface descriptor. The two will be concatenated in a single packet so this response should be completed in a single DATA stage.
+The configuration descriptor and one interface descriptor will be concatenated in a single packet so this response should be completed in a single DATA stage.
 
 The configuration descriptor in the response should contain these fields:
 
@@ -531,9 +571,9 @@ Again, we strongly recommend that you use the `usb2::configuration::Descriptor` 
 
 [`heapless::Vec`]: https://docs.rs/heapless/0.5.5/heapless/struct.Vec.html
 
-## SET_CONFIGURATION (likely Linux only)
+## SET_CONFIGURATION (Linux & Mac OS)
 
-On Linux, the host will likely send a SET_CONFIGURATION request right after enumeration to put the device in the `Configured` state. For now you can reject (stall) the request. It is not necessary at this stage because the device has already been enumerated.
+On Linux and Mac OS, the host will likely send a SET_CONFIGURATION request right after enumeration to put the device in the `Configured` state. For now you can stall the request. It is not necessary at this stage because the device has already been enumerated.
 
 ## Idle state
 
@@ -589,9 +629,9 @@ Note that these logs are from a Linux host where a `SET_CONFIGURATION` request i
 You can find traces for other OSes in these files (they are next to this README):
 
 - `win-enumeration.txt`
-- `macos-enumeration.txt` (TODO)
+- `macos-enumeration.txt`
 
-At this point you can double check that enumeration worked by running the `list-usb` tool.
+At this point you can double check that the enumeration works by running the [`usb-list` tool](#listing-usb-devices) while `usb-4.rs` is running.
 
 ``` console
 Bus 001 Device 013: ID 1366:1015 <- J-Link on the nRF52840 Development Kit
@@ -660,19 +700,15 @@ At this stage the device will be in the `Address` stage. It has been identified 
 
 Windows and macOS will enumerate the device but not automatically configure it after enumeration. Here's what you should do to force the host to configure the device.
 
-### Linux
+### Linux and Mac OS
 
-Nothing extra needs to be done on Linux. The host will automatically send a `SET_CONFIGURATION` request so proceed to the `SET_CONFIGURATION` section to see how to handle the request.
+Nothing extra needs to be done if you're working on a Linux or Mac OS host. The host will automatically send a `SET_CONFIGURATION` request so proceed to the `SET_CONFIGURATION` section to see how to handle the request.
 
 ### Windows
 
 After getting the device enumerated and into the idle state, open the Zadig tool (covered in the setup instructions; see the top README) and use it to associate the nRF52840 USB device to the WinUSB driver. The nRF52840 will appear as a "unknown device" with a VID and PID that matches the ones defined in the `common` crate
 
 Now modify the `print-descs` program to "open" the device -- this operation is commented out in the source code. With this modification `print-descs` will cause Windows to send a `SET_CONFIGURATION` request to configure the device. You'll need to run `print-descs` to test out the correct handling of the `SET_CONFIGURATION` request.
-
-### macOS
-
-> TODO uncomment the `open` line in `print-descs` and see if that forces the host to send a SET_CONFIGURATION request
 
 ### SET_CONFIGURATION
 
@@ -690,7 +726,8 @@ Section 9.4.7, Set Configuration, of the USB spec describes how to handle this r
   - if the requested configuration value is non-zero and valid (was previously reported in a configuration descriptor) then move to the `Configured` state with the new configuration value
   - if the requested configuration value is not valid then stall the endpoint
 
-In all the cases where you did not stall the endpoint (returned `Err`) you'll need to acknowledge the request by starting a STATUS stage. This can be done by writing 1 to the TASKS_EP0STATUS register.
+In all the cases where you did not stall the endpoint (by returning `Err`) you'll need to acknowledge the request by starting a STATUS stage.  
+This is done by writing 1 to the TASKS_EP0STATUS register.
 
 NOTE: On Windows, you may get a `GET_STATUS` request *before* the `SET_CONFIGURATION` request and although you *should* respond to it, stalling the `GET_STATUS` request seems sufficient to get the device to the `Configured` state.
 
@@ -746,7 +783,7 @@ INFO:usb_5 -- entering the configured state
 These logs are from a Linux host. You can find traces for other OSes in these files (they are next to this README):
 
 - `win-configured.txt`, this file only contains the logs produced by running `print-descs`
-- `macos-configured.txt` (TODO)
+- `macos-configured.txt`
 
 You can find a solution to this part of the exercise in `src/bin/usb-5-solution.rs`.
 
