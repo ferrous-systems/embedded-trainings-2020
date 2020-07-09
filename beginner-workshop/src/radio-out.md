@@ -75,7 +75,7 @@ let reftoarray1: &[u8; 2] = b"Hi";
 let reftoarray2: &[u8; 2] = &[b'H', 'i'];
 //               ^          ^
 ```
-## Character constrains in byte string vs. string literals
+## Character constraints in byte string vs. string literals
 
 You can encode text as `b"Hello"` or as `"Hello"`.
 
