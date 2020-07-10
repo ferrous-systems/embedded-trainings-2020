@@ -2,7 +2,7 @@
 # It is not intended for manual editing.
 [[package]]
 name = "apps"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
@@ -92,7 +92,7 @@ dependencies = [
 
 [[package]]
 name = "dk"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
@@ -219,7 +219,7 @@ dependencies = [
 
 [[package]]
 name = "panic-log"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "cortex-m",
  "log",

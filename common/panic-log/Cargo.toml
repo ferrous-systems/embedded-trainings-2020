@@ -1,8 +1,9 @@
 [package]
 authors = ["Jorge Aparicio <jorge.aparicio@ferrous-systems.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
 name = "panic-log"
-version = "0.1.0"
+version = "0.0.0"
 
 [dependencies]
 cortex-m = "0.6.2"

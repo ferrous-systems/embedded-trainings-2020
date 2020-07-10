@@ -55,7 +55,7 @@ checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
 name = "consts"
-version = "0.1.0"
+version = "0.0.0"
 
 [[package]]
 name = "cortex-m"
@@ -116,7 +116,7 @@ dependencies = [
 
 [[package]]
 name = "dk"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
@@ -138,7 +138,7 @@ dependencies = [
 
 [[package]]
 name = "firmware"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "consts",
  "cortex-m",
@@ -269,7 +269,7 @@ dependencies = [
 
 [[package]]
 name = "panic-log"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "cortex-m",
  "log",
@@ -394,7 +394,7 @@ checksum = "826e7639553986605ec5979c7dd957c7895e93eabed50ab2ffa7f6128a75097c"
 
 [[package]]
 name = "usb"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "log",
 ]

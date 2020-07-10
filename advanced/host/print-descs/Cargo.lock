@@ -41,7 +41,7 @@ checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
 name = "consts"
-version = "0.1.0"
+version = "0.0.0"
 
 [[package]]
 name = "crc32fast"
@@ -104,7 +104,7 @@ checksum = "05da548ad6865900e60eaba7f589cc0783590a92e940c26953ff81ddbab2d677"
 
 [[package]]
 name = "print-descs"
-version = "0.1.0"
+version = "0.0.0"
 dependencies = [
  "anyhow",
  "consts",
