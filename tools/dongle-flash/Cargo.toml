@@ -1,8 +1,9 @@
 [package]
 authors = ["Jorge Aparicio <jorge.aparicio@ferrous-systems.com>"]
 edition = "2018"
+license = "MIT OR Apache-2.0"
 name = "dongle-flash"
-version = "0.1.0"
+version = "0.0.0"
 
 [dependencies]
 anyhow = "1.0.31"
