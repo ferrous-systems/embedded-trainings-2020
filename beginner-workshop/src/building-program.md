@@ -6,7 +6,7 @@ The following command cross compiles the program to the ARM Cortex-M4 architectu
 $ cargo build --bin hello
 ```
 
-The default in a Cargo project is to compile for the host (native compilation) but the `beginner/apps` project has been configured for cross compilation. This configuration can be see in the Cargo configuration file (`.cargo/config`):
+The default in a Cargo project is to compile for the host (native compilation) but the `beginner/apps` project has been configured for cross compilation. This configuration can be seen in the Cargo configuration file (`.cargo/config`):
 
 ``` text
 # .cargo/config
@@ -23,7 +23,7 @@ hello: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), statically linked
 
 ## Binary size
 
-ELF files contain metadata like debug information and their size on disk is not a good indication of the amount of Flash the program will use once it's loaded on the target device's memory.
+ELF files contain metadata like debug information so their size on disk is not a good indication of the amount of Flash the program will use once it's loaded on the target device's memory.
 
 To display the amount of Flash the program will occupy on the target device use the `cargo-size` tool (part of the `cargo-binutils` package):
 
