@@ -6,7 +6,7 @@
 - [Building an Embedded Program](./building-programm.md)
 - [Flashing the Program](./flashing-programm.md)
 - [Viewing Logs](./viewing-logs.md)
-- [Runnging the Program from VS Code](./running-from-vsc.md)
+- [Running the Program from VS Code](./running-from-vsc.md)
 - [Panicking](./panicking.md)
 - [Using a Hardware Abstraction Layer](./using-hal.md)
 - [Timers and Time](./time.md)
