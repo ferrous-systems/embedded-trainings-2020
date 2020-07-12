@@ -14,9 +14,9 @@ When put in bootloader mode the Dongle will run a bootloader program instead of 
 
 To put the Dongle in bootloader mode connect it to your laptop / PC  / mac and then press its *reset* button. The Dongle has two buttons: a round-ish user button (SW1) and a square-ish reset button (RESET); the latter is mounted "sideways". The buttons are next to each other. The RESET button is mounted closer to the edge of the board that has the Nordic logo on silkscreen and the actual button is facing towards that edge. The opposite edge of the board is narrower and has the surface USB connector; this is the end that goes into your PC USB port.
 
-When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
+When the Dongle is in bootloader mode its red LED will oscillate in intensity. Alternatively, the status can be checked using the `usb-list` tool introduced below. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
 
-In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool. Run it (`cargo run` from `tools/usb-list`) to list all USB devices; the Dongle will be highlighted in the output.
+In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool. Run it (`cargo run` from `tools/usb-list`) to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
 
 
 ``` console
