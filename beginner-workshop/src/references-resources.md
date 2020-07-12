@@ -1,4 +1,4 @@
-# References and Ressources
+# References and Resources
 
 - [nRF52840 Product Specification 1.1](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
 - The [Embedded Rust Book][embedded rust] is a great learning resource, especially the Concurrency chapter.
