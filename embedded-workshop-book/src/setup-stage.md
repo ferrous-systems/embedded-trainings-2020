@@ -1,6 +1,6 @@
 # USB-2: SETUP Stage
 
-At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the following registers: BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}. These registers are documented in sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec].
+At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the following registers: BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}. These registers are documented in sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec]. In `usb-2.rs`, you will find a short description of each register above the variable into which it should be read.
 
 [nrf product spec]: https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf
 
