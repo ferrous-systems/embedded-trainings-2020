@@ -16,7 +16,7 @@ Now modify the `print-descs` program to "open" the device -- this operation is c
 
 ## SET_CONFIGURATION
 
-Section 9.4.7, Set Configuration, of the USB spec describes how to handle this request but below you can find a summary:
+The SET_CONFIGURATION request is sent by the host to configure the device.
 
 - If the device is in the `Default` state, you should stall the endpoint because the operation is not permitted in that state.
 
@@ -25,15 +25,17 @@ Section 9.4.7, Set Configuration, of the USB spec describes how to handle this r
   - if the requested configuration value is non-zero and valid (was previously reported in a configuration descriptor) then move to the `Configured` state
   - if the requested configuration value is not valid then stall the endpoint
 
-- If the device is in the `Configured` state, then
-  - if the requested configuration value is 0 (`None` in the `usb` API) then return to the `Address` state
-  - if the requested configuration value is non-zero and valid (was previously reported in a configuration descriptor) then move to the `Configured` state with the new configuration value
-  - if the requested configuration value is not valid then stall the endpoint
+- If the device is in the `Configured` state, then read the requested configuration value from `wValue`
+   - if `wValue` is 0 (`None` in the `usb` API) then return to the `Address` state
+   - if `wValue` is non-zero and valid (was previously reported in a configuration descriptor) then move to the `Configured` state with the new configuration value
+   - if `wValue` is not valid then stall the endpoint
 
 In all the cases where you did not stall the endpoint (by returning `Err`) you'll need to acknowledge the request by starting a STATUS stage.  
 This is done by writing 1 to the TASKS_EP0STATUS register.
 
 NOTE: On Windows, you may get a `GET_STATUS` request *before* the `SET_CONFIGURATION` request and although you *should* respond to it, stalling the `GET_STATUS` request seems sufficient to get the device to the `Configured` state.
+
+> Section 9.4.7 Set Configuration, of the USB spec contains the full description of how to handle this request.
 
 ## Expected output
 
