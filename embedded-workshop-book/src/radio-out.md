@@ -103,7 +103,7 @@ Now run the `radio-send` program several times with different variations:
 - change the length of the packet
 - different combinations of all of the above
 
-Take note of how LQI changes with these changes. Do packet loss occur in any of these configurations?
+Take note of how LQI changes with these changes. Does packet loss occur in any of these configurations?
 
 > NOTE if you decide to send many packets in a single program then you should use the `Timer` API to insert a delay of at least five milliseconds between the transmissions. This is required because the Dongle will use the radio medium right after it receives a packet. Not including the delay will result in the Dongle missing packets
 
