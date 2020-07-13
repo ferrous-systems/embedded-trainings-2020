@@ -37,8 +37,7 @@ The `thumb` targets listed above are all the currently supported ARM Cortex-M ta
 | `thumbv8m.main-none-eabihf` | ARM Cortex-M33F, ARM Cortex-M35PF  |
 
 
-The ARM Cortex-M ISA is backwards compatible so for example you could compile a program using the `thumbv6m-none-eabi` target and run it on an ARM Cortex-M4 microcontroller. This will work but using the `thumbv7em-none-eabi` results in better performance (ARMv7-M instructions will be emitted by the compiler) so it should be preferred. The opposite, compiling for `thumbv7em-none-eabi` and running the resulting
-> TODO delete or finish last sentence
+The ARM Cortex-M ISA is backwards compatible so for example you could compile a program using the `thumbv6m-none-eabi` target and run it on an ARM Cortex-M4 microcontroller. This will work but using the `thumbv7em-none-eabi` results in better performance (ARMv7-M instructions will be emitted by the compiler) so it should be preferred.
 
 ### 2. Its memory layout.
 
@@ -135,18 +134,10 @@ If no HAL is available for your device then you'll need to build one yourself. T
 [SVD]: http://www.keil.com/pack/doc/CMSIS/SVD/html/index.html
 [`svd2rust`]: https://crates.io/crates/svd2rust
 
----
-
-> NOTE additional content, if needed / desired
-
 # Hello, 💡
+
 Now that you've set up your own project from scratch, you could start playing around with it by turning on one of the DK's on-board LEDs using only the HAL. Some hints that might be helpful there:
 
 - The [Nordic Infocenter][infocenter] tells you which LED is connected to which pin.
 
 [infocenter]: https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrf52840_dk%2FUG%2Fnrf52840_DK%2Fhw_buttons_leds.html
-
-
-# (extra) adding addresses to packets
-
-> have people use the `ieee802154` crate to add a MAC header to the radio packet. New dongle firmware would be required to respond differently to broadcast packets and addressed packets
