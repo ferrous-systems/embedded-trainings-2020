@@ -291,7 +291,7 @@ Mass erase completed, chip unlocked
 
 ### Cargo subcommands
 
-Install version v0.8.0 of the `cargo-flash` and `cargo-embed` subcommands, as well as the `cargo-binutils` subcommand, using the following commands:
+Install version v0.8.0 of the `cargo-flash` and `cargo-embed` subcommands, as well as the `cargo-binutils` set of subcommands and the `cargo-bloat` subcommand using the following Cargo commands:
 
 ``` console
 $ cargo install cargo-flash --version 0.8.0 -f
@@ -305,6 +305,10 @@ Installed package `cargo-embed v0.8.0` (..)
 $ cargo install cargo-binutils
 (..)
 Installed package `cargo-binutils v0.3.0` (..)
+
+$ cargo install cargo-bloat
+(..)
+Installed package `cargo-bloat v0.9.3` (..)
 ```
 
 ## License
