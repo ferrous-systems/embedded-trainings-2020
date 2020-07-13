@@ -13,11 +13,6 @@ $ code beginner/apps
 ✅ Then open the `src/bin/hello.rs` file.
 
 
-
-> NOTE: If you find it more convenient to open the repository at the root then please also add the `beginner/apps` folder to the VS Code workspace: right click the left side panel, select "Add folder to workspace" and add the `beginner/apps` folder.
-
-
-
 ## In the file, you will find the following attributes:
 
 ### `#![no_std]`
