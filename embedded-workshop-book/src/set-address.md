@@ -16,4 +16,4 @@ Section 9.4.6, Set Address, describes how to handle this request but below you c
 
 > Note: According to the USB specification the device needs to respond to this request with a STATUS stage -- the DATA stage is omitted. The nRF52840 USBD peripheral will automatically issue the STATUS stage and switch to listening to the requested address (see the USBADDR register) so no interaction with the USBD peripheral is required for this request.
 >
-> For more details, read the introduction of section 6.35.9 of the nRF52840 Product Specification 1.0 (pages 486 and 487).
+> For more details, read the introduction of section 6.35.9 of the nRF52840 Product Specification 1.0.
