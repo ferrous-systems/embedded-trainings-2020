@@ -56,7 +56,7 @@ If you run the `serial-term` application you should see the following output:
 
 ``` console
 $ serial-term
-deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
+deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 (..)
 ```
 

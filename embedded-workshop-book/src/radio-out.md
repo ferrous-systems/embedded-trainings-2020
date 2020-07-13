@@ -8,7 +8,7 @@ First run the program as it is. You should new output in the output of the `seri
 
 ``` console
 $ serial-term
-deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
+deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 received 5 bytes (LQI=49)
 ```
 
