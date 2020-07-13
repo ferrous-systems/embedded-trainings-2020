@@ -111,6 +111,6 @@ Take note of how LQI changes with these changes. Do packet loss occur in any of 
 
 ## 802.15.4 compatibility
 
-The radio API we are using follows the PHY layer of the IEEE 802.15.4 specification but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
+The radio API we are using follows the PHY layer of the IEEE 802.15.4 specification, but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
 
 This is not an issue for the workshop exercises but it's something to consider if you would like to continue from here and build a 802.15.4 compliant network API.
