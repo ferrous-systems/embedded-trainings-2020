@@ -14,5 +14,5 @@
 - [Radio Out](./radio-out.md)
 - [Radio In ](./radio-in.md)
 - [Radio Puzzle](./radio-puzzle.md)
-- [Starting a Project from Scatch](./from-scatch.md)
-- [References and Ressources](./references-ressources.md)
+- [Starting a Project from Scratch](./from-scatch.md)
+- [References and Resources](./references-ressources.md)
