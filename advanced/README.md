@@ -49,7 +49,7 @@ Bus 001 Device 003: ID 0c45:6713
 Bus 001 Device 001: ID 1d6b:0002
 ```
 
-The goal is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; the `usb-list` tool will highlight the USB device that matches that VID PID pair.
+The goal of this exercise is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; the `usb-list` tool will highlight the USB device that matches that VID PID pair.
 
 ``` console
 $ # expected output
