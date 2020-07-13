@@ -15,7 +15,7 @@ The definition of `Descriptor::Configuration` as well as the associated test has
 Your task now is to parse the data of this SETUP stage. We will start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
 
 The fields of a GET_DESCRIPTOR request are as follows:
-- `bmrequesttype` is 0b10000000
+- `bmRequestType` is 0b10000000
 - `bRequest` is GET_DESCRIPTOR
 - the high byte of `wValue` contains the descriptor type, whereas the low byte contains the descriptor index
 - `wIndex` is set to 0 for our purposes
@@ -56,4 +56,3 @@ INFO:usb_2 -- Goal reached; move to the next section
 
 You can find a solution to step 1. in `advanced/common/usb/get-descriptor-device.rs`.  
 You can find a solution to step 2. in `advanced/firmware/src/bin/usb-2-solution.rs`.
-

@@ -2,7 +2,7 @@
 
 When the host issues a GET_DESCRIPTOR *Configuration* request the device needs to respond with the requested configuration descriptor *plus* all the interface and endpoint descriptors associated to that configuration descriptor during the DATA stage.
 
- A GET_DESCRIPTOR Configuration request is a GERT_DESCRIPTOR request where the descriptor type encoded in the high bit of `wValue` is CONFIGURATION.
+ A GET_DESCRIPTOR Configuration request is a GET_DESCRIPTOR request where the descriptor type encoded in the high bit of `wValue` is CONFIGURATION.
 
 We have covered configurations and endpoints but what is an *interface*?
 
@@ -80,4 +80,3 @@ The interface descriptor in the response should contain these fields:
 Again, we strongly recommend that you use the `usb2::configuration::Descriptor` and `usb2::interface::Descriptor` abstractions here. Each descriptor instance can be transformed into its byte representation using the `bytes` method -- the method returns an array. To concatenate both arrays you can use an stack-allocated [`heapless::Vec`] buffer. If you haven't the `heapless` crate before you can find example usage in the the `src/bin/vec.rs` file.
 
 [`heapless::Vec`]: https://docs.rs/heapless/0.5.5/heapless/struct.Vec.html
-
