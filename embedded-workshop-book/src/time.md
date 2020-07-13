@@ -11,3 +11,5 @@ This program will blink (turn on and off) one of the LEDs on the board. The time
 The other time related API exposed by the `dk` HAL is the `dk::uptime` function. This function returns the time that has elapsed since the call to the `dk::init` function. This function is used in the program to log the time of each LED toggle operation.
 
 Next, we'll look into the radio API exposed by the `dk` HAL. But before that we'll need to set up the nRF52840 Dongle.
+
+[❗️assignment to chnge something]

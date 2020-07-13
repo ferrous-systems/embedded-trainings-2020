@@ -4,6 +4,8 @@ In this workshop we'll use both the nRF52840 Development Kit (DK) and the nRF528
 
 For the span of this workshop keep the nRF52840 DK connected to your PC using a micro-USB cable. Connect the USB cable to the J2 port on the nRF52840 DK. Instructions to identify the USB ports on the nRF52840 board can be found in the top level README file.
 
+[❗️link or crosspost J2 instructions, for less clicking]
+
 ## The nRF52840
 
 Some details about the nRF52840 microcontroller that are relevant to this workshop.
