@@ -8,7 +8,7 @@ use dk::{
 use panic_log as _; // panic handler
 
 // use one of these
-use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
+use usb2::{GetDescriptor as Descriptor, StandardRequest as Request};
 
 #[rtic::app(device = dk)]
 const APP: () = {

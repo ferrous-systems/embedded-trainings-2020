@@ -1,4 +1,4 @@
-# Starting a Project from Scatch
+# Starting a Project from Scratch
 
 So far we have been using a pre-made Cargo project to work with the nRF52840 DK. In this section we'll see how to create a new embedded project for any microcontroller.
 

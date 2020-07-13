@@ -36,7 +36,7 @@ const APP: () = {
         // to show that its contents reflect our usb connection status
         // (the USBDETECTED event that will trigger `on_power_event()` is derived from this information)
         let vbusdetect: bool = power.usbregstatus.read().vbusdetect().bits();
-        //                                                ^^^^^^^^^ bitfield name
+        //                                               ^^^^^^^^^^ bitfield name
         log::info!("USBREGSTATUS.VBUSDETECT: {}", vbusdetect);
     }
 

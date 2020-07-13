@@ -1,4 +1,4 @@
-# Runnging the Program from VS Code
+# Running the Program from VS Code
 
 Both `cargo-embed` and `cargo-flash` are tools based on the `probe-rs` library. This library exposes an API to communicate with the J-Link and perform all the operations exposed by the JTAG protocol. For this workshop we have developed a small Cargo runner that uses the `probe-rs` library to streamline the process of running a program and printing logs, like `cargo-embed`, while also having better integration into VS code.
 
@@ -26,4 +26,4 @@ stack backtrace:
 
 `cargo run` will compile the application and then invoke the `dk-run` tool with its argument set to the path of the output ELF file.
 
-Unlike `cargo-embed`, `dk-run` will terminate when the program reaches a breakpoint (`asm::bkpt`) that halts the device. Before exiting, `dk-run` will print a stack backtrace of the program starting from the breakpoint. This can be used to write small test programs that are meant to perform some work and then terminate.
+Unlike `cargo-embed`, `dk-run` will terminate when the program reaches a breakpoint (`asm::bkpt`) that halts the device. Before exiting `dk-run` will print a stack backtrace of the program starting from the breakpoint. This can be used to write small test programs that are meant to perform some work and then terminate.

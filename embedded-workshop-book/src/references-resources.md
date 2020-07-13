@@ -1,4 +1,4 @@
-# References and Ressources
+# References and Resources
 
 ## Beginner Material
 

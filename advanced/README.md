@@ -49,7 +49,7 @@ Bus 001 Device 003: ID 0c45:6713
 Bus 001 Device 001: ID 1d6b:0002
 ```
 
-The goal is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; the `usb-list` tool will highlight the USB device that matches that VID PID pair.
+The goal of this exercise is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; the `usb-list` tool will highlight the USB device that matches that VID PID pair.
 
 ``` console
 $ # expected output
@@ -161,7 +161,7 @@ Open the `src/bin/resource.rs` file. The starter code shows the syntax to declar
 
 In the starter code a resource is used to *move* (by value) the POWER peripheral from `init` to the `on_power_event` task. The POWER peripheral then becomes part of the state of the `on_power_event` task and can be persistently accessed throughout calls to `on_power_event()` through a *reference*. The resources of a task are available via the `Context` argument of the task.
 
-To elaborate more on this *move* action: in the `svd2rust` API, peripheral types like `POWER` are *singletons* (only a single instance of the type can ever exist). The consequence of this design is that holding a peripheral instance, like `POWER`, *by value* means that the function (or task) has exclusive access, or ownership, over the peripheral. This is the case of the `init` function: it owns the `POWER` peripheral but then transfer ownership over it to a task using the resource initialization mechanism.
+To elaborate more on this *move* action: in the `svd2rust` API, peripheral types like `POWER` are *singletons* (only a single instance of the type can ever exist). The consequence of this design is that holding a peripheral instance, like `POWER`, *by value* means that the function (or task) has exclusive access, or ownership, over the peripheral. This is the case of the `init` function: it owns the `POWER` peripheral but then transfers ownership over it to a task using the resource initialization mechanism.
 
 We have moved the POWER peripheral into the task because we want to clear the USBDETECTED interrupt flag after it has been set by the hardware. If we miss this step the `on_power_event` task (function) will be called again once it returns and then again and again and again (ad infinitum).
 
@@ -265,26 +265,17 @@ When you need to write some `no_std` code that does not involve device-specific 
 
 So that's what we'll do here. In `advanced/common/usb/lib.rs` you'll find starter code for writing a `no_std` SETUP data parser. The starter code contains some unit tests; you can run them with `cargo test` (from within the `usb` folder) or you can use Rust Analyzer's "Test" button in VS code.
 
-If you run these tests, you'll notice this error:
-```rust
-error[E0599]: no variant named `Configuration` found for enum `Descriptor`
-   --> src/lib.rs:73:45
-    |
-73  |                     descriptor: Descriptor::Configuration {index: desc_index },
-    |                                             ^^^^^^^^^^^^^ variant not found in `Descriptor`
-...
-100 | pub enum Descriptor {
-    | ------------------- variant `Configuration` not found here
-```
-That's because the definition of `Descriptor::Configuration` has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see the error message again.
+The definition of `Descriptor::Configuration` as well as the associated test has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see it again.
 
 Now, proceed as follows:
 
 1. **Parse GET_DESCRIPTOR requests:**  
-Modify `Request::parse()` in `advanced/common/usb` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
+Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
     - check table 9-4 in the USB specification for Request Codes
     - remember that you can define binary literals by prefixing them with `0b`
     - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of a `u16`
+
+See `advanced/common/usb/src/get-descriptor-device.rs` for a solution.
 
 2. **Read incoming request information and pass it to the parser:**  
 modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EPSETUP event is received.
