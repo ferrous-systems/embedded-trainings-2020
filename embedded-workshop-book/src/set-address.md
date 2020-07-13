@@ -2,14 +2,21 @@
 
 > This request should come right after the `GET_DESCRIPTOR Device` request if you're using Linux, or be the first request sent to the device by Mac OS.
 
-Section 9.4.6, Set Address, describes how to handle this request but below you can find a summary:
+A SET_ADDRESS request has the following fields as defined by Section 9.4.6 Set Address of the USB spec:
+
+- `bmrequesttype` is 0b00000000
+- `brequest` is SET_ADDRESS
+- `wValue` contains the address to be used for all subsequent accesses
+- `wIndex` and `wLength` are 0, there is no `wData`
+
+It should be handled as follows:
 
 - If the device is in the `Default` state, then
-  - if the requested address was `0` (`None` in the `usb` API) then the device should stay in the `Default` state
+  - if the requested address stored in `wValue` was `0` (`None` in the `usb` API) then the device should stay in the `Default` state
   - otherwise the device should move to the `Address` state
 
 - If the device is in the `Address` state, then
-  - if the requested address was `0` (`None` in the `usb` API) then the device should return to the `Default` state
+  - if the requested address stored in `wValue` was `0` (`None` in the `usb` API) then the device should return to the `Default` state
   - otherwise the device should remain in the `Address` state but start using the new address
 
 - If the device is in the `Configured` state this request results in "unspecified" behavior according to the USB specification. You should stall the endpoint in this case.
