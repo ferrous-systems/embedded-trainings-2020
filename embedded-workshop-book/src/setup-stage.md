@@ -1,12 +1,10 @@
 # USB-2: SETUP Stage
 
-At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the following registers: BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}. These registers are documented in sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec]. In `usb-2.rs`, you will find a short description of each register above the variable into which it should be read.
+At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the registers BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}.  
+In `usb-2.rs`, you will find a short description of each register above the variable into which it should be read.
 
+> For in-depth register documentation, refer to sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec].
 [nrf product spec]: https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf
-
-The format of this setup data is documented in section 9.3 of the USB specification. Your next task is to parse it. We will start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
-
-> NOTE: If you'd like to learn more, take a look at Section 9.4, Standard Descriptor Requests, of the USB specification.
 
 When you need to write some `no_std` code that does not involve device-specific I/O you should consider writing it as a separate crate. This way, you can test it on your development machine (e.g. `x86_64`) using the standard `cargo test` functionality.
 
@@ -14,7 +12,18 @@ So that's what we'll do here. In `advanced/common/usb/lib.rs` you'll find starte
 
 The definition of `Descriptor::Configuration` as well as the associated test has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see it again.
 
-Now, proceed as follows:
+Your task now is to parse the data of this SETUP stage. We will start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
+
+The fields of a GET_DESCRIPTOR request are as follows:
+- `bmrequesttype` is 0b00000000
+- `bRequest` is GET_DESCRIPTOR
+- the high byte of `wValue` contains the descriptor type, whereas the low byte contains the descriptor index
+- `wIndex` is set to 0 for our purposes
+
+You will also find this information in the `// TODO implement ...` comment in the `Request::parse()` function of `lib.rs` file.
+ > NOTE: If you'd like to learn more, take a look at Section 9.4.3 Get Descriptor of the USB specification.
+
+To complete the task, proceed like this:
 
 1. **Parse GET_DESCRIPTOR requests:**  
 Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
