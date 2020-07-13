@@ -12,27 +12,18 @@ When you need to write some `no_std` code that does not involve device-specific 
 
 So that's what we'll do here. In `advanced/common/usb/lib.rs` you'll find starter code for writing a `no_std` SETUP data parser. The starter code contains some unit tests; you can run them with `cargo test` (from within the `usb` folder) or you can use Rust Analyzer's "Test" button in VS code.
 
-If you run these tests, you'll notice this error:
-```rust
-error[E0599]: no variant named `Configuration` found for enum `Descriptor`
-   --> src/lib.rs:73:45
-    |
-73  |                     descriptor: Descriptor::Configuration {index: desc_index },
-    |                                             ^^^^^^^^^^^^^ variant not found in `Descriptor`
-...
-100 | pub enum Descriptor {
-    | ------------------- variant `Configuration` not found here
-```
-
-That's because the definition of `Descriptor::Configuration` has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see the error message again.
+The definition of `Descriptor::Configuration` as well as the associated test has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see it again.
 
 Now, proceed as follows:
 
 1. **Parse GET_DESCRIPTOR requests:**  
-Modify `Request::parse()` in `advanced/common/usb` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
+Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
+
     - check table 9-4 in the USB specification for Request Codes
     - remember that you can define binary literals by prefixing them with `0b`
     - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of a `u16`
+
+See `advanced/common/usb/src/get-descriptor-device.rs` for a solution.
 
 2. **Read incoming request information and pass it to the parser:**  
 modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EPSETUP event is received.
