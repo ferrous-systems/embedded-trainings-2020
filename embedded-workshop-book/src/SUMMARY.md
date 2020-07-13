@@ -5,6 +5,7 @@
 - [Beginner Workbook](./beginner-workbook.md)
     - [Parts of an Embedded Program](./parts-embedded-program.md)
     - [Building an Embedded Program](./building-program.md)
+    - [Binary Size](./binary-size.md)
     - [Flashing the Program](./flashing-program.md)
     - [Viewing Logs](./viewing-logs.md)
     - [Running the Program from VS Code](./running-from-vsc.md)
