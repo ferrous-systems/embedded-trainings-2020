@@ -57,9 +57,33 @@ If you run the `serial-term` application you should see the following output:
 ``` console
 $ serial-term
 deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
-(..)
 ```
 
 This line is printed by the `loopback` app on boot. It contains the device ID of the dongle, a 64-bit unique identifier (so everyone will see a different number); the radio channel that the device will use to communicate; and the transmission power of the radio in dBm.
+
+At this point you should *not* get more output from `serial-term`. If you get "received N bytes" lines in output like this:
+
+``` console
+$ serial-term
+deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
+received 7 bytes (CRC=Ok(0x2459), LQI=0)
+received 5 bytes (CRC=Ok(0xdad9), LQI=0)
+received 6 bytes (CRC=Ok(0x72bb), LQI=0)
+```
+
+That means the device is observing interference traffic, likely from 2.4 GHz WiFi or Bluetooth. In this scenario you should switch the listening channel to one where you don't observe interference. Use the `tools/change-channel` tool to do this. The tool takes a single argument: the new listening channel which must be in the range 11-26.
+
+``` console
+$ change-channel 11
+requested channel change to channel 11
+```
+
+Then you should see new output from `serial-term`:
+
+``` console
+deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
+(..)
+now listening on channel 11
+```
 
 Leave the Dongle connected and the `serial-term` application running. Now we'll switch back to the Development Kit.
