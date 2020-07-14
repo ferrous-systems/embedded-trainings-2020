@@ -79,7 +79,9 @@ deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 
 This line is printed by the `loopback` app on boot. It contains the device ID of the dongle, a 64-bit unique identifier (so everyone will see a different number); the radio channel that the device will use to communicate; and the transmission power of the radio in dBm.
 
-At this point you should *not* get more output from `serial-term`. If you get "received N bytes" lines in output like this:
+At this point you should *not* get more output from `serial-term`. 
+
+❗If you get "received N bytes" lines in output like this:
 
 ``` console
 $ serial-term

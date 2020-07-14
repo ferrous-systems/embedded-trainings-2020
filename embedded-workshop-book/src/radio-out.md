@@ -1,10 +1,10 @@
 # Radio Out
 
-Open the `src/bin/radio-send.rs` file.
+✅ Open the `src/bin/radio-send.rs` file.
 
 In this section you'll send radio packets from the DK to the Dongle and get familiar with the different settings of the radio API.
 
-First run the program as it is. You should new output in the output of the `serial-term` program.
+✅ First run the program `radio-send.rs` as it is. You should see new output in the output of the `serial-term` program.
 
 ``` console
 $ serial-term
