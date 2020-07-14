@@ -1,5 +1,5 @@
 //! Some USB 2.0 data types
-// NOTE this is a solution to exercise `usb-2`
+// NOTE this is a partial solution to exercise `usb-3`
 
 #![deny(missing_docs)]
 #![deny(warnings)]
@@ -24,7 +24,6 @@ pub enum Request {
 
     /// SET_ADDRESS
     // see section 9.4.6 of the USB specification
-    #[cfg(TODO)]
     SetAddress {
         /// New device address, in the range `1..=127`
         address: Option<Address>,
@@ -32,6 +31,7 @@ pub enum Request {
 
     /// SET_CONFIGURATION
     // see section 9.4.7 of the USB specification
+    #[cfg(TODO)]
     SetConfiguration {
         /// bConfigurationValue to change the device to
         value: Option<NonZeroU8>,
@@ -51,13 +51,14 @@ impl Request {
         windex: u16,
         wlength: u16,
     ) -> Result<Self, ()> {
-        // see table 9-4
+        // see table 9-4 (USB specification)
+        const SET_ADDRESS: u8 = 5;
         const GET_DESCRIPTOR: u8 = 6;
-        const SET_CONFIGURATION: u8 = 9;
 
         if bmrequesttype == 0b10000000 && brequest == GET_DESCRIPTOR {
             // see table 9-5
             const DEVICE: u8 = 1;
+            const CONFIGURATION: u8 = 2;
 
             let desc_ty = (wvalue >> 8) as u8;
             let desc_index = wvalue as u8;
@@ -68,13 +69,22 @@ impl Request {
                     descriptor: Descriptor::Device,
                     length: wlength,
                 })
+            } else if desc_ty == CONFIGURATION && langid == 0 {
+                Ok(Request::GetDescriptor {
+                    descriptor: Descriptor::Configuration { index: desc_index },
+                    length: wlength,
+                })
             } else {
                 Err(())
             }
-        } else if bmrequesttype == 0b00000000 && brequest == SET_CONFIGURATION {
-            if wvalue < 256 && windex == 0 && wlength == 0 {
-                Ok(Request::SetConfiguration {
-                    value: NonZeroU8::new(wvalue as u8),
+        } else if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
+            // Set the device address for all future accesses.
+            // (Needed to successfully init when conected to Apple devices)
+            // Section 9.4.6 Set Address of the USB specification explains which values for wvalue,
+            // windex and wlength are valid.
+            if wvalue < 128 && windex == 0 && wlength == 0 {
+                Ok(Request::SetAddress {
+                    address: NonZeroU8::new(wvalue as u8),
                 })
             } else {
                 Err(())
@@ -92,7 +102,6 @@ pub enum Descriptor {
     Device,
 
     /// Configuration descriptor
-    #[cfg(TODO)]
     Configuration {
         /// Index of the descriptor
         index: u8,
@@ -126,24 +135,6 @@ mod tests {
         //                                                 ^^^^
     }
 
-    #[cfg(TODO)]
-    #[test]
-    fn get_descriptor_configuration() {
-        // OK: GET_DESCRIPTOR Configuration 0 [length=9]
-        assert_eq!(
-            Request::parse(0b1000_0000, 0x06, 0x02_00, 0, 9),
-            Ok(Request::GetDescriptor {
-                descriptor: Descriptor::Configuration { index: 0 },
-                length: 9
-            })
-        );
-
-        // has language ID but shouldn't
-        assert!(Request::parse(0b1000_0000, 0x06, 0x02_00, 1033, 9).is_err());
-        //                                                 ^^^^
-    }
-
-    #[cfg(TODO)]
     #[test]
     fn set_address() {
         // OK: SET_ADDRESS 16
@@ -173,6 +164,23 @@ mod tests {
         //                                                    ^
     }
 
+    #[test]
+    fn get_descriptor_configuration() {
+        // OK: GET_DESCRIPTOR Configuration 0 [length=9]
+        assert_eq!(
+            Request::parse(0b1000_0000, 0x06, 0x02_00, 0, 9),
+            Ok(Request::GetDescriptor {
+                descriptor: Descriptor::Configuration { index: 0 },
+                length: 9
+            })
+        );
+
+        // has language ID but shouldn't
+        assert!(Request::parse(0b1000_0000, 0x06, 0x02_00, 1033, 9).is_err());
+        //                                                 ^^^^
+    }
+
+    #[cfg(TODO)]
     #[test]
     fn set_configuration() {
         // OK: SET_CONFIGURATION 1

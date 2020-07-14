@@ -1,5 +1,5 @@
 //! Some USB 2.0 data types
-// NOTE this is a solution to exercise `usb-3`
+// NOTE this is a partial solution to exercise `usb-2`
 
 #![deny(missing_docs)]
 #![deny(warnings)]
@@ -55,23 +55,23 @@ impl Request {
         const SET_ADDRESS: u8 = 5;
         const GET_DESCRIPTOR: u8 = 6;
 
+
         if bmrequesttype == 0b10000000 && brequest == GET_DESCRIPTOR {
             // see table 9-5
             const DEVICE: u8 = 1;
-            const CONFIGURATION: u8 = 2;
 
+            // 1. get descriptor type and descriptor index from wValue
             let desc_ty = (wvalue >> 8) as u8;
             let desc_index = wvalue as u8;
             let langid = windex;
 
+            // 2. confirm that the descriptor
+            //    - is of type DEVICE and
+            //    - has descriptor index 0 (i.e. it is the first implemented descriptor for this type) and
+            //    - has wIndex 0 (i.e. no language ID since it's not a string descriptor)
             if desc_ty == DEVICE && desc_index == 0 && langid == 0 {
                 Ok(Request::GetDescriptor {
                     descriptor: Descriptor::Device,
-                    length: wlength,
-                })
-            } else if desc_ty == CONFIGURATION && langid == 0 {
-                Ok(Request::GetDescriptor {
-                    descriptor: Descriptor::Configuration { index: desc_index },
                     length: wlength,
                 })
             } else {
@@ -102,6 +102,7 @@ pub enum Descriptor {
     Device,
 
     /// Configuration descriptor
+    #[cfg(TODO)]
     Configuration {
         /// Index of the descriptor
         index: u8,
@@ -164,6 +165,7 @@ mod tests {
         //                                                    ^
     }
 
+    #[cfg(TODO)]
     #[test]
     fn get_descriptor_configuration() {
         // OK: GET_DESCRIPTOR Configuration 0 [length=9]
