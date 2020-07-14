@@ -1,18 +1,14 @@
 # Flashing the Program
 
-✅ Use the following command to flash the ELF file to the device.
-
-``` console
-$ cargo flash --chip nRF52840_xxAA --elf target/thumbv7em-none-eabi/debug/hello
-```
-
-> NOTE: If you run into an error along the lines of "Debug power request failed" retry the operation and the error should disappear.
-
-Alternatively you can run this command, which builds the application before flashing it.
+✅ Use the following command to flash the program to the device.
 
 ``` console
 $ cargo flash --chip nRF52840_xxAA --bin hello
 ```
+
+> NOTE: If you run into an error along the lines of "Debug power request failed" retry the operation and the error should disappear.
+
+This subcommand will build the program first so you'll always flash the latest version.
 
 The `cargo-flash` subcommand flashes and runs the program but won't display logs. It is a deployment tool.
 
