@@ -37,7 +37,7 @@ To handle a SET_CONFIGURATION, do the following:
    - if `wValue` is non-zero and valid (was previously reported in a configuration descriptor) then move to the `Configured` state with the new configuration value
    - if `wValue` is not valid then stall the endpoint
 
-In all the cases where you did not stall the endpoint (by returning `Err`) you'll need to acknowledge the request by starting a STATUS stage.  
+In all the cases where you did not stall the endpoint (by returning `Err`) you'll need to acknowledge the request by starting a STATUS stage.
 This is done by writing 1 to the TASKS_EP0STATUS register.
 
 NOTE: On Windows, you may get a `GET_STATUS` request *before* the `SET_CONFIGURATION` request and although you *should* respond to it, stalling the `GET_STATUS` request seems sufficient to get the device to the `Configured` state.
@@ -91,8 +91,9 @@ INFO:usb_5 -- EP0: SetConfiguration { value: Some(42) }
 INFO:usb_5 -- entering the configured state
 ```
 
-These logs are from a Linux host. You can find traces for other OSes in these files (they are next to this README):
+These logs are from a Linux host. You can find traces for other OSes in these files (they are in the `advanced` folder):
 
+- `linux-configured.txt` (same logs as the ones shown above)
 - `win-configured.txt`, this file only contains the logs produced by running `print-descs`
 - `macos-configured.txt`
 
