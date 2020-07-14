@@ -99,11 +99,11 @@ now listening on channel 20
 now listening on channel 20
 ```
 
-If that's the case you are good to go.
+If that's the case you are good to go: proceed to the "Interference" section below.
 
-If you only get one line of output then your OS may be losing some serial data -- we have seen this behavior on some macOS machines. You will still be able to work through the exercises but will miss log data every now and then.
+If you only get one line of output then your OS may be losing some serial data -- we have seen this behavior on some macOS machines. You will still be able to work through the exercises but will miss log data every now and then. Proceed to the "Interference" section below.
 
-If you don't get *any* output from `serial-term` and/or the `change-channel` command fails then the Dongle's USB functionality is not working correctly. In this case you should use the `loopback-nousb*` programs. These have no USB functionality but you will be able to use them to do the exercises. There are four `.hex` files available. You can pick any of them but commit the number in the file name to memory; this is the radio channel the Dongle will listen to.
+If you don't get *any* output from `serial-term` and/or the `change-channel` command fails then the Dongle's USB functionality is not working correctly. In this case you should use the `loopback-nousb*` programs. These have no USB functionality but you will be able to use them to do the exercises. There are four `.hex` files available. You can pick any of them but commit the number in the file name to memory; this is the radio channel the Dongle will listen to. The "Interference" section below will not apply to you.
 
 ## Interference
 
