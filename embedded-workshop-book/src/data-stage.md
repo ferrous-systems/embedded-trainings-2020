@@ -6,10 +6,7 @@ An instance of this abstraction is available in the `board` value (`#[init]` fun
 
 The `Ep0In` API has two methods: `start` and `end` (also see their API documentation). `start` is used to start a DATA stage; this method takes a *slice of bytes* (`[u8]`) as argument; this argument is the response data. The `end` method needs to be called after `start`, when the EP0DATADONE event is raised, to complete the control transfer. `Ep0In` will automatically issue the STATUS stage that must follow the DATA stage.
 
-To implement responding to a GET_DESCRIPTOR request, do the following:
-
-1. **Extend the GET_DESCRIPTOR parser implementation to handle a CONFIGURATION request:** make the `common/usb/lib.rs::get_descriptor_configuration()` test run successfully.
-2. **Answer the Descriptor Request:** extend `usb-3.rs` so that it uses `Ep0In` to respond to the `GET_DESCRIPTOR Device` request (and only to that request). The response must be a device descriptor with its fields set to these values:
+To implement responding to a GET_DESCRIPTOR Device request, extend `usb-3.rs` so that it uses `Ep0In` to respond to the `GET_DESCRIPTOR Device` request (and only to that request). The response must be a device descriptor with its fields set to these values:
 
 - `bDeviceClass = bDeviceSubClass = bDeviceProtocol = 0`, these are unimportant for enumeration
 - `bMaxPacketSize0 = 64`, this is the most performant option (minimizes exchanges between the device and the host) and it's assumed by the `Ep0In` abstraction
