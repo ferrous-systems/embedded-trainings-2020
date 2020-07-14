@@ -6,7 +6,7 @@ If you've already completed the main workshop tasks or would like to explore mor
 
 If you check the API documentation of the `Radio` abstraction we have been using you'll notice that we haven't used these methods: `energy_detection_scan()`, `set_cca()` and `try_send()`.
 
-The first method scans the currently selected channel (see `set_channel`), measures the energy level of ongoing radio communication in this channel and returns the maximum energy observed over a span of time. This method can be used to determine what the *idle* energy level of a channel is. If there's non-802.15.4 traffic ongoing on this channel the method will return a high value.
+The first method scans the currently selected channel (see `set_channe()l`), measures the energy level of ongoing radio communication in this channel and returns the maximum energy observed over a span of time. This method can be used to determine what the *idle* energy level of a channel is. If there's non-IEEE 802.15.4 traffic on this channel the method will return a high value.
 
 Under the 802.15.4 specification, before sending a data packet devices must first check if there's communication going on in the channel. This process is known as Clear Channel Assessment (CCA). The `send` method we have been used performs CCA in a loop and sends the packet only when the channel appears to be idle. The `try_send` method performs CCA *once* and returns the `Err` variant is the channel appears to be busy. In this failure scenario the device does not send any packet.
 
