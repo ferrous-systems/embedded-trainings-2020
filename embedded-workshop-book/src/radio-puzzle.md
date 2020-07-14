@@ -18,7 +18,7 @@ The Dongle will respond differently depending on the length of the incoming pack
 
 The Dongle will always respond with packets that are valid UTF-8 so you can use `str::from_utf8` on the response packets.
 
-Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. It supplies a stack-allocated, fixed-capacity version of the `std::Vec` type which will come in handy to store byte arrays. Sto store character mappings we recommend using a `heapless::IndexMap`.
+Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. It supplies a stack-allocated, fixed-capacity version of the `std::Vec` type which will come in handy to store byte arrays. To store character mappings we recommend using a `heapless::IndexMap`.
 
 `heapless` is already declared as a dependency in the Cargo.toml of the project so you can directly import it into the application code using a `use` statement.
 
@@ -42,9 +42,10 @@ fn main() {
 }
 ```
 
-If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [IndexMap documentation][indexMap] of the `heapless` crate has some usage examples, as does th .
+If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [`heapless::IndexMap` documentation][indexMap] of the `heapless` crate has some usage examples, as does the [`heapless::Vec` documentation][vec].
 
 [indexMap]: https://docs.rs/heapless/0.5.5/heapless/struct.IndexMap.html
+[vec]: https://docs.rs/heapless/0.5.5/heapless/struct.Vec.html
 
 Something you will likely run into while solving this exercise are *character* literals (`'c'`) and *byte* literals (`b'c'`). The former has type [`char`] and represent a single Unicode "scalar value". The latter has type `u8` (1-byte integer) and it's mainly a convenience for getting the value of ASCII characters, for instance `b'A'` is the same as the `65u8` literal.
 
