@@ -5,7 +5,7 @@
 If you'd like to continue working on your workshop project, we recommend adding String Descriptors support to the USB firmware.
 
 - First, you'll want to read through section 9.6.7 of the USB spec, which covers string descriptors.
-- Next, we suggest you change your *configuration* descriptor to use string descriptors. You'll want to change the `iConfiguration` field to a non-zero value.
+- Next, we suggest you change your *configuration* descriptor to use string descriptors. You'll want to change the `iConfiguration` field to a non-zero value. Note that this change will likely break enumeration.
 - Now, re-run the program to see what new control requests you get from the host.
 - You'll need to update the `usb` parser to handle the new requests.
 - Then you can extend the logic of `ep0setup` to handle these new requests.
@@ -16,7 +16,7 @@ To verify that string descriptors are working in a cross-platform way you can ex
 
 [`read_string_descriptor`]: https://docs.rs/rusb/0.6.2/rusb/struct.DeviceHandle.html#method.read_string_descriptor
 
-## RTIC
+## Explore more RTIC features
 
 We have covered only a few of the core features of the RTIC framework but the framework has many more features like *software* tasks, tasks that can be spawned by the software; message passing between tasks; and task scheduling, which allows the creation of periodic tasks. We encourage to check the [RTIC book][rtic-book] which describes the features we haven't covered here.
 
@@ -24,7 +24,7 @@ We have covered only a few of the core features of the RTIC framework but the fr
 
 ## usb-device
 
-[`usb-device`] is a library for building USB devices. It has been built using traits (the pillar of Rust's *generics*) such that USB interfaces like HID and TTY ACM can be implemented in a device agnostic manner. The device details then are limited to a trait *implementation*. There's a work in progress implementation of the `usb-device` trait for the nRF52840 device in [this PR] and there are many `usb-device` "classes" like [HID] and [TTY ACM] that can be used with that trait implementation.
+[`usb-device`] is a library for building USB devices. It has been built using traits (the pillar of Rust's *generics*) such that USB interfaces like HID and TTY ACM can be implemented in a device agnostic manner. The device details then are limited to a trait *implementation*. There's a work in progress implementation of the `usb-device` trait for the nRF52840 device in [this PR] and there are many `usb-device` "classes" like [HID] and [TTY ACM] that can be used with that trait implementation. We encourage you to check out that implementation, test it on different OSes and report issues, or contribute fixes, to the `usb-device` ecosystem.
 
 [this PR]: https://github.com/nrf-rs/nrf-hal/pull/144
 [HID]: https://crates.io/crates/usbd-hid
