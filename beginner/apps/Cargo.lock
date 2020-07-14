@@ -179,7 +179,7 @@ checksum = "b1411551beb3c11dedfb0a90a0fa256b47d28b9ec2cdff34c25a2fa59e45dbdc"
 [[package]]
 name = "nrf-hal-common"
 version = "0.10.0"
-source = "git+https://github.com/japaric/nrf-hal?branch=radio#7076639891fd2493e1c61a7aca71944b48ae0458"
+source = "git+https://github.com/japaric/nrf-hal?branch=radio#b57ba8100eda0145de9823e63c7f5e2cf5d888d1"
 dependencies = [
  "cast",
  "cortex-m",
@@ -194,7 +194,7 @@ dependencies = [
 [[package]]
 name = "nrf52840-hal"
 version = "0.10.0"
-source = "git+https://github.com/japaric/nrf-hal?branch=radio#7076639891fd2493e1c61a7aca71944b48ae0458"
+source = "git+https://github.com/japaric/nrf-hal?branch=radio#b57ba8100eda0145de9823e63c7f5e2cf5d888d1"
 dependencies = [
  "cast",
  "cortex-m",
