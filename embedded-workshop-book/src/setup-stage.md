@@ -25,7 +25,7 @@ You will also find this information in the `// TODO implement ...` comment in th
 
 To complete the task, proceed like this:
 
-1. **Parse GET_DESCRIPTOR requests:**
+1. **Parse GET_DESCRIPTOR requests:**  
 Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
 
     - check table 9-4 in the USB specification for Request Codes
@@ -34,7 +34,7 @@ Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET
 
 See `advanced/common/usb/solution-get-descriptor-device.rs` for a solution.
 
-2. **Read incoming request information and pass it to the parser:**
+2. **Read incoming request information and pass it to the parser:**  
 modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EPSETUP event is received.
     - for a mapping of register names to the `USBD` API, check the entry for `nrf52840_hal::target::usbd` in the documentation you've created using `cargo doc`
     - remember that we've learned how to read registers in `events.rs`
