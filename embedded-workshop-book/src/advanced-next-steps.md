@@ -2,7 +2,7 @@
 
 ## String descriptors
 
-Here's one more USB exercise for you: add string descriptors support to the USB firmware.
+If you'd like to continue working on your workshop project, we recommend adding String Descriptors support to the USB firmware.
 
 - First, you'll want to read through section 9.6.7 of the USB spec, which covers string descriptors.
 - Next, we suggest you change your *configuration* descriptor to use string descriptors. You'll want to change the `iConfiguration` field to a non-zero value.

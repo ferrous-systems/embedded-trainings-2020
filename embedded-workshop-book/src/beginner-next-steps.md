@@ -2,9 +2,9 @@
 
 ## Collision avoidance
 
-Here's one more RADIO exercise for you: test out collision avoidance.
+If you've already completed the main workshop tasks or would like to explore more on your own, we suggest you test the collision avoidance of the IEEE 802.15.4 radio used by the Dongle and DK.
 
-If you check the API documentation of the `Radio` abstraction we have been using you'll notice that we haven't used these methods: `energy_detection_scan`, `set_cca` and `try_send`.
+If you check the API documentation of the `Radio` abstraction we have been using you'll notice that we haven't used these methods: `energy_detection_scan()`, `set_cca()` and `try_send()`.
 
 The first method scans the currently selected channel (see `set_channel`), measures the energy level of ongoing radio communication in this channel and returns the maximum energy observed over a span of time. This method can be used to determine what the *idle* energy level of a channel is. If there's non-802.15.4 traffic ongoing on this channel the method will return a high value.
 
@@ -27,7 +27,7 @@ Here are some things for you to try out:
 
 ## Interrupt handling
 
-We haven't covered interrupt handling in the workshop but the `cortex-m-rt` crate provides attributes to declare exception and interrupt handlers: `#[exception]` and `#[interrupt]`. You can find documentation about these attributes in the ["Concurrency" chapter][concurrency] of the Embedded Rust book.
+We haven't covered interrupt handling in the workshop but the `cortex-m-rt` crate provides attributes to declare exception and interrupt handlers: `#[exception]` and `#[interrupt]`. You can find documentation about these attributes and how to safely share data with interrupt handlers using Mutexes in the ["Concurrency" chapter][concurrency] of the Embedded Rust book.
 
 Another way to deal with interrupts is to use a framework like Real-Time Interrupt-driven Concurrency ([RTIC]); this framework has a [book] that explains how you can build reactive applications using interrupts. We use this framework in the advanced level workshop.
 
