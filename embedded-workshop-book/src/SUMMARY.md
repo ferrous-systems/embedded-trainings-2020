@@ -1,7 +1,8 @@
 # Summary
 
-- [Intro](./intro.md)
-- [Hardware](./hardware.md)
+- [Preparations](./preparations.md)
+    - [Checking the Hardware](./hardware.md)
+    - [Installation Instructions](./installation.md)
 - [Beginner Workbook](./beginner-workbook.md)
     - [Parts of an Embedded Program](./parts-embedded-program.md)
     - [Building an Embedded Program](./building-program.md)

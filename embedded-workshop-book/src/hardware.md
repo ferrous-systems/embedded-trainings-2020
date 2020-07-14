@@ -1,19 +1,112 @@
-# Hardware
+# Checking the Hardware
 
-In this workshop we'll use both the nRF52840 Development Kit (DK) and the nRF52840 Dongle. We'll mainly develop programs for the DK and use the Dongle to assist with some exercises.
+## nRF52840 Dongle
 
-For the span of this workshop keep the nRF52840 DK connected to your PC using a micro-USB cable. Connect the USB cable to the J2 port on the nRF52840 DK. Instructions to identify the USB ports on the nRF52840 board can be found in the top level README file.
+Connect the Dongle to your PC/laptop. Its red LED should start oscillating in intensity. The device will also show up as:
 
-[❗️link or crosspost J2 instructions, for less clicking]
+**Windows**: a USB Serial Device (COM port) in the Device Manager under the Ports section
 
-## The nRF52840
+**Linux**: a USB device under `lsusb`. The device will have a VID of `0x1915` and a PID of `0x521f` -- the `0x` prefix will be omitted in the output of `lsusb`:
 
-Some details about the nRF52840 microcontroller that are relevant to this workshop.
+``` console
+$ lsusb
+(..)
+Bus 001 Device 023: ID 1915:521f Nordic Semiconductor ASA 4-Port USB 2.0 Hub
+```
 
-- single core ARM Cortex-M4 processor clocked at 64 MHz
-- 1 MB of Flash (at address `0x0000_0000`)
-- 256 KB of RAM (at address `0x2000_0000`)
-- IEEE 802.15.4 and BLE (Bluetooth Low Energy) compatible radio
-- USB controller (device function)
+The device will also show up in the `/dev` directory as a `ttyACM` device:
 
-[❗️Info about Dongle]
+``` console
+$ ls /dev/ttyACM*
+/dev/ttyACM0
+```
+
+**macOS**: a usb device when executing `ioreg -p IOUSB -b -n "Open DFU Bootloader"`. The device will have a vendor ID (`"idVendor"`) of `6421` and a product ID (`"idProduct"`) of `21023`:
+
+``` console
+$ ioreg -p IOUSB -b -n "Open DFU Bootloader"
+(...)
+| +-o Open DFU Bootloader@14300000  <class AppleUSBDevice, id 0x100005d5b, registered, matched, ac$
+  |     {
+  |       (...)
+  |       "idProduct" = 21023
+  |       (...)
+  |       "USB Product Name" = "Open DFU Bootloader"
+  |       (...)
+  |       "USB Vendor Name" = "Nordic Semiconductor"
+  |       "idVendor" = 6421
+  |       (...)
+  |       USB Serial Number" = "CA1781C8A1EE"
+  |       (...)
+  |     }
+  |
+```
+
+The device will show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`:
+
+``` console
+$ ls /dev/tty.usbmodem*
+/dev/tty.usbmodemCA1781C8A1EE1
+```
+
+## nRF52840 Development Kit (DK)
+
+Connect one end of a micro USB cable to the USB connector *J2* of the board and the other end to your PC. 
+
+💬 These directions assume you are holding the board "horizontally" with components (switches, buttons and pins) facing up. In this position, rotate the board, so that its concave shaped short side faces right. You'll find one USB connector (J2) on the left edge, another USB connector (J3) on the bottom edge and 4 buttons on the bottom right corner.
+
+
+
+
+
+After connecting the DK to your PC/laptop it will show up as:
+
+**Windows**: a removable USB flash drive (named JLINK) and also as a USB Serial Device (COM port) in the Device Manager under the Ports section
+
+**Linux**: a USB device under `lsusb`. The device will have a VID of `0x1366` and a PID of `0x1015`  -- the `0x` prefix will be omitted in the output of `lsusb`:
+
+``` console
+$ lsusb
+(..)
+Bus 001 Device 014: ID 1366:1015 SEGGER 4-Port USB 2.0 Hub
+```
+
+The device will also show up in the `/dev` directory as a `ttyACM` device:
+
+``` console
+$ ls /dev/ttyACM*
+/dev/ttyACM0
+```
+
+**macOS**: a removable USB flash drive (named JLINK) in Finder and also a USB device named "J-Link" when executing `ioreg -p IOUSB -b -n "J-Link"`.
+
+``` console
+$ ioreg -p IOUSB -b -n "J-Link"
+(...)
+  | +-o J-Link@14300000  <class AppleUSBDevice, id 0x10000606a, registered, matched, active, busy 0 $
+  |     {
+  |       (...)
+  |       "idProduct" = 4117
+  |       (...)
+  |       "USB Product Name" = "J-Link"
+  |       (...)
+  |       "USB Vendor Name" = "SEGGER"
+  |       "idVendor" = 4966
+  |       (...)
+  |       "USB Serial Number" = "000683420803"
+  |       (...)
+  |     }
+  |
+```
+
+The device will also show up in the `/dev` directory as `tty.usbmodem<USB Serial Number>`:
+
+``` console
+$ ls /dev/tty.usbmodem*
+/dev/tty.usbmodem0006834208031
+```
+
+The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, check the position of the on-board switches:
+
+- Switch SW8, located on the bottom edge left corner, is set to the ON position; this is the left position of the two possible positions.
+- Switch SW9, located on the surface of the board, to the right of USB connector (J2), is set to the VDD position; this is the center position of the three possible positions.
