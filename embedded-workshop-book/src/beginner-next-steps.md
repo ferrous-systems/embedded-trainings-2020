@@ -15,10 +15,10 @@ The `Radio` abstraction supports 2 CCA modes: `CarrierSense` and `EnergyDetectio
 Here are some things for you to try out:
 - First, read the section 6.20.12.4 of the nRF52840 Product Specification, which covers the nRF52840's implementation of CCA.
 
-- Disconnect the Dongle. Write a program for the DK that scans and reports the energy levels of all valid 802.15.4 channels. In your location which channels have high energy levels when there's no ongoing 802.15.4 traffic? If you can, use an application like [WiFi Analyzer] to see which WiFi channels are in use in your location. Compare the output of WiFiAnalyzer to the values you got from  `energy_detection_scan`. Is there a correspondence? Note that WiFi channels don't match in frequency with 802.15.4 channels; some mapping is required to convert between them -- check [this resource] for more details about co-existence between 802.15.4 and WiFi.
+- Disconnect the Dongle. Write a program for the DK that scans and reports the energy levels of all valid 802.15.4 channels. In your location which channels have high energy levels when there's no ongoing 802.15.4 traffic? If you can, use an application like [WiFi Analyzer] to see which WiFi channels are in use in your location. Compare the output of WiFiAnalyzer to the values you got from  `energy_detection_scan`. Is there a correspondence? Note that WiFi channels don't match in frequency with 802.15.4 channels; some mapping is required to convert between them -- [check this illustration for more details about co-existence of 802.15.4 and WiFi][coexistence].
 
 [WiFi Analyzer]: https://play.google.com/store/apps/details?id=com.farproc.wifi.analyzer&hl=en
-[this resource]: https://inet.omnetpp.org/docs/showcases/wireless/coexistence/doc/
+[coexistence]: https://inet.omnetpp.org/docs/showcases/wireless/coexistence/doc/
 
 - Choose the channel with the highest idle energy. Now write a program on the DK that sets the CCA mode to `EnergyDetection` and then send a packet over this channel using `try_send`. The `EnergyDetection` CCA mode requires a Energy Detection (ED) "threshold" value. Try different threshold values. What threshold value makes the `try_send` succeed?
 
