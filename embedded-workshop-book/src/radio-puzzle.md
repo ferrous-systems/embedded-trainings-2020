@@ -18,7 +18,7 @@ The Dongle will respond differently depending on the length of the incoming pack
 
 The Dongle will always respond with packets that are valid UTF-8 so you can use `str::from_utf8` on the response packets.
 
-Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. A `Vec`-like buffer may also come in handy; `heapless` provides a stack-allocated, fixed-capacity version of the `std::Vec` type.
+Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. It supplies a stack-allocated, fixed-capacity version of the `std::Vec` type which will come in handy to store byte arrays. Sto store character mappings we recommend using a `heapless::IndexMap`.
 
 `heapless` is already declared as a dependency in the Cargo.toml of the project so you can directly import it into the application code using a `use` statement.
 
@@ -26,13 +26,24 @@ Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not 
 [crates.io]: https://crates.io/crates/heapless
 
 
-
 ``` rust
-use heapless::IndexMap; // a dictionary / map
-use heapless::Vec; // like `std::Vec` but stack-allocated
+use heapless::Vec;         // like `std::Vec` but stack-allocated
+use heapless::FnvIndexMap; // a dictionary / map
+use heapless::consts::*;   // defines U16, U32, U64... etc. to set the size of the IndexMap
+
+fn main() {
+    // A hash map with a capacity of 16 key-value pairs allocated on the stack
+    let mut my_map = FnvIndexMap::<_, _, U16>::new();
+    my_map.insert(b'A', b'~').unwrap();
+
+    // A vector with a fixed capacity of 8 elements allocated on the stack
+    let mut my_vec = Vec::<_, U8>::new();
+    my_vec.push(b'A').unwrap();
+}
 ```
 
-If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [IndexMap documentation][indexMap] of the `heapless` crate has some usage examples.
+If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [IndexMap documentation][indexMap] of the `heapless` crate has some usage examples, as does th .
+
 [indexMap]: https://docs.rs/heapless/0.5.5/heapless/struct.IndexMap.html
 
 Something you will likely run into while solving this exercise are *character* literals (`'c'`) and *byte* literals (`b'c'`). The former has type [`char`] and represent a single Unicode "scalar value". The latter has type `u8` (1-byte integer) and it's mainly a convenience for getting the value of ASCII characters, for instance `b'A'` is the same as the `65u8` literal.
