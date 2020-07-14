@@ -32,7 +32,8 @@ use heapless::IndexMap; // a dictionary / map
 use heapless::Vec; // like `std::Vec` but stack-allocated
 ```
 
-If you haven't use a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [crate level documentation][`heapless`] of the `heapless` crate has some examples.
+If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [IndexMap documentation][indexMap] of the `heapless` crate has some usage examples.
+[indexMap]: https://docs.rs/heapless/0.5.5/heapless/struct.IndexMap.html
 
 Something you will likely run into while solving this exercise are *character* literals (`'c'`) and *byte* literals (`b'c'`). The former has type [`char`] and represent a single Unicode "scalar value". The latter has type `u8` (1-byte integer) and it's mainly a convenience for getting the value of ASCII characters, for instance `b'A'` is the same as the `65u8` literal.
 
