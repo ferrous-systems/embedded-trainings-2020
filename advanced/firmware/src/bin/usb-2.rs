@@ -45,10 +45,20 @@ fn on_event(_usbd: &USBD, event: Event) {
 
         Event::UsbEp0Setup => {
             // TODO read USBD registers
+
+            // the BMREQUESTTYPE register contains information about data recipient, transfer type and direction
             let bmrequesttype: u8 = 0;
+            // the BREQUEST register stores the type of the current request (e.g. SET_ADDRESS, GET_DESCRIPTOR, ...)
             let brequest: u8 = 0;
+            // wLength denotes the number of bytes to transfer (if any)
+            // composed of a high register (WLENGTHH) and a low register (WLENGTHL)
             let wlength: u16 = 0;
+            // wIndex is a generic index field whose meaning depends on the request type
+            // composed of a high register (WINDEXH) and a low register (WINDEXL)
             let windex: u16 = 0;
+            // wValue is a generic paremeter field meaning depends on the request type (e.g. contains the device
+            // address in SET_ADRESS requests)
+            // composed of a high register (WVALUEH) and a low register (WVALUEL)
             let wvalue: u16 = 0;
 
             log::info!(
