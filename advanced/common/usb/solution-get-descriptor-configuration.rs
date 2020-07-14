@@ -1,5 +1,5 @@
 //! Some USB 2.0 data types
-// NOTE this is a solution to exercise `usb-3`
+// NOTE this is a partial solution to exercise `usb-4`
 
 #![deny(missing_docs)]
 #![deny(warnings)]

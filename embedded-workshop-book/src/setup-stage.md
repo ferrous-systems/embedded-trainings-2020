@@ -1,6 +1,6 @@
 # USB-2: SETUP Stage
 
-At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the registers BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}.  
+At the end of program `usb-1` we received a EP0SETUP event. This event signals the *end* of the SETUP stage of a control transfer.  The nRF52840 USBD peripheral will automatically receive the SETUP data and store it in the registers BMREQUESTTYPE, BREQUEST, WVALUE{L,H}, WINDEX{L,H} and WLENGTH{L,H}.
 In `usb-2.rs`, you will find a short description of each register above the variable into which it should be read.
 
 > For in-depth register documentation, refer to sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec].
@@ -32,7 +32,7 @@ Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET
     - remember that you can define binary literals by prefixing them with `0b`
     - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of a `u16`
 
-See `advanced/common/usb/src/get-descriptor-device.rs` for a solution.
+See `advanced/common/usb/solution-get-descriptor-device.rs` for a solution.
 
 2. **Read incoming request information and pass it to the parser:**  
 modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EPSETUP event is received.
@@ -54,5 +54,5 @@ INFO:usb_2 -- Goal reached; move to the next section
 
 `wlength` / `length` can vary depending on the OS, USB port (USB 2.0 vs USB 3.0) or the presence of a USB hub so you may see a different value.
 
-You can find a solution to step 1. in `advanced/common/usb/get-descriptor-device.rs`.  
+You can find a solution to step 1. in `advanced/common/usb/solution-get-descriptor-device.rs`.
 You can find a solution to step 2. in `advanced/firmware/src/bin/usb-2-solution.rs`.

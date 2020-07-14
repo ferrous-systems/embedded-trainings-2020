@@ -11,7 +11,7 @@ For each green test, you can extend `usb-4.rs` to handle the new requests your p
 
 If you need a reference, you can find solutions to parsing `GET_DESCRIPTOR Configuration` and `SET_CONFIGURATION` requests in the following files:
 
-- `advanced/common/src/get-descriptor-configuration.rs`
-- `advanced/common/src/set-configuration.rs`
+- `advanced/common/usb/solution-get-descriptor-configuration.rs`
+- `advanced/common/usb/solution-set-configuration.rs`
 
-Each file contains just enough code to parse the request in its name and the `GET_DESCRIPTOR Device` request. So you can refer to `set-configuration.rs` without getting "spoiled" about how to parse the `SET_CONFIGURATION` request.
+Each file contains just enough code to parse the request in its name and the `GET_DESCRIPTOR Device` and `SET_ADDRESS` requests. So you can refer to `solution-get-descriptor-configuration.rs` without getting "spoiled" about how to parse the `SET_CONFIGURATION` request.
