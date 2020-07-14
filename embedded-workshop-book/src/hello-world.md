@@ -1,8 +1,6 @@
 # Hello, world!
 
-In this section, we'll set up the integration in VS Code and run the first program. 
-
-✅ Open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
+In this section, we'll set up the integration in VS Code and run the first program.
 
 ✅ Open the `advanced/firmware` folder in VS Code and open the `src/bin/hello.rs` file from the `advanced/apps` folder.
 

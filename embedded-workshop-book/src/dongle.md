@@ -8,12 +8,6 @@ From this section on, we'll use the nRF52840 Dongle in addition to the nRF52840 
  Put the Dongle in front of you, so that the side with the parts mounted on faces up. Rotate it, so that the narrower part of the board, the surface USB connector, faces away from you.
  The Dongle has two buttons. They are next to each other in the lower left corner of the Dongle. The reset button (RESET) is mounted sideways, it's square shaped button faces you. Further away from you is the round-ish user button (SW1), which faces up.
 
-✅ Install the `dongle-flash` tool by running the following command from the `tools/dongle-flash` directory.
-
-``` console
-$ cargo install --path . -f
-```
-
 The Dongle does not contain an on-board debugger, like the DK, so we cannot use `probe-rs` tools to write programs into it. Instead, the Dongle's stock firmware comes with a *bootloader*.
 
 When put in bootloader mode the Dongle will run a bootloader program instead of the last application that was flashed into it. This bootloader program will make the Dongle show up as a USB CDC ACM device (AKA Serial over USB device) that accepts new application images over this interface. We'll use the `nrfutil` tool to communicate with the bootloader-mode Dongle and flash new images into it.
@@ -22,9 +16,9 @@ When put in bootloader mode the Dongle will run a bootloader program instead of 
 
 When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
 
-You can also use the tool `usb-list`, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
+You can also use our `usb-list` tool, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
 
-✅ Run `cargo run` from `tools/usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
+✅ Run the `usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
 
 Output should look like this:
 ``` console
@@ -55,20 +49,17 @@ After the device has been programmed it will automatically reset and start runni
 
 The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device.
 
-✅ Run `usb-list` tool from the `tools/usb-list` directory to see the newly enumerated Dongle in the output:
+✅ Run the `usb-list` tool to see the newly enumerated Dongle in the output:
 
 ``` console
-$ cargo run
+$ usb-list
+(..)
 Bus 001 Device 020: ID 2020:0309 <- nRF52840 Dongle (loopback.hex)
 ```
 
 The `loopback` app will log messages over the USB interface. To display these messages on the host we have provided a cross-platform tool: `serial-term`.
 
-✅ Install it by running the following command from the `tools/serial-term` directory.
-
-``` console
-$ cargo install --path . -f
-```
+❗ Do not use serial terminal emulators like `minicom` or `screen`. They use the USB TTY ACM interface in a slightly different manner and may result in data loss.
 
 ✅ Run the `serial-term` application. You should see the following output:
 

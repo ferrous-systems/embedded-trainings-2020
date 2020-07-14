@@ -2,7 +2,7 @@
 
 ## Setup check
 
-✅ First, let's check that you have installed all the required tools.
+✅ First, let's check that you have installed all the tools listed in the previous section.
 
 ❗ The first two commands *must* return version `0.8.x`
 
@@ -19,6 +19,8 @@ cargo-size 0.3.0
 $ nrfutil version
 nrfutil version 6.1.0
 ```
+
+Note: The first two commands *must* return version `0.8.x`
 
 ## More tools
 
