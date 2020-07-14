@@ -161,6 +161,28 @@ $ rustup +stable component add llvm-tools-preview
 $ cargo install cargo-binutils
 ```
 
+### Cargo subcommands
+
+Install version v0.8.0 of the `cargo-flash` and `cargo-embed` subcommands, as well as the `cargo-binutils` set of subcommands and the `cargo-bloat` subcommand using the following Cargo commands:
+
+``` console
+$ cargo install cargo-flash --version 0.8.0 -f
+(..)
+Installed package `cargo-flash v0.8.0` (..)
+
+$ cargo install cargo-embed --version 0.8.0 -f
+(..)
+Installed package `cargo-embed v0.8.0` (..)
+
+$ cargo install cargo-binutils
+(..)
+Installed package `cargo-binutils v0.3.0` (..)
+
+$ cargo install cargo-bloat
+(..)
+Installed package `cargo-bloat v0.9.3` (..)
+```
+
 ### Python
 
 **Windows**: Go to https://www.python.org/downloads/ and run the Python *3* installer
@@ -287,28 +309,6 @@ $ cargo install nrf-recover
 $ nrf-recover -y
 Starting mass erase...
 Mass erase completed, chip unlocked
-```
-
-### Cargo subcommands
-
-Install version v0.8.0 of the `cargo-flash` and `cargo-embed` subcommands, as well as the `cargo-binutils` set of subcommands and the `cargo-bloat` subcommand using the following Cargo commands:
-
-``` console
-$ cargo install cargo-flash --version 0.8.0 -f
-(..)
-Installed package `cargo-flash v0.8.0` (..)
-
-$ cargo install cargo-embed --version 0.8.0 -f
-(..)
-Installed package `cargo-embed v0.8.0` (..)
-
-$ cargo install cargo-binutils
-(..)
-Installed package `cargo-binutils v0.3.0` (..)
-
-$ cargo install cargo-bloat
-(..)
-Installed package `cargo-bloat v0.9.3` (..)
 ```
 
 ## License
