@@ -1,12 +1,12 @@
-// f6c27c0a5af464795d1a64c45fa1b3039f44a62a
 #![deny(unused_must_use)]
 #![no_main]
 #![no_std]
 
-use core::fmt::Write as _;
+use core::{convert::TryFrom, fmt::Write as _};
 
+use async_core::unsync::Mutex;
 use hal::{
-    radio::{self, Channel, Packet},
+    radio::{self, Channel},
     usbd,
 };
 use heapless::{consts, String};
@@ -14,17 +14,67 @@ use panic_abort as _;
 
 #[no_mangle]
 fn main() -> ! {
-    let mut stx = usbd::serial();
-    let (mut rtx, mut rrx) = radio::claim(Channel::_20);
-    let mut output = String::::new();
+    let stx = Mutex::new(usbd::serial());
+    let (mut hidout, _) = usbd::hid();
+    let (rtx, mut rrx) = radio::claim(Channel::_20);
+
+    let mut output = String::<consts::U128>::new();
 
     output.push_str("deviceid=").ok();
     write!(output, "{:08x}{:08x}", hal::deviceid1(), hal::deviceid0()).ok();
-    write!(output, " channel={} TxPower=+8dBm app=loopback.hex\n", rtx.channel()).ok();
+    write!(
+        output,
+        " channel={} TxPower=+8dBm app=loopback.hex\n",
+        rtx.channel()
+    )
+    .ok();
 
-    let task = async {
-        let mut packet = Packet::new().await;
-        stx.write(output.as_bytes());
+    let rtx = Mutex::new(rtx);
+
+    let t1 = async {
+        let mut output = String::<consts::U128>::new();
+        let mut hidbuf = usbd::Packet::new().await;
+        let zlp = radio::Packet::new().await;
+
+        loop {
+            hidout.recv(&mut hidbuf).await;
+            semidap::info!("HID: {}", *hidbuf);
+
+            let arg = if hidbuf.len() == 1 {
+                // Linux / macOS
+                Some(hidbuf[0])
+            } else if hidbuf.len() == 64 {
+                // Windows (it zero pads the packet)
+                Some(hidbuf[0])
+            } else {
+                None
+            };
+
+            if let Some(arg) = arg {
+                if let Ok(chan) = Channel::try_from(arg) {
+                    let mut rtx = rtx.lock().await;
+                    rtx.set_channel(chan);
+                    // send a zero-length packet to force the radio to listen on the new channel
+                    rtx.write(&zlp).await.ok();
+                    drop(rtx);
+
+                    output.clear();
+                    writeln!(output, "now listening on channel {}", chan).ok();
+                    stx.lock().await.write(output.as_bytes());
+                } else {
+                    stx.lock()
+                        .await
+                        .write(b"requested channel is out of range (11-26)\n");
+                }
+            } else {
+                stx.lock().await.write(b"invalid HID packet\n");
+            }
+        }
+    };
+
+    let t2 = async {
+        let mut packet = radio::Packet::new().await;
+        stx.lock().await.write(output.as_bytes());
 
         loop {
             let crcres = rrx.read(&mut packet).await;
@@ -39,7 +89,7 @@ fn main() -> ! {
             let mut busy = false;
             if crcres.is_ok() {
                 packet.reverse();
-                busy = rtx.write(&packet).await.is_err();
+                busy = rtx.lock().await.write(&packet).await.is_err();
             }
 
             output.clear();
@@ -64,12 +114,12 @@ fn main() -> ! {
 
             if busy {
                 output.push_str("didn't reply -- channel was busy\n").ok();
-                stx.write(output.as_bytes());
+                stx.lock().await.write(output.as_bytes());
             }
 
-            stx.write(output.as_bytes());
+            stx.lock().await.write(output.as_bytes());
         }
     };
 
-    executor::run!(task)
+    executor::run!(t1, t2)
 }

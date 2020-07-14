@@ -8,7 +8,7 @@ First run the program as it is. You should new output in the output of the `seri
 
 ``` console
 $ serial-term
-deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
+deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 received 5 bytes (LQI=49)
 ```
 
@@ -103,7 +103,7 @@ Now run the `radio-send` program several times with different variations:
 - change the length of the packet
 - different combinations of all of the above
 
-Take note of how LQI changes with these changes. Do packet loss occur in any of these configurations?
+Take note of how LQI changes with these changes. Does packet loss occur in any of these configurations?
 
 > NOTE if you decide to send many packets in a single program then you should use the `Timer` API to insert a delay of at least five milliseconds between the transmissions. This is required because the Dongle will use the radio medium right after it receives a packet. Not including the delay will result in the Dongle missing packets
 
@@ -111,6 +111,6 @@ Take note of how LQI changes with these changes. Do packet loss occur in any of 
 
 ## 802.15.4 compatibility
 
-The radio API we are using follows the PHY layer of the IEEE 802.15.4 specification but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
+The radio API we are using follows the PHY layer of the IEEE 802.15.4 specification, but it's missing MAC level features like addressing (each device gets its own address), opt-in acknowledgment (a transmitted packet must be acknowledged with a response acknowledgment packet; the packet is re-transmitted if the packet is not acknowledged in time). These MAC level features are not implemented *in hardware* (in the nRF52840 Radio peripheral) so they would need to be implemented in software to be fully IEEE 802.15.4 compliant.
 
 This is not an issue for the workshop exercises but it's something to consider if you would like to continue from here and build a 802.15.4 compliant network API.

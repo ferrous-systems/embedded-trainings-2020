@@ -20,7 +20,7 @@ $ cargo doc -p dk --open
 
 ✅ Uncomment the `log::set_max_level` line. This will make the logs more verbose; they will now include logs from the board initialization function (`dk::init`) and from the `Led` API.
 
-Among the logs you'll find the line "I/O pins have been configured for digital output". At this point the electrical pins of the nRF52840 microcontroller has been configured to drive the 4 LEDs on the board.
+Among the logs you'll find the line "I/O pins have been configured for digital output". At this point the electrical pins of the nRF52840 microcontroller have been configured to drive the 4 LEDs on the board.
 
 After the `dk::init` logs you'll find logs about the `Led` API. As the logs indicate an LED becomes active when the output of the pin is a *logical zero*, which is also referred as the "low" state. This "active low" configuration does not apply to all boards: it depends on how the pins have been wired to the LEDs. You should refer to the [board documentation] to find out which pins are connected to LEDs and whether "active low" or "active high" applies to it.
 

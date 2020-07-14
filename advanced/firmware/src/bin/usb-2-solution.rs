@@ -44,12 +44,22 @@ fn on_event(usbd: &USBD, event: Event) {
         Event::UsbEp0DataDone => todo!(),
 
         Event::UsbEp0Setup => {
+
+            // the BMREQUESTTYPE register contains information about data recipient, transfer type and direction
             let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
+            // the BREQUEST register stores the type of the current request (e.g. SET_ADDRESS, GET_DESCRIPTOR, ...)
             let brequest = usbd.brequest.read().brequest().bits();
+            // wLength denotes the number of bytes to transfer (if any)
+            // composed of a high register (WLENGTHH) and a low register (WLENGTHL)
             let wlength = (u16::from(usbd.wlengthh.read().wlengthh().bits()) << 8)
                 | u16::from(usbd.wlengthl.read().wlengthl().bits());
+            // wIndex is a generic index field whose meaning depends on the request type
+            // composed of a high register (WINDEXH) and a low register (WINDEXL)
             let windex = (u16::from(usbd.windexh.read().windexh().bits()) << 8)
                 | u16::from(usbd.windexl.read().windexl().bits());
+            // wValue is a generic paremeter field meaning depends on the request type (e.g. contains the device
+            // address in SET_ADRESS requests)
+            // composed of a high register (WVALUEH) and a low register (WVALUEL)
             let wvalue = (u16::from(usbd.wvalueh.read().wvalueh().bits()) << 8)
                 | u16::from(usbd.wvaluel.read().wvaluel().bits());
 
