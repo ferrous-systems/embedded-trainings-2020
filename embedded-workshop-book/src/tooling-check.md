@@ -20,8 +20,6 @@ $ nrfutil version
 nrfutil version 6.1.0
 ```
 
-Note: The first two commands *must* return version `0.8.x`
-
 ## More tools
 
 ✅ Now let's install some tools shipped with the workshop material.
