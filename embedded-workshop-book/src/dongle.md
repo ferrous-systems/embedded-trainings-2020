@@ -5,7 +5,7 @@ Next, we'll look into the radio API exposed by the `dk` HAL. But before that we'
 From this section on, we'll use the nRF52840 Dongle in addition to the nRF52840 DK. We'll run some pre-compiled programs on the Dongle and write programs for the DK that will interact with the Dongle over a radio link.
 
  **💬 How to find the buttons on the Dongle:**
- Put the Dongle in front of you, so that the side with the parts moundted on faces up. Rotate it, so that the narrower part of the board, the surface USB connector, faces away from you. 
+ Put the Dongle in front of you, so that the side with the parts mounted on faces up. Rotate it, so that the narrower part of the board, the surface USB connector, faces away from you. 
  The Dongle has two buttons. They are next to each other in the lower left corner of the Dongle. The reset button (RESET) is mounted sideways, it's square shaped button faces you. Further away from you is the round-ish user button (SW1), which faces up.
 
 ✅ Install the `dongle-flash` tool by running the following command from the `tools/dongle-flash` directory.
