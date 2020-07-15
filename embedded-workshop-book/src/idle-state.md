@@ -55,7 +55,7 @@ You can find traces for other OSes in these files (they are in the `advanced` fo
 - `macos-enumeration.txt`
 - `win-enumeration.txt`
 
-At this point you can double check that the enumeration works by running the [`usb-list` tool](#listing-usb-devices) while `usb-4.rs` is running.
+At this point you can double check that the enumeration works by running the [`usb-list` tool](./listing-usb-devices.md) while `usb-4.rs` is running.
 
 ``` console
 Bus 001 Device 013: ID 1366:1015 <- J-Link on the nRF52840 Development Kit
