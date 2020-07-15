@@ -8,6 +8,6 @@ Start tracking and updating the device state to move your request handling forwa
 
 1. **Update the handling of the `USBRESET` event:** Instead of ignoring it, we now want it to change the state of the USB device. See section 9.1 USB Device States of the USB specification for details on what to do.
 
-2. **Update the handling of `SET_ADDRESS` requests:** See the section on [Handling SET_ADDRESS Requests](#handling-set_address-requests) of this tutorial for details.
+2. **Update the handling of `SET_ADDRESS` requests:** See the section on [Handling SET_ADDRESS Requests](./set-address.md#handling-set_address-requests) of this tutorial for details.
 
-3. **Implement the handling of `GET_DESCRIPTOR Configuration` requests:** See the section on [Handling GET_DESCRIPTOR Configuration Requests](#handling-get_descriptor-configuration-requests) of this tutorial for details.
+3. **Implement the handling of `GET_DESCRIPTOR Configuration` requests:** See the section on [Handling GET_DESCRIPTOR Configuration Requests](./get-descriptor-config.md#handling-get_descriptor-configuration-requests) of this tutorial for details.

@@ -5,7 +5,7 @@ Next, we'll look into the radio API exposed by the `dk` HAL. But before that we'
 From this section on, we'll use the nRF52840 Dongle in addition to the nRF52840 DK. We'll run some pre-compiled programs on the Dongle and write programs for the DK that will interact with the Dongle over a radio link.
 
  **💬 How to find the buttons on the Dongle:**
- Put the Dongle in front of you, so that the side with the parts mounted on faces up. Rotate it, so that the narrower part of the board, the surface USB connector, faces away from you. 
+ Put the Dongle in front of you, so that the side with the parts mounted on faces up. Rotate it, so that the narrower part of the board, the surface USB connector, faces away from you.
  The Dongle has two buttons. They are next to each other in the lower left corner of the Dongle. The reset button (RESET) is mounted sideways, it's square shaped button faces you. Further away from you is the round-ish user button (SW1), which faces up.
 
 ✅ Install the `dongle-flash` tool by running the following command from the `tools/dongle-flash` directory.
@@ -18,11 +18,11 @@ The Dongle does not contain an on-board debugger, like the DK, so we cannot use 
 
 When put in bootloader mode the Dongle will run a bootloader program instead of the last application that was flashed into it. This bootloader program will make the Dongle show up as a USB CDC ACM device (AKA Serial over USB device) that accepts new application images over this interface. We'll use the `nrfutil` tool to communicate with the bootloader-mode Dongle and flash new images into it.
 
-✅ Connect the Dongle to your computer. Put the Dongle in bootloader mode by  pressing its *reset* button. 
- 
+✅ Connect the Dongle to your computer. Put the Dongle in bootloader mode by  pressing its *reset* button.
+
 When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
 
-You can also use the tool `usb-list`, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle. 
+You can also use the tool `usb-list`, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
 
 ✅ Run `cargo run` from `tools/usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
 
@@ -53,7 +53,7 @@ Device programmed.
 
 After the device has been programmed it will automatically reset and start running the new application.
 
-The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device. 
+The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device.
 
 ✅ Run `usb-list` tool from the `tools/usb-list` directory to see the newly enumerated Dongle in the output:
 
@@ -62,7 +62,7 @@ $ cargo run
 Bus 001 Device 020: ID 2020:0309 <- nRF52840 Dongle (loopback.hex)
 ```
 
-The `loopback` app will log messages over the USB interface. To display these messages on the host we have provided a cross-platform tool: `serial-term`. 
+The `loopback` app will log messages over the USB interface. To display these messages on the host we have provided a cross-platform tool: `serial-term`.
 
 ✅ Install it by running the following command from the `tools/serial-term` directory.
 
@@ -79,7 +79,13 @@ deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 
 This line is printed by the `loopback` app on boot. It contains the device ID of the dongle, a 64-bit unique identifier (so everyone will see a different number); the radio channel that the device will use to communicate; and the transmission power of the radio in dBm.
 
-At this point you should *not* get more output from `serial-term`. 
+If you don't get any output from `serial-term` check [the USB dongle troubleshooting section][usb-issues].
+
+[usb-issues]: /troubleshoot-usb-dongle.html
+
+## Interference
+
+At this point you should *not* get more output from `serial-term`.
 
 ❗If you get "received N bytes" lines in output like this:
 

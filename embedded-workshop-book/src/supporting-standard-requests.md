@@ -2,8 +2,8 @@
 
 After responding to the `GET_DESCRIPTOR Device` request the host will start sending different requests. The parser in `common/usb` will need to be updated to handle these requests:
 
-1. `GET_DESCRIPTOR Configuration`, see section [Handling GET_DESCRIPTOR Configuration Requests](#handling-get_descriptor-configuration-requests)
-2. `SET_CONFIGURATION`, see section [SET_CONFIGURATION](#set_configuration) of this course material
+1. `GET_DESCRIPTOR Configuration`, see the section on [Handling GET_DESCRIPTOR Configuration Requests](./get-descriptor-config.md#handling-get_descriptor-configuration-requests)
+2. `SET_CONFIGURATION`, see the section on [SET_CONFIGURATION](./getting-device-configured.md#set_configuration) of this course material
 
 The starter `common/usb` code contains unit tests for these other requests as well as extra `Request` variants for these requests. All of them have been commented out using a `#[cfg(TODO)]` attribute which you can remove once you need any new variant or new unit test.
 

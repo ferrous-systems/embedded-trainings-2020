@@ -4,9 +4,7 @@ Pre-made applications for the nRF52840 Dongle.
 
 These applications will be used in the beginner workshop.
 
-## Getting familiar with the hardware
-
-> TODO review for accessibility
+## Hardware
 
 ### LEDs
 

@@ -58,3 +58,4 @@
     - [Rust analyzer is not working](./troubleshoot-rust-analyzer.md)
     - [`cargo-build` fails to link](./troubleshoot-cargo-build.md)
     - [`dongle-flash` is not working](./troubleshoot-dongle-flash.md)
+    - [Dongle USB functionality is not working](./troubleshoot-usb-dongle.md)

@@ -7,6 +7,8 @@ Your task in this section is to decrypt the [substitution cipher] encrypted *ASC
 
   ✅ Flash the `puzzle.hex` program on the Dongle. Follow the instructions from the "nRF52840 Dongle" section but flash the `puzzle.hex` program instead of the `loopback.hex` one -- don't forget to put the Dongle in bootloader mode before invoking `dongle-flash`.
 
+> Note: If you experienced USB issues with `loopback.hex` you use the `puzzle-nousb*.hex` variants.
+
 Like in the previous sections the Dongle will listen for radio packets -- this time over *channel 25* -- while also logging messages over a USB/serial interface.
 
 ✅ Open the `beginner/apps` folder in VS Code; then open the `src/bin/radio-puzzle.rs` file. Run the program. 
