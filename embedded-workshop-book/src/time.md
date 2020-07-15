@@ -8,6 +8,6 @@ This program will blink (turn on and off) one of the LEDs on the board. The time
 
 [`Duration`]: https://doc.rust-lang.org/core/time/struct.Duration.html
 
-The other time related API exposed by the `dk` HAL is the `dk::uptime` function. This function returns the time that has elapsed since the call to the `dk::init` function. This function is used in the program to log the time of each LED toggle operation.
+✅ Try changing the `Duration` value passed to `Timer.wait`. Try values larger than one second and smaller than one second. What values of `Duration` make the blinking imperceptible?
 
-[❗️assignment to chnge something]
+The other time related API exposed by the `dk` HAL is the `dk::uptime` function. This function returns the time that has elapsed since the call to the `dk::init` function. This function is used in the program to log the time of each LED toggle operation.
