@@ -1,8 +1,10 @@
 # Listing USB Devices
 
-In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool.
-
 ✅ To list all USB devices, run `usb-list`.
+
+❗️ If you haven't yet installed `usb-list`; [installation instructions can be found in a previous section][install].
+
+[install]: ./tooling-check.md#more-tools
 
 ``` console
 $ usb-list
