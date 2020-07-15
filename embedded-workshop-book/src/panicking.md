@@ -1,6 +1,6 @@
 # Panicking
 
-Open the `src/bin/panic.rs` file and click the "Run" button.
+✅ Open the `src/bin/panic.rs` file and click the "Run" button.
 
 This program attempts to index an array beyond its length and this results in a panic.
 
@@ -18,7 +18,9 @@ stack backtrace:
    8: 0x0000199e - Reset
 ```
 
-In `no_std` programs the behavior of panic is defined using the `#[panic_handler]` attribute. In the example, the *panic handler* is defined in the `panic_log` crate but we can also implement it manually: comment out the `panic_log` import and add the following function to the example:
+In `no_std` programs the behavior of panic is defined using the `#[panic_handler]` attribute. In the example, the *panic handler* is defined in the `panic_log` crate but we can also implement it manually: 
+
+✅ Comment out the `panic_log` import and add the following function to the example:
 
 ``` rust
 #[panic_handler]

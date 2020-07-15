@@ -1,7 +1,8 @@
 # Summary
 
-- [Intro](./intro.md)
-- [Hardware](./hardware.md)
+- [Preparations](./preparations.md)
+    - [Checking the Hardware](./hardware.md)
+    - [Installation Instructions](./installation.md)
 - [Beginner Workbook](./beginner-workbook.md)
     - [Parts of an Embedded Program](./parts-embedded-program.md)
     - [Building an Embedded Program](./building-program.md)
@@ -14,6 +15,9 @@
     - [Timers and Time](./time.md)
     - [nRF52840 Dongle](./dongle.md)
     - [Radio Out](./radio-out.md)
+        - [Radio Setup](./radio-setup.md)
+        - [Messages](./messages.md)
+        - [Link Quality Indicator (LQI)](./link-quality.md)
     - [Radio In ](./radio-in.md)
     - [Radio Puzzle](./radio-puzzle.md)
     - [Starting a Project from Scratch](./from-scratch.md)
