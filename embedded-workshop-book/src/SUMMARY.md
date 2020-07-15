@@ -20,6 +20,7 @@
         - [Link Quality Indicator (LQI)](./link-quality.md)
     - [Radio In ](./radio-in.md)
     - [Radio Puzzle](./radio-puzzle.md)
+    - [Radio Puzzle Help](./radio-puzzle-help.md)
     - [Starting a Project from Scratch](./from-scratch.md)
     - [Next Steps](./beginner-next-steps.md)
 - [Advanced Workbook](./advanced-workbook.md)

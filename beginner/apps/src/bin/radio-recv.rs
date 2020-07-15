@@ -5,7 +5,7 @@
 use core::str;
 
 use cortex_m_rt::entry;
-use dk::ieee802154::{Error, Packet};
+use dk::ieee802154::{Channel, Error, Packet};
 use panic_log as _; // the panicking behavior
 
 const TEN_MS: u32 = 10_000;
@@ -16,6 +16,8 @@ fn main() -> ! {
     let board = dk::init().unwrap();
     let mut radio = board.radio;
     let mut timer = board.timer;
+
+    radio.set_channel(Channel::_20);
 
     let mut packet = Packet::new();
     let msg = b"olleh";
