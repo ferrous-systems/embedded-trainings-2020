@@ -99,7 +99,8 @@ if the red LED was blinking and you got this message then the device wasn't corr
         ihex
     };
 
-    let dfu = ihex.with_extension("zip");
+    // create in temp folder for automatic cleanup
+    let dfu = dir.path().join(filename).with_extension("zip");
 
     println!("packaging iHex using nrfutil ...");
 
