@@ -2,8 +2,9 @@
 
 Material for the beginner and advanced workshops of Oxidize Global (15.07.2020).
 
+Website for this workshop: [https://embedded-trainings.ferrous-systems.com][book]
 
-
+[book]: https://embedded-trainings.ferrous-systems.com
 
 ## Required hardware
 
