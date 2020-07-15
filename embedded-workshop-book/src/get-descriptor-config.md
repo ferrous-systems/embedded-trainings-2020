@@ -48,7 +48,7 @@ We will not need to deal with endpoint descriptors in this workshop but they are
 So how should we respond to the host? As our only goal is to be enumerated we'll respond with the minimum amount of information possible.
 
 **First, check the request:**  
-Configuration descriptors are requested by *index*, not by their configuration value. Since we reported a single configuration in our device descriptor the index in the request must be zero. Any other value should be rejected by stalling the endpoint (see section [Dealing with unknown requests: Stalling the endpoint](#dealing-with-unknown-requests-stalling-the-endpoint) for more information).
+Configuration descriptors are requested by *index*, not by their configuration value. Since we reported a single configuration in our device descriptor the index in the request must be zero. Any other value should be rejected by stalling the endpoint (see section [Dealing with unknown requests: Stalling the endpoint](./unknown-requests.md#dealing-with-unknown-requests-stalling-the-endpoint) for more information).
 
 **Next, create and send a response:**  
 The response should consist of the configuration descriptor, followed by interface descriptors and then by (optional) endpoint descriptors. We'll include a minimal single interface descriptor in the response. Since endpoints are optional we will include none.
