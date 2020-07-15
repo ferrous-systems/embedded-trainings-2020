@@ -17,16 +17,18 @@ use heapless::consts::*;   // defines U16, U32, U64... etc. to set the size of t
 
 fn main() {
     // A hash map with a capacity of 16 key-value pairs allocated on the stack
+    // note that U16 is a heapless constant, not Rust's u16
     let mut my_map = FnvIndexMap::<_, _, U16>::new();
     my_map.insert(b'A', b'~').unwrap();
 
     // A vector with a fixed capacity of 8 elements allocated on the stack
+    // note that U8 is a heapless constant, not Rust's u8
     let mut my_vec = Vec::<_, U8>::new();
     my_vec.push(b'A').unwrap();
 }
 ```
 
-If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module. The [`heapless::IndexMap` documentation][indexMap] of the `heapless` crate has some usage examples, as does the [`heapless::Vec` documentation][vec].
+If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module (e.g. `U8`, `U64` etc.). The [`heapless::IndexMap` documentation][indexMap] of the `heapless` crate has some usage examples, as does the [`heapless::Vec` documentation][vec].
 
 [indexMap]: https://docs.rs/heapless/0.5.5/heapless/struct.IndexMap.html
 [vec]: https://docs.rs/heapless/0.5.5/heapless/struct.Vec.html

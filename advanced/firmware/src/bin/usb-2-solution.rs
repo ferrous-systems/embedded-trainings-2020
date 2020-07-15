@@ -44,7 +44,6 @@ fn on_event(usbd: &USBD, event: Event) {
         Event::UsbEp0DataDone => todo!(),
 
         Event::UsbEp0Setup => {
-
             // the BMREQUESTTYPE register contains information about data recipient, transfer type and direction
             let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
             // the BREQUEST register stores the type of the current request (e.g. SET_ADDRESS, GET_DESCRIPTOR, ...)

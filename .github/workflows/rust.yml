@@ -51,12 +51,18 @@ jobs:
 
     - name: build tools
       working-directory: ./tools
-      run: cargo build --verbose
+      run: |
+        cargo build --verbose
+        cargo fmt --all -- --check
 
-    - name: build beginner/apps
+    - name: build and fmt beginner/apps
       working-directory: ./beginner/apps
-      run: cargo build --verbose
+      run: |
+        cargo build --verbose
+        cargo fmt --all -- --check
 
-    - name: build advanced/firmware
+    - name: build and fmt advanced/firmware
       working-directory: ./advanced/firmware
-      run: cargo build --verbose
+      run: |
+        cargo build --verbose
+        cargo fmt --all -- --check
