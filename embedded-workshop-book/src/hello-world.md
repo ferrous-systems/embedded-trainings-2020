@@ -1,14 +1,16 @@
 # Hello, world!
 
-First, open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
+In this section, we'll set up the integration in VS Code and run the first program. 
 
-Next open the `advanced/firmware` folder in VS Code and open the `src/bin/hello.rs` file from the `advanced/apps` folder.
+✅ Open the `tools/dk-run` folder and run `cargo install --path . -f` to install the `dk-run` tool.
+
+✅ Open the `advanced/firmware` folder in VS Code and open the `src/bin/hello.rs` file from the `advanced/apps` folder.
 
 > Note: To ensure full Rust-Analyzer support, do not open the whole `embedded-trainings-2020` folder.
 
 Give Rust Analyzer some time to analyze the file and its dependency graph. When it's done, a "Run" button will appear over the `main` function. If it doesn't appear on its own, type something in the file, delete and save. This should trigger a re-load.
 
-Click the "Run" button to run the application on the microcontroller.
+✅ Click the "Run" button to run the application on the microcontroller.
 
 If you are not using VS code run the `cargo run --bin hello` command from the `advanced/firmware` folder.
 

@@ -1,6 +1,9 @@
 # Listing USB Devices
 
-In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool. Run it (`cargo run` from `tools/usb-list`) to list all USB devices.
+In the `tools` folder you'll find `usb-list`: a minimal cross-platform version of the `lsusb` tool. 
+
+✅ To list all USB devices, run the progam using `cargo run` from `tools/usb-list`.
+
 
 ``` console
 $ cargo run

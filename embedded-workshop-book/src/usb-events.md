@@ -2,11 +2,13 @@
 
 The USBD peripheral on the nRF52840 contains a series of registers, called EVENTS registers, that indicate the reason for entering the USBD event handler. These events must be handled by the application to complete the enumeration process.
 
-Open the `firmware/src/bin/usb-1.rs` file. In this starter code the USBD peripheral is initialized in `init` and a task, named `main`, is bound to the interrupt signal USBD. This task will be called every time a new USBD event needs to be handled. The `main` task uses `usbd::next_event()` to check all the event registers; if any event is set (occurred) then the function returns the event, represented by the `Event` enum, wrapped in the `Some` variant. This `Event` is then passed to the `on_event` function for further processing.
+✅ Open the `firmware/src/bin/usb-1.rs` file. 
 
-Connect the USB cable to the port J3 then run the starter code.
+In this starter code the USBD peripheral is initialized in `init` and a task, named `main`, is bound to the interrupt signal USBD. This task will be called every time a new USBD event needs to be handled. The `main` task uses `usbd::next_event()` to check all the event registers; if any event is set (occurred) then the function returns the event, represented by the `Event` enum, wrapped in the `Some` variant. This `Event` is then passed to the `on_event` function for further processing.
 
-In this section as a warm-up exercise you'll need to deal with the following USB events until you reach the EP0SETUP event.
+✅ Connect the USB cable to the port J3 then run the starter code.
+
+Go to `fn on_event`, line 39. In this section you'll need to implement the following USB events until you reach the EP0SETUP event:
 
 - `USBRESET`. This event indicates that the host issued a USB reset signal. According to the USB specification this will move the device from any state to the `Default` state. Since we are currently not dealing with any other state, you can handle this state by doing nothing.
 
@@ -26,4 +28,3 @@ Do not overthink this exercise; it is not a trick question. There is very little
 
 You can find the solution in the `usb-1-solution.rs` file.
 
-Before we continue we need to discuss how data transfers work under the USB protocol.
