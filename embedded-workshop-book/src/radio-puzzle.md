@@ -23,3 +23,5 @@ The Dongle will respond differently depending on the length of the incoming pack
 - On packets of any other length the Dongle will respond with the string `correct` if it received the decrypted string, otherwise it will respond with the `incorrect` string.
 
 The Dongle will always respond with packets that are valid UTF-8 so you can use `str::from_utf8` on the response packets.
+
+See the next chapter for solving stragies and help.
