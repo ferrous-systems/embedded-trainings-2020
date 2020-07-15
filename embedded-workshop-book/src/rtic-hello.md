@@ -2,7 +2,7 @@
 
 RTIC, Real Time on Integrated Circuits, is a framework for building evented, time sensitive applications.
 
-Open the `src/bin/rtic-hello.rs` file.
+✅ Open the `src/bin/rtic-hello.rs` file.
 
 RTIC applications are written in RTIC's Domain Specific Language (DSL). The DSL extends Rust syntax with custom attributes like `#[init]` and `#[idle]`.
 
@@ -10,7 +10,9 @@ RTIC makes a clearer distinction between the application's initialization phase,
 
 `rtic::app` is a procedural macro that generates extra Rust code, in addition to the user's functions. The fully expanded version of the macro can be found in the file `target/rtic-expansion.rs`. This file will contain the expansion of the procedural macro for the last compiled RTIC application.
 
-If you build the `rtic-hello` example and look at the generated `rtic-expansion.rs` file you can confirm that interrupts are disabled during the execution of the `init` function:
+✅ Build the `rtic-hello` example and look at the generated `rtic-expansion.rs` file. 
+
+The generated code should look like this. Note that interrupts are disabled during the execution of the `init` function:
 
 ``` rust
 fn main() -> ! {

@@ -2,11 +2,13 @@
 
 Now let's say we want to change the previous program to count how many times the USB cable (port J3) has been connected and disconnected.
 
+✅ Open the `src/bin/resource.rs` file. 
+
 Tasks run from start to finish, like functions, in response to events. To preserve some state between the different executions of a task we can add a *resource* to the task. In RTIC, resources are the mechanism used to *share* data between different tasks in a memory safe manner but they can also be used to hold task state.
 
 To get the desired behavior we'll want to store some counter in the state of the `on_power_event` task.
 
-Open the `src/bin/resource.rs` file. The starter code shows the syntax to declare a resource, the `Resources` struct, and the syntax to associate a resource to a task, the `resources` list in the `#[task]` attribute.
+The starter code shows the syntax to declare a resource, the `Resources` struct, and the syntax to associate a resource to a task, the `resources` list in the `#[task]` attribute.
 
 In the starter code a resource is used to *move* (by value) the POWER peripheral from `init` to the `on_power_event` task. The POWER peripheral then becomes part of the state of the `on_power_event` task and can be persistently accessed throughout calls to `on_power_event()` through a *reference*. The resources of a task are available via the `Context` argument of the task.
 
@@ -16,7 +18,7 @@ We have moved the POWER peripheral into the task because we want to clear the US
 
 Also note that in the starter code the `idle` function has been modified. Pay attention to the logs when you run the starter code.
 
-Your task in this section will be to modify the program so that it prints the number of times the USB cable has been connected to the DK every time the cable is connected, as shown below.
+✅ Modify the program so that it prints the number of times the USB cable has been connected to the DK every time the cable is connected, as shown below.
 
 ``` console
 (..)

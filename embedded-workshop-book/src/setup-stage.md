@@ -12,7 +12,9 @@ So that's what we'll do here. In `advanced/common/usb/lib.rs` you'll find starte
 
 The definition of `Descriptor::Configuration` as well as the associated test has been "commented out" using an `#[cfg(TODO)]` attribute because it is not handled by the firmware yet. Delete the `#[cfg(TODO)]` so that the unit tests can access it. This pattern is used for enum members and test functions throughout this workshop, so keep it in mind should you see it again.
 
-Your task now is to parse the data of this SETUP stage. We will start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
+✅ Parse the data of this SETUP stage. 
+
+Start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
 
 The fields of a GET_DESCRIPTOR request are as follows:
 - `bmRequestType` is 0b10000000
