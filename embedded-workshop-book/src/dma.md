@@ -1,6 +1,14 @@
 # DMA
 
-Let's zoom into the `Ep0In` abstraction used in `usb4.rs` next. You can use VSCode's "Go to Definition" to see the implementation of the `Ep0In.start()` method. What this method does is start a DMA transfer to send `bytes` to the host. The data (`bytes`) is first copied into an internal buffer and then the DMA is configured to move the data from that internal buffer to the USBD peripheral.
+[What do endpoints have to do with dma]
+
+[What is the task in this section?]
+
+Let's zoom into the `Ep0In` abstraction used in `usb-4.rs` next. 
+
+✅ Open the file. Use VSCode's "Go to Definition" to see the implementation of the `Ep0In.start()` method. 
+
+What this method does is start a DMA transfer to send `bytes` to the host. The data (`bytes`) is first copied into an internal buffer and then the DMA is configured to move the data from that internal buffer to the USBD peripheral.
 
 The signature of the `start()` method does *not* ensure that:
 
