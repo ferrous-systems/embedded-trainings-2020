@@ -79,31 +79,9 @@ deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 
 This line is printed by the `loopback` app on boot. It contains the device ID of the dongle, a 64-bit unique identifier (so everyone will see a different number); the radio channel that the device will use to communicate; and the transmission power of the radio in dBm.
 
-## USB issues
+If you don't get any output from `serial-term` check [the USB dongle troubleshooting section][usb-issues].
 
-If you don't get any output from `serial-term` it could just have been that first line got lost when re-enumerating the device from bootloader mode to the loopback application. Run these *two* commands:
-
-``` console
-$ change-channel 20
-requested channel change to channel 20
-
-$ change-channel 20
-requested channel change to channel 20
-```
-
-You should get *two* lines of output in `serial-term`
-
-``` console
-$ serial-term
-now listening on channel 20
-now listening on channel 20
-```
-
-If that's the case you are good to go: proceed to the "Interference" section below.
-
-If you only get one line of output then your OS may be losing some serial data -- we have seen this behavior on some macOS machines. You will still be able to work through the exercises but will miss log data every now and then. Proceed to the "Interference" section below.
-
-If you don't get *any* output from `serial-term` and/or the `change-channel` command fails then the Dongle's USB functionality is not working correctly. In this case you should use the `loopback-nousb*` programs. These have no USB functionality but you will be able to use them to do the exercises. There are four `.hex` files available. You can pick any of them but commit the number in the file name to memory; this is the radio channel the Dongle will listen to. The "Interference" section below will not apply to you.
+[usb-issues]: /troubleshoot-usb-dongle.html
 
 ## Interference
 
