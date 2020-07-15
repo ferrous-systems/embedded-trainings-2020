@@ -18,11 +18,11 @@ When the Dongle is in bootloader mode its red LED will oscillate in intensity. T
 
 You can also use our `usb-list` tool, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
 
-✅ Run the `usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
+✅ Run `usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
 
 Output should look like this:
 ``` console
-$ cargo run
+$ usb-list
 (..)
 Bus 001 Device 016: ID 1915:521f <- nRF52840 Dongle (in bootloader mode)
 ```
