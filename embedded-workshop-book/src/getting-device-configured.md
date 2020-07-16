@@ -23,7 +23,7 @@ The SET_CONFIGURATION request is sent by the host to configure the device. Its c
 - `wValue` contains the requested configuration value
 - `wIndex` and `wLength` are 0, there is no `wData`
 
-To handle a SET_CONFIGURATION, do the following:
+✅ To handle a SET_CONFIGURATION, do the following:
 
 - If the device is in the `Default` state, you should stall the endpoint because the operation is not permitted in that state.
 
@@ -38,11 +38,14 @@ To handle a SET_CONFIGURATION, do the following:
    - if `wValue` is not valid then stall the endpoint
 
 In all the cases where you did not stall the endpoint (by returning `Err`) you'll need to acknowledge the request by starting a STATUS stage.
-This is done by writing 1 to the TASKS_EP0STATUS register.
+
+✅ This is done by writing 1 to the TASKS_EP0STATUS register.
 
 NOTE: On Windows, you may get a `GET_STATUS` request *before* the `SET_CONFIGURATION` request and although you *should* respond to it, stalling the `GET_STATUS` request seems sufficient to get the device to the `Configured` state.
 
 ## Expected output
+
+✅ Run the progam and check the log output.
 
 Once you are correctly handling the `SET_CONFIGURATION` request you should get logs like these:
 
