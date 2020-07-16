@@ -200,6 +200,18 @@ pub fn next_event(usbd: &USBD) -> Option<Event> {
     None
 }
 
+/// Reads the BMREQUESTTYPE register and returns the 8-bit BMREQUESTTYPE component of a setup packet
+pub fn bmrequesttype(usbd: &USBD) -> u8 {
+    // read the 32-bit register and extract the least significant byte
+    // (the alternative is to read the 3 bitfields of the register and merge them into one byte)
+    usbd.bmrequesttype.read().bits() as u8
+}
+
+/// Reads the BREQUEST register and returns the 8-bit BREQUEST component of a setup packet
+pub fn brequest(usbd: &USBD) -> u8 {
+    usbd.brequest.read().brequest().bits()
+}
+
 /// Reads the WLENGTHL and WLENGTHH registers and returns the 16-bit WLENGTH component of a setup packet
 pub fn wlength(usbd: &USBD) -> u16 {
     u16::from(usbd.wlengthl.read().wlengthl().bits())

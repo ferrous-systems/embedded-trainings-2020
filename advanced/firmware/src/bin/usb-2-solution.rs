@@ -62,6 +62,13 @@ fn on_event(usbd: &USBD, event: Event) {
             let wvalue = (u16::from(usbd.wvalueh.read().wvalueh().bits()) << 8)
                 | u16::from(usbd.wvaluel.read().wvaluel().bits());
 
+            // NOTE the `dk` crate contains helper functions for the above operations
+            // let bmrequesttype = usbd::bmrequesttype(usbd);
+            // let brequest = usbd::brequest(usbd);
+            // let wlength = usbd::wlength(usbd);
+            // let windex = usbd::windex(usbd);
+            // let wvalue = usbd::wvalue(usbd);
+
             log::info!(
                 "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                 bmrequesttype,
