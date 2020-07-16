@@ -1,14 +1,14 @@
-# DMA
+# Direct Memory Access
 
-[What do endpoints have to do with dma]
+🔎 this section covers the implementation of the `Ep0In` abstraction; it's not necessary to fully understand this section to continue working on the workshop.
 
-[What is the task in this section?]
+Let's zoom into the `Ep0In` abstraction we used in `usb-3.rs`.
 
-Let's zoom into the `Ep0In` abstraction used in `usb-4.rs` next. 
+✅ Open the file. Use VSCode's "Go to Definition" to see the implementation of the `Ep0In.start()` method.
 
-✅ Open the file. Use VSCode's "Go to Definition" to see the implementation of the `Ep0In.start()` method. 
+This is how data transfers over USB work on the nRF52840: for each endpoint there's a buffer in the USBD peripheral. Data sent by the host over USB to a particular endpoint will be stored in the corresponding endpoint buffer. Likewise, data stored in one of these endpoint buffers can be send to the host over USB from that particular endpoint. These buffers are not directly accessible by the CPU but data stored in RAM can be copied into these buffers; likewise, the contents of an endpoint buffer can be copied into RAM. A second peripheral, the Direct Memory Access (DMA) peripheral, can copy data between these endpoint buffers and RAM. The process of copying data in either direction is referred to as "a DMA transfer".
 
-What this method does is start a DMA transfer to send `bytes` to the host. The data (`bytes`) is first copied into an internal buffer and then the DMA is configured to move the data from that internal buffer to the USBD peripheral.
+What the `start` method does is start a DMA transfer to copy `bytes` into endpoint buffer IN 0; this makes the USBD peripheral send data to the host from endpoint IN 0 fs. The data (`bytes`), which may be located in Flash or RAM, is first copied into an internal buffer, allocated in RAM, and then the DMA is configured to move the data from this internal buffer to endpoint buffer 0 IN, which is part of the USBD peripheral.
 
 The signature of the `start()` method does *not* ensure that:
 
