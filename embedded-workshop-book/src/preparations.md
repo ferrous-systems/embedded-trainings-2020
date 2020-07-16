@@ -21,7 +21,7 @@ Project templates and starter code for this workshop can be found at [https://gi
 [repo]: https://github.com/ferrous-systems/embedded-trainings-2020
 
 ## Required Software
-Please install the required software before the course starts.
+Please [install the required software](./installation.md) before the course starts.
 
 ## Course Material
 This book contains the material for the beginner and the advanced workshop in embedded Rust. It aims to be as inclusive as possible. This means, that some information is available in several forms, for example pictures and text description. We also use icons so that different kinds of information are visually distiguishable on the first glance. If you have accessibility needs that are not covered, please let us know.

@@ -18,3 +18,12 @@ It is also recommended that you work through the advanced material of this cours
 
 - [nRF52840 Product Specification 1.1](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
 - [Universal Serial Bus Specification Revision 2.0](https://www.usb.org/document-library/usb-20-specification)
+
+## When's The Next Workshop?
+If you've enjoyed this workshop and would like to join us for another one, [subscribe to our newsletter](https://ferrous-systems.us19.list-manage.com/subscribe/post?u=94954b16eab55b59525c890cb&id=5eaf5b14e6)! This is where we'll announce upcoming public courses.
+
+If your company would like a training with custom content, or a private run of an existing workshop, we'll be happy to make this happen for you. Get in touch with us [via phone or E-Mail](https://ferrous-systems.com/#contact) for further information.
+
+brought to you with 🧡 by
+
+<img src="./logo-monochrome.svg" alt="ferrous systems logo" width=300px>
