@@ -14,6 +14,8 @@ The `Ep0In` API has two methods: `start` and `end` (also see their API documenta
 
 To implement responding to a GET_DESCRIPTOR Device request, extend `usb-3.rs` so that it uses `Ep0In` to respond to the `GET_DESCRIPTOR Device` request (and only to that request). The response must be a device descriptor with its fields set to these values:
 
+- `bLength = 18`, the size of the descriptor (must always be this value)
+- `bDescriptorType = 1`, device descriptor type (must always be this value)
 - `bDeviceClass = bDeviceSubClass = bDeviceProtocol = 0`, these are unimportant for enumeration
 - `bMaxPacketSize0 = 64`, this is the most performant option (minimizes exchanges between the device and the host) and it's assumed by the `Ep0In` abstraction
 - `idVendor = consts::VID`, value expected by the `usb-list` tool (\*)
@@ -25,6 +27,8 @@ To implement responding to a GET_DESCRIPTOR Device request, extend `usb-3.rs` so
 >(\*) the `common` crate refers to the crate in the `advanced/common` folder. It is already part of the `firmware` crate dependencies.
 
 Although you can create the device descriptor by hand as an array filled with magic values we *strongly* recommend you use the `usb2::device::Descriptor` abstraction. The crate is already in the dependency list of the project; you can open its API documentation with the following command: `cargo doc -p usb2 --open`.
+
+> NOTE: the `usb2::device::Descriptor` struct does not have `bLength` and `bDescriptorType` fields. Those fields have fixed values according to the USB spec so you cannot modify or set them. When `bytes()` is called on the `Descriptor` value the returned array, the binary representation of the descriptor, will contain those fields set to their correct value.
 
 Note that the device descriptor is 18 bytes long but the host may ask for fewer bytes (see `wlength` field in the SETUP data). In that case you must respond with the amount of bytes the host asked for. The opposite may also happen: `wlength` may be larger than the size of the device descriptor; in this case your answer must be 18 bytes long (do *not* pad the response with zeroes).
 
