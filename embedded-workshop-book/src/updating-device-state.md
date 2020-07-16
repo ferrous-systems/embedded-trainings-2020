@@ -4,7 +4,7 @@ At some point during the initialization you'll receive a `SET_ADDRESS` request t
 
 The device state should be tracked using a resource so that it's preserved across multiple executions of the `USBD` event handler. The `usb2` crate has a `State` enum with the 3 possible USB states: `Default`, `Address` and `Configured`. You can use that enum or roll your own.
 
-Start tracking and updating the device state to move your request handling forward:
+✅ Start tracking and updating the device state to move your request handling forward:
 
 1. **Update the handling of the `USBRESET` event:** Instead of ignoring it, we now want it to change the state of the USB device. See section 9.1 USB Device States of the USB specification for details on what to do.
 

@@ -1,9 +1,13 @@
 # Inspecting the Descriptors
 
-There's a tool in the `advanced/host/` folder called `print-descs`. You can run this tool to print all the descriptors reported by your application.
+There's a tool in the `advanced/host/` folder called `print-descs`, it prints all the descriptors reported by your application. 
+
+✅ Run this tool.
+
+Your output should look like this:
 
 ``` console
-$ print-descs
+$ cargo run
 DeviceDescriptor {
     bLength: 18,
     bDescriptorType: 1,

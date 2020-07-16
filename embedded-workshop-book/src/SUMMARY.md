@@ -60,3 +60,4 @@
     - [`cargo-build` fails to link](./troubleshoot-cargo-build.md)
     - [`dongle-flash` is not working](./troubleshoot-dongle-flash.md)
     - [Dongle USB functionality is not working](./troubleshoot-usb-dongle.md)
+    - [USB error: Access denied](./troubleshoot-usb-error-access-denied.md)

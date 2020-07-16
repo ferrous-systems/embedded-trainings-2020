@@ -1,6 +1,10 @@
 # USB-3: DATA Stage
 
-The next step is to respond to the GET_DESCRIPTOR request with a device descriptor. To do this we'll use the `dk::usb::Ep0In` abstraction -- we'll look into what the abstraction does in a future section; for now we'll just use it.
+The next step is to respond to the GET_DESCRIPTOR request with a device descriptor.
+
+✅ Open the file `src/bin/usb-3.rs`. Implement the response to the GET_DESCRIPTOR request. Use the following guide for assistance. 
+
+ To do this we'll use the `dk::usb::Ep0In` abstraction -- we'll look into what the abstraction does in a future section; for now we'll just use it.
 
 An instance of this abstraction is available in the `board` value (`#[init]` function). The first step is to make this `Ep0In` instance available to the `on_event` function.
 

@@ -2,17 +2,24 @@
 
 ## String descriptors
 
-If you'd like to continue working on your workshop project, we recommend adding String Descriptors support to the USB firmware.
+If you'd like to continue working on your workshop project, we recommend adding String Descriptors support to the USB firmware. To do this, follow these steps:
 
-- First, you'll want to read through section 9.6.7 of the USB spec, which covers string descriptors.
-- Next, we suggest you change your *configuration* descriptor to use string descriptors. You'll want to change the `iConfiguration` field to a non-zero value. Note that this change will likely break enumeration.
-- Now, re-run the program to see what new control requests you get from the host.
-- You'll need to update the `usb` parser to handle the new requests.
-- Then you can extend the logic of `ep0setup` to handle these new requests.
-- Eventually, you'll need to send a string descriptor to the host. Note here that Rust string literals are UTF-8 encoded but the USB protocol uses UTF-**16** strings. You'll need to convert between these formats.
-- After you have `iConfiguration` working you can start adding strings to other descriptors like the device descriptor e.g. its `iProduct` field.
+✅ Read through section 9.6.7 of the USB spec, which covers string descriptors.
 
-To verify that string descriptors are working in a cross-platform way you can extend the `print-descs` program to also print the device's string descriptors. See the [`read_string_descriptor`] method but note that this must be called on a "device handle", which is what the commented out `open` operation does.
+
+✅ Change your *configuration* descriptor to use string descriptors. You'll want to change the `iConfiguration` field to a non-zero value. Note that this change will likely break enumeration.
+
+✅ Re-run the program to see what new control requests you get from the host.
+
+✅ Update the `usb` parser to handle the new requests.
+
+✅ Extend the logic of `ep0setup` to handle these new requests.
+
+ Eventually, you'll need to send a string descriptor to the host. Note here that Rust string literals are UTF-8 encoded but the USB protocol uses UTF-**16** strings. You'll need to convert between these formats.
+
+✅ If this works, add strings to other descriptors like the device descriptor e.g. its `iProduct` field.
+
+✅ To verify that string descriptors are working in a cross-platform way, extend the `print-descs` program to also print the device's string descriptors. See the [`read_string_descriptor`] method but note that this must be called on a "device handle", which is what the commented out `open` operation does.
 
 [`read_string_descriptor`]: https://docs.rs/rusb/0.6.2/rusb/struct.DeviceHandle.html#method.read_string_descriptor
 
