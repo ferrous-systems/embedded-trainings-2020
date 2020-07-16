@@ -1,11 +1,5 @@
 # Installation Instructions
 
-## Base Rust installation
-
-Go to https://rustup.rs and follow the instructions.
-
-**Windows**: *Do* install the optional components of the C++ build tools package. The installation size may take up to 2 GB of disk space.
-
 ## VS Code
 
 **Windows**: Go to https://code.visualstudio.com and run the installer
@@ -19,67 +13,9 @@ $ sudo pacman -S code
 
 **macOS**: Go to https://code.visualstudio.com and click on "Download for Mac"
 
-## Rust Analyzer
+## OS specific dependencies
 
-**All**: Open VS Code and look for Rust Analyzer in the marketplace (bottom icon in the left panel). Then install it.
-
-**Windows**: it's OK to ignore the message about `git` not being installed, if you get one
-
-## Rust Cross compilation support
-
-**All**: Run this command in a terminal:
-
-``` console
-$ rustup +stable target add thumbv7em-none-eabi
-```
-
-## ELF analysis tools
-
-**All**: Run these commands in a terminal:
-
-``` console
-$ rustup +stable component add llvm-tools-preview
-
-$ cargo install cargo-binutils
-```
-
-## Python
-
-**Windows**: Go to https://www.python.org/downloads/ and run the Python *3* installer
-
-- in the installer check the "add Python 3.x to PATH" box
-- also run the "Disable path length limit" action at the end, if you are on Windows 10 and the option is displayed to you
-
-**Linux**: Install `pip` using the package manager; this will also install Python.
-
-``` console
-$ # Arch Linux
-$ sudo pacman -S python-pip
-```
-
-**macOS**:
-Ensure that you have python 3 and pip installed. Refer to the following link for [Instructions on how to install python 3 and pip](https://docs.python-guide.org/starting/install3/osx/)
-
-```console
-$ python --version
-Python 3.7.7
-$ pip --version
-pip 20.0.2 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
-```
-
-## nrfutil
-
-**All**: Open a terminal and install nrfutil as follows. *If you are familiar with python, it is advised to do this in a [virtual environment](https://docs.python.org/3/library/venv.html).*
-
-``` console
-$ pip install nrfutil
-(..)
-
-$ nrfutil version
-nrfutil version 6.1.0
-```
-
-## USB (Linux only)
+### Linux only: USB
 
 Some of our tools depend on `pkg-config` and `libudev.pc`. Ensure you have the proper packages installed; on Debian based distributions you can use:
 
@@ -137,7 +73,7 @@ crw-rw-r--+ 1 root root 189, 16 May 20 12:11 /dev/bus/usb/001/017
 
 The `+` part in `crw-rw-r--+` indicates the device can be accessed without `root` permissions.
 
-## JLink driver (Windows only)
+### Windows only: Zadig JLink driver
 
 On Windows you'll need to associate the nRF52840 Development Kit's USB device to the WinUSB driver.
 
@@ -157,21 +93,39 @@ In Zadig's graphical user interface,
 
 5. Click "Install WinUSB driver". The process may take a few minutes to complete.
 
-## `nrf-recover`
+## Rust and tooling
 
-Some nRF52840 devices, specially older revisions, may have parts of their Flash memory locked. To unlock the memory use the `nrf-recover` tool.
+### Base Rust installation
 
-This is only relevant to the nRF52840 Development Kit. First connect the nRF52840 DK to your PC using micro-USB J2 (as done before) then run the following commands:
+Go to https://rustup.rs and follow the instructions.
+
+**Windows**: *Do* install the optional components of the C++ build tools package. The installation size may take up to 2 GB of disk space.
+
+### Rust Analyzer
+
+**All**: Open VS Code and look for Rust Analyzer in the marketplace (bottom icon in the left panel). Then install it.
+
+**Windows**: it's OK to ignore the message about `git` not being installed, if you get one
+
+### Rust Cross compilation support
+
+**All**: Run this command in a terminal:
 
 ``` console
-$ cargo install nrf-recover
-
-$ nrf-recover -y
-Starting mass erase...
-Mass erase completed, chip unlocked
+$ rustup +stable target add thumbv7em-none-eabi
 ```
 
-## Cargo subcommands
+### ELF analysis tools
+
+**All**: Run these commands in a terminal:
+
+``` console
+$ rustup +stable component add llvm-tools-preview
+
+$ cargo install cargo-binutils
+```
+
+### Cargo subcommands
 
 Install version v0.8.0 of the `cargo-flash` and `cargo-embed` subcommands, as well as the `cargo-binutils` set of subcommands and the `cargo-bloat` subcommand using the following Cargo commands:
 
@@ -191,4 +145,56 @@ Installed package `cargo-binutils v0.3.0` (..)
 $ cargo install cargo-bloat
 (..)
 Installed package `cargo-bloat v0.9.3` (..)
+```
+
+## Python
+
+**Windows**: Go to https://www.python.org/downloads/ and run the Python *3* installer
+
+- in the installer check the "add Python 3.x to PATH" box
+- also run the "Disable path length limit" action at the end, if you are on Windows 10 and the option is displayed to you
+
+**Linux**: Install `pip` using the package manager; this will also install Python.
+
+``` console
+$ # Arch Linux
+$ sudo pacman -S python-pip
+```
+
+**macOS**:
+Ensure that you have python 3 and pip installed. Refer to the following link for [Instructions on how to install python 3 and pip](https://docs.python-guide.org/starting/install3/osx/)
+
+```console
+$ python --version
+Python 3.7.7
+$ pip --version
+pip 20.0.2 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
+```
+
+## nrf tools
+
+### nrfutil
+
+**All**: Open a terminal and install nrfutil as follows. *If you are familiar with python, it is advised to do this in a [virtual environment](https://docs.python.org/3/library/venv.html).*
+
+``` console
+$ pip install nrfutil
+(..)
+
+$ nrfutil version
+nrfutil version 6.1.0
+```
+
+### `nrf-recover`
+
+Some nRF52840 devices, specially older revisions, may have parts of their Flash memory locked. To unlock the memory use the `nrf-recover` tool.
+
+This is only relevant to the nRF52840 Development Kit. First connect the nRF52840 DK to your PC using micro-USB J2 (as done before) then run the following commands:
+
+``` console
+$ cargo install nrf-recover
+
+$ nrf-recover -y
+Starting mass erase...
+Mass erase completed, chip unlocked
 ```
