@@ -14,4 +14,4 @@ These host actions will be perceived as *events* by the nRF52840. During this wo
 
 There are more USB concepts involved that we'll need to cover, like descriptors, configurations, interfaces and endpoints but for now let's see how to handle USB events.
 
-For each step of the course, we've prepared a `usb-<n>.rs` file that gives you a base structure and hints on how to proceed. The matching `usb-<n>-solution.rs` contains a sample solution should you need it. Switch from `usb-<n>.rs` to `usb-<n+1>.rs` when instructed and continue working from there.
+For each step of the course, we've prepared a `usb-<n>.rs` file that gives you a base structure and hints on how to proceed. The matching `usb-<n>-solution.rs` contains a sample solution should you need it. Switch from `usb-<n>.rs` to `usb-<n+1>.rs` when instructed and continue working from there. Please keep the USB cable plugged into J3 through all these exercises. 
