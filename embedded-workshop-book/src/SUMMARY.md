@@ -3,6 +3,7 @@
 - [Preparations](./preparations.md)
     - [Checking the Hardware](./hardware.md)
     - [Installation Instructions](./installation.md)
+- [Tooling check](./tooling-check.md)
 - [Beginner Workbook](./beginner-workbook.md)
     - [Parts of an Embedded Program](./parts-embedded-program.md)
     - [Building an Embedded Program](./building-program.md)

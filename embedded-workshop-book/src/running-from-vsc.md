@@ -2,21 +2,12 @@
 
 Both `cargo-embed` and `cargo-flash` are tools based on the `probe-rs` library. This library exposes an API to communicate with the J-Link and perform all the operations exposed by the JTAG protocol. For this workshop we have developed a small Cargo runner that uses the `probe-rs` library to streamline the process of running a program and printing logs, like `cargo-embed`, while also having better integration into VS code.
 
-✅ Install the Cargo runner.
-
-1. Run the following command from the `tools/dk-run` folder:
-
-``` console
-$ cargo install --path . -f
-```
-
-2. Open the `src/bin/hello.rs` file in VS Code and click the "Run" button that's hovering over the `main` function.
+✅ Open the `src/bin/hello.rs` file and click the "Run" button that's hovering over the `main` function.
 
 > Note: you will get the "Run" button if the Rust analyzer's workspace is set to the `beginner/apps` folder. This will be the case if the current folder in VS code (left side panel) is set to `beginner/apps`.
 
-If you are not using VS code, you can run the program out of your console. 
+If you are not using VS code, you can run the program out of your console.
 Enter the command `cargo run --bin hello` from within the `beginer/apps` folder. Rust Analyzer's "Run" button is a short-cut for that command.
-
 
 Expected output:
 

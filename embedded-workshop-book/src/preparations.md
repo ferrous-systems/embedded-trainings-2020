@@ -1,9 +1,9 @@
 # Preparations
 
-This chapter contains informations about the course material, the required hardware and an installation guide. 
+This chapter contains informations about the course material, the required hardware and an installation guide.
 
 
-## Required Hardware 
+## Required Hardware
 
 - [nRF52840 Development Kit (DK)](https://www.nordicsemi.com/Software-and-Tools/Development-Kits/nRF52840-DK)
 - [nRF52840 Dongle](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52840-Dongle)
@@ -14,9 +14,14 @@ In this workshop we'll use both the nRF52840 Development Kit (DK) and the nRF528
 
 For the span of this workshop keep the nRF52840 DK connected to your PC using a micro-USB cable. Connect the USB cable to the J2 port on the nRF52840 DK. Instructions to identify the USB ports on the nRF52840 board can be found in the top level README file.
 
+## Starter code
+
+Project templates and starter code for this workshop can be found at [https://github.com/ferrous-systems/embedded-trainings-2020][repo]
+
+[repo]: https://github.com/ferrous-systems/embedded-trainings-2020
 
 ## Required Software
-Please install the required software before the course starts. 
+Please install the required software before the course starts.
 
 ## Course Material
 This book contains the material for the beginner and the advanced workshop in embedded Rust. It aims to be as inclusive as possible. This means, that some information is available in several forms, for example pictures and text description. We also use icons so that different kinds of information are visually distiguishable on the first glance. If you have accessibility needs that are not covered, please let us know.
