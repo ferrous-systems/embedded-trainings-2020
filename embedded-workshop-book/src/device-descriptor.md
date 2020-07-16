@@ -1,5 +1,9 @@
 # Device Descriptor
 
+<p align="center">
+  <img src="/usb-device.svg" alt="TODO">
+<p>
+
 After receiving a GET_DESCRIPTOR request during the SETUP stage the device needs to respond with a *descriptor* during the DATA stage.
 
 A descriptor is a binary encoded data structure sent by the device to the host. The device descriptor, in particular, contains information about the device, like its product and vendor identifiers and how many *configurations* it has. The format of the device descriptor is specified in section 9.6.1, Device, of the USB specification.

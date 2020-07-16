@@ -1,5 +1,9 @@
 # Control Transfers
 
+<p align="center">
+  <img src="/usb-control.svg" alt="TODO">
+<p>
+
 Before we continue we need to discuss how data transfers work under the USB protocol.
 
 The control pipe handles *control transfers*, a special kind of data transfer used by the host to issue *requests*. A control transfer is a data transfer that occurs in three stages: a SETUP stage, an optional DATA stage and a STATUS stage.
