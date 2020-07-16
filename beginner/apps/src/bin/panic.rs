@@ -24,9 +24,13 @@ fn foo() {
 
 #[inline(never)]
 fn bar() {
-    let i = 3;
+    let i = index();
     let array = [0, 1, 2];
     let x = array[i]; // out of bounds access
 
     log::info!("{}", x);
+}
+
+fn index() -> usize {
+    3
 }
