@@ -1,5 +1,13 @@
 # Device Descriptor
 
+<p align="center">
+  <img src="/usb-device.svg" alt="USB hierarchy diagram showing the relationship between configurations, interfaces and endpoints. The diagram consists of nested rectangles. In this version of the diagram the outermost 'device' rectangle and the 'bNumConfigurations' label are highlighted in blue.
+The outermost rectangle is labeled 'device' and represents the complete USB device.
+Inside the 'device' rectangle there is one rectangle labeled 'configuration 1'; this rectangle has a 'parallel lines' symbol that indicates there may be more than one configuration instance; the symbol is labeled 'bNumConfigurations=1' indicating that this device has only one configuration.
+Inside the 'configuration 1' rectangle there are two rectangles labeled 'control endpoint' and 'interface 0'. Inside the 'control endpoint' rectangle there are two rectangles labeled 'endpoint 0 IN' and 'endpoint 0 OUT. The 'interface 0' rectangle has a 'parallel lines' symbol that indicates there may be more than one interface instance; the symbol is labeled 'bNumInterfaces=1' indicating that this configuration has only one interface.
+Inside the 'interface 0' rectangle there are three rectangles labeled 'endpoint 1 IN', 'endpoint 2 IN' and 'endpoint 2 OUT'. Between these three rectangle there is a label that says 'bNumEndpoints=3'; it indicates that this interface has only three endpoints.">
+<p>
+
 After receiving a GET_DESCRIPTOR request during the SETUP stage the device needs to respond with a *descriptor* during the DATA stage.
 
 A descriptor is a binary encoded data structure sent by the device to the host. The device descriptor, in particular, contains information about the device, like its product and vendor identifiers and how many *configurations* it has. The format of the device descriptor is specified in section 9.6.1, Device, of the USB specification.
