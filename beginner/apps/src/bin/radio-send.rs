@@ -13,8 +13,9 @@ fn main() -> ! {
     let board = dk::init().unwrap();
     let mut radio = board.radio;
 
-    // these are the initial settings
-    radio.set_channel(Channel::_20);
+    // these are the default settings of the DK's radio
+    // NOTE if you ran `change-channel` then you may need to update the channel here
+    radio.set_channel(Channel::_20); // <- must match the Dongle's listening channel
     radio.set_txpower(TxPower::Pos8dBm);
 
     let mut packet = Packet::new();
