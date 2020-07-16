@@ -17,7 +17,8 @@ fn main() -> ! {
     let mut radio = board.radio;
     let mut timer = board.timer;
 
-    radio.set_channel(Channel::_20);
+    // NOTE if you ran `change-channel` then you may need to update the channel here
+    radio.set_channel(Channel::_20); // <- must match the Dongle's listening channel
 
     let mut packet = Packet::new();
     let msg = b"olleh";
