@@ -2,7 +2,9 @@
 
 The next step is to respond to the GET_DESCRIPTOR request with a device descriptor.
 
-✅ Open the file `src/bin/usb-3.rs`. Implement the response to the GET_DESCRIPTOR request. Use the following guide for assistance. 
+✅ Open the file `src/bin/usb-3.rs`. Implement the response to the GET_DESCRIPTOR request. Use the following guide for assistance.
+
+❗️ Keep the cable connected to the J3 port for the rest of the workshop
 
  To do this we'll use the `dk::usb::Ep0In` abstraction -- we'll look into what the abstraction does in a future section; for now we'll just use it.
 
