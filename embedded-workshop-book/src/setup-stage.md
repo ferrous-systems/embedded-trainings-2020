@@ -4,6 +4,7 @@ At the end of program `usb-1` we received a EP0SETUP event. This event signals t
 In `usb-2.rs`, you will find a short description of each register above the variable into which it should be read.
 
 > For in-depth register documentation, refer to sections 6.35.13.31 to 6.35.13.38 of the [nRF52840 Product Specification][nrf product spec].
+
 [nrf product spec]: https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf
 
 When you need to write some `no_std` code that does not involve device-specific I/O you should consider writing it as a separate crate. This way, you can test it on your development machine (e.g. `x86_64`) using the standard `cargo test` functionality.
