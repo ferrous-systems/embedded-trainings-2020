@@ -14,4 +14,4 @@ The `cargo-flash` subcommand flashes and runs the program but won't display logs
 
 **🔎 How does flashing work?**
 
-The flashing process consists of the PC communicating with a second microcontroller on the nRF52840 DK over USB (J2 port). This second microcontroller, named J-Link, is connected to the nRF52840 through a electrical interface known as JTAG. The JTAG protocol specifies procedures for reading memory, writing to memory, halting the target processor, reading the target processor registers, etc.
+The flashing process consists of the PC communicating with a second microcontroller on the nRF52840 DK over USB (J2 port). This second microcontroller, named J-Link, is connected to the nRF52840 through a electrical interface known as SWD. The SWD protocol specifies procedures for reading memory, writing to memory, halting the target processor, reading the target processor registers, etc.
