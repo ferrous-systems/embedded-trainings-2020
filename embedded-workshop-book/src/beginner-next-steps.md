@@ -2,8 +2,7 @@
 
 ## Collision avoidance
 
-If you've al
-y completed the main workshop tasks or would like to explore more on your own, we suggest you test the collision avoidance of the IEEE 802.15.4 radio used by the Dongle and DK.
+If you've already completed the main workshop tasks or would like to explore more on your own, we suggest you test the collision avoidance of the IEEE 802.15.4 radio used by the Dongle and DK.
 
 If you check the API documentation of the `Radio` abstraction we have been using you'll notice that we haven't used these methods: `energy_detection_scan()`, `set_cca()` and `try_send()`.
 
