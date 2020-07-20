@@ -4,8 +4,8 @@
 
 A SET_ADDRESS request has the following fields as defined by Section 9.4.6 Set Address of the USB spec:
 
-- `bmrequesttype` is 0b00000000
-- `brequest` is SET_ADDRESS
+- `bmrequesttype` is **0b00000000**
+- `brequest` is **5** (i.e. the SET_ADDRESS Request Code, see table 9-4 in the USB spec)
 - `wValue` contains the address to be used for all subsequent accesses
 - `wIndex` and `wLength` are 0, there is no `wData`
 
