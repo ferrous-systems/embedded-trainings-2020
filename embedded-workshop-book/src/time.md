@@ -11,3 +11,5 @@ This program will blink (turn on and off) one of the LEDs on the board. The time
 The other time related API exposed by the `dk` HAL is the `dk::uptime` function. This function returns the time that has elapsed since the call to the `dk::init` function. This function is used in the program to log the time of each LED toggle operation.
 
 ✅ Try changing the `Duration` value passed to `Timer.wait`. Try values larger than one second and smaller than one second. What values of `Duration` make the blinking imperceptible?
+
+❗If you set the duration to below 100ms, try removing the `log::info!` command in the loop. Too much logging will fill the logging buffer and cause the loop to slow down, resulting in the blink frequency to reduce after a while.
