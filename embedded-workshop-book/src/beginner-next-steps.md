@@ -13,7 +13,7 @@ Under the 802.15.4 specification, before sending a data packet devices must firs
 The `Radio` abstraction supports 2 CCA modes: `CarrierSense` and `EnergyDetection`. `CarrierSense` is the default CCA mode and what we have been using in this workshop. `CarrierSense` will only look for ongoing 802.15.4 traffic in the channel but ignore other traffic like 2.4 GHz WiFi and Bluetooth. The `EnergyDetection` method is able to detect ongoing non-802.15.4 traffic.
 
 Here are some things for you to try out:
-- First, read the section 6.20.12.4 of the nRF52840 Product Specification, which covers the nRF52840's implementation of CCA.
+- First, read the section 6.20.12.4 of the [nRF52840 Product Specification](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf), which covers the nRF52840's implementation of CCA.
 
 - Disconnect the Dongle. Write a program for the DK that scans and reports the energy levels of all valid 802.15.4 channels. In your location which channels have high energy levels when there's no ongoing 802.15.4 traffic? If you can, use an application like [WiFi Analyzer] to see which WiFi channels are in use in your location. Compare the output of WiFiAnalyzer to the values you got from  `energy_detection_scan`. Is there a correspondence? Note that WiFi channels don't match in frequency with 802.15.4 channels; some mapping is required to convert between them -- [check this illustration for more details about co-existence of 802.15.4 and WiFi][coexistence].
 
