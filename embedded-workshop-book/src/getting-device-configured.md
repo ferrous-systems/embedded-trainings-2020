@@ -16,12 +16,14 @@ Now modify the `print-descs` program to "open" the device -- this operation is c
 
 ## SET_CONFIGURATION
 
-The SET_CONFIGURATION request is sent by the host to configure the device. Its configuration according to section 9.4.7. of the USB spec is:
+The SET_CONFIGURATION request is sent by the host to configure the device. Its configuration according to section 9.4.7. of the [USB specification][usb_spec] is:
 
-- `bmrequesttype` is 0b00000000
-- `brequest` is SET_CONFIGURATION
+- `bmrequesttype` is **0b00000000**
+- `brequest` is **9** (i.e. the SET_CONFIGURATION Request Code, see table 9-4 in the USB spec)
 - `wValue` contains the requested configuration value
 - `wIndex` and `wLength` are 0, there is no `wData`
+
+[usb_spec]: https://www.usb.org/document-library/usb-20-specification
 
 ✅ To handle a SET_CONFIGURATION, do the following:
 

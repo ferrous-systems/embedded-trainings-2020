@@ -17,11 +17,13 @@ The definition of `Descriptor::Configuration` as well as the associated test has
 
 ❗️ Keep the cable connected to the J3 port for the rest of the workshop
 
-Start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the USB specification. All the constants you will need are described in Tables 9-3, 9-4 and 9-5.
+Start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the [USB specification][usb_spec]. All the constants we'll be using are also described in Tables 9-3, 9-4 and 9-5 of the USB spec.
+
+[usb_spec]: https://www.usb.org/document-library/usb-20-specification
 
 The fields of a GET_DESCRIPTOR request are as follows:
-- `bmRequestType` is 0b10000000
-- `bRequest` is GET_DESCRIPTOR
+- `bmRequestType` is **0b10000000**
+- `bRequest` is **6** (i.e. the GET_DESCRIPTOR Request Code, see table 9-4 in the USB spec)
 - the high byte of `wValue` contains the descriptor type, whereas the low byte contains the descriptor index
 - `wIndex` is set to 0 for our purposes
 
@@ -33,7 +35,7 @@ To complete the task, proceed like this:
 1. **Parse GET_DESCRIPTOR requests:**  
 Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
 
-    - check table 9-4 in the USB specification for Request Codes
+    - remember the GET_DESCRIPTOR fields described at the start of this section
     - remember that you can define binary literals by prefixing them with `0b`
     - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of a `u16`
 

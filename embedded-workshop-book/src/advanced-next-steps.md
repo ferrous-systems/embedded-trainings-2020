@@ -22,6 +22,7 @@ If you'd like to continue working on your workshop project, we recommend adding 
 ✅ To verify that string descriptors are working in a cross-platform way, extend the `print-descs` program to also print the device's string descriptors. See the [`read_string_descriptor`] method but note that this must be called on a "device handle", which is what the commented out `open` operation does.
 
 [`read_string_descriptor`]: https://docs.rs/rusb/0.6.2/rusb/struct.DeviceHandle.html#method.read_string_descriptor
+[usb_spec]: https://www.usb.org/document-library/usb-20-specification
 
 ## Explore more RTIC features
 
