@@ -43,6 +43,28 @@ Something you will likely run into while solving this exercise are *character* l
 
 P.S. The plaintext string is *not* stored in `puzzle.hex` so running `strings` on it will not give you the answer.
 
+## Make sure not to flood the log buffer
+When you log more messages than can be moved from the probe to the target, the log buffer will get overwritten, resulting in data loss. This can easily happen when you repeatedly poll the dongle and log the result. The quickest solution to this is to wait a short while until you send the next packet so that the logs can be processed in the meantime.
+
+``` rust
+use core::time::Duration;
+
+#[entry]
+fn main() -> ! {
+
+    let mut timer = board.timer;
+
+    for plainletter in 0..=127 {
+        /* ... send letter to dongle ... */
+        log::info!("got response");
+        /* ... store output ... */
+
+        timer.wait(Duration::from_millis(20));
+    }
+}
+```
+
+
 ## Recommended Steps:
 
  Each step is demonstrated in a separate example so if for example you only need a quick reference of how to use the map API you can step / example number 2.
