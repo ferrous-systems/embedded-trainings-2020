@@ -97,9 +97,9 @@ In Zadig's graphical user interface,
 
 ### Base Rust installation
 
-Go to https://rustup.rs and follow the instructions.
+Go to [https://rustup.rs](https://rustup.rs/) and follow the instructions.
 
-**Windows**: *Do* install the optional components of the C++ build tools package. The installation size may take up to 2 GB of disk space.
+**Windows**: *Do* install the optional components of the [C++ build tools package](https://visualstudio.microsoft.com/visual-cpp-build-tools/). The installation size may take up to 2 GB of disk space.
 
 ### Rust Analyzer
 
