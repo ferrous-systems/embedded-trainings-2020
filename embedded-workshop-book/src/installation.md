@@ -2,16 +2,16 @@
 
 ## VS Code
 
-**Windows**: Go to https://code.visualstudio.com and run the installer
+**Windows**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and run the installer.
 
-**Linux**: Check your Linux distribution package manager (example below). If it's not there follow the instructions on https://code.visualstudio.com/docs/setup/linux
+**Linux**: Check your Linux distribution package manager (example below). If it's not there, follow the instructions on [https://code.visualstudio.com/docs/setup/linux](https://code.visualstudio.com/docs/setup/linux).
 
 ``` console
 $ # Arch Linux
 $ sudo pacman -S code
 ```
 
-**macOS**: Go to https://code.visualstudio.com and click on "Download for Mac"
+**macOS**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and click on "Download for Mac"
 
 ## OS specific dependencies
 
