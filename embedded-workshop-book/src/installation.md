@@ -2,16 +2,16 @@
 
 ## VS Code
 
-**Windows**: Go to https://code.visualstudio.com and run the installer
+**Windows**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and run the installer.
 
-**Linux**: Check your Linux distribution package manager (example below). If it's not there follow the instructions on https://code.visualstudio.com/docs/setup/linux
+**Linux**: Check your Linux distribution package manager (example below). If it's not there, follow the instructions on [https://code.visualstudio.com/docs/setup/linux](https://code.visualstudio.com/docs/setup/linux).
 
 ``` console
 $ # Arch Linux
 $ sudo pacman -S code
 ```
 
-**macOS**: Go to https://code.visualstudio.com and click on "Download for Mac"
+**macOS**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and click on "Download for Mac"
 
 ## OS specific dependencies
 
@@ -97,15 +97,15 @@ In Zadig's graphical user interface,
 
 ### Base Rust installation
 
-Go to https://rustup.rs and follow the instructions.
+Go to [https://rustup.rs](https://rustup.rs/) and follow the instructions.
 
-**Windows**: *Do* install the optional components of the C++ build tools package. The installation size may take up to 2 GB of disk space.
+**Windows**: *Do* install the optional components of the [C++ build tools package](https://visualstudio.microsoft.com/visual-cpp-build-tools/). The installation size may take up to 2 GB of disk space.
 
 ### Rust Analyzer
 
-**All**: Open VS Code and look for Rust Analyzer in the marketplace (bottom icon in the left panel). Then install it.
+**All**: Open VS Code and look for [Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer) in the marketplace (bottom icon in the left panel). Then install it.
 
-**Windows**: it's OK to ignore the message about `git` not being installed, if you get one
+**Windows**: It's OK to ignore the message about `git` not being installed, if you get one!
 
 ### Rust Cross compilation support
 
@@ -127,7 +127,7 @@ $ cargo install cargo-binutils
 
 ### Cargo subcommands
 
-Install version v0.8.0 of the `cargo-flash` and `cargo-embed` subcommands, as well as the `cargo-binutils` set of subcommands and the `cargo-bloat` subcommand using the following Cargo commands:
+Install version v0.8.0 of the [`cargo-flash`](https://crates.io/crates/cargo-flash) and [`cargo-embed`](https://crates.io/crates/cargo-embed) subcommands, as well as the [`cargo-binutils`](https://crates.io/crates/cargo-binutils) set of subcommands and the [`cargo-bloat`](https://crates.io/crates/cargo-bloat) subcommand using the following Cargo commands:
 
 ``` console
 $ cargo install cargo-flash --version 0.8.0 -f
@@ -149,7 +149,7 @@ Installed package `cargo-bloat v0.9.3` (..)
 
 ## Python
 
-**Windows**: Go to https://www.python.org/downloads/ and run the Python *3* installer
+**Windows**: Go to [https://www.python.org/downloads/](https://www.python.org/downloads/) and run the Python *3* installer
 
 - in the installer check the "add Python 3.x to PATH" box
 - also run the "Disable path length limit" action at the end, if you are on Windows 10 and the option is displayed to you
@@ -175,7 +175,7 @@ pip 20.0.2 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
 
 ### nrfutil
 
-**All**: Open a terminal and install nrfutil as follows. *If you are familiar with python, it is advised to do this in a [virtual environment](https://docs.python.org/3/library/venv.html).*
+**All**: Open a terminal and install [nrfutil](https://github.com/NordicSemiconductor/pc-nrfutil) as follows. *If you are familiar with python, it is advised to do this in a [virtual environment](https://docs.python.org/3/library/venv.html).*
 
 ``` console
 $ pip install nrfutil
@@ -187,7 +187,7 @@ nrfutil version 6.1.0
 
 ### `nrf-recover`
 
-Some nRF52840 devices, specially older revisions, may have parts of their Flash memory locked. To unlock the memory use the `nrf-recover` tool.
+Some nRF52840 devices, specially older revisions, may have parts of their Flash memory locked. To unlock the memory use the [`nrf-recover`](https://crates.io/crates/nrf-recover) tool.
 
 This is only relevant to the nRF52840 Development Kit. First connect the nRF52840 DK to your PC using micro-USB J2 (as done before) then run the following commands:
 
