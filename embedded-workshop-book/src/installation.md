@@ -93,6 +93,8 @@ In Zadig's graphical user interface,
 
 5. Click "Install WinUSB driver". The process may take a few minutes to complete.
 
+> You do not need to do anything for the **nRF52840 Dongle** device.
+
 ## Rust and tooling
 
 ### Base Rust installation
