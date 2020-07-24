@@ -106,7 +106,7 @@ $ ls /dev/tty.usbmodem*
 /dev/tty.usbmodem0006834208031
 ```
 
-The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, check the position of the on-board switches:
+The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, position the board so that the Button descriptions are horizontal and check the position of the on-board switches:
 
 - Switch SW6, on the top edge right corner, is set to the DEFAULT position; this is the right position of the two possible positions (nRF = DEFAULT). Note that this switch is protected by Kapton tape.
 - Switch SW7, which is slightly up and to the right of the center of the board, is set to the Def. position; this is the right position of the two possible positions (TRACE = Def.)
