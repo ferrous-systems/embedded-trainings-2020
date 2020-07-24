@@ -108,8 +108,8 @@ $ ls /dev/tty.usbmodem*
 
 The board has several switches to configure its behavior. The out of the box configuration is the one we want. If the above instructions didn't work for you, position the board so that the Button descriptions are horizontal and check the position of the on-board switches:
 
-- Switch SW6, on the top edge right corner, is set to the DEFAULT position; this is the right position of the two possible positions (nRF = DEFAULT). Note that this switch is protected by Kapton tape.
-- Switch SW7, which is slightly up and to the right of the center of the board, is set to the Def. position; this is the right position of the two possible positions (TRACE = Def.)
+- Switch SW6, on the top edge right corner, is set to the DEFAULT position; this is the right position of the two possible positions (nRF = DEFAULT).
+- Switch SW7, which is slightly up and to the right of the center of the board, is set to the Def. position; this is the right position of the two possible positions (TRACE = Def.). Note that this switch is protected by Kapton tape.
 - Switch SW8, on the bottom edge left corner, is set to the ON position; this is the left position of the two possible positions (Power = ON)
 - Switch SW9, to the right the left edge USB connector (J2), is set to the VDD position; this is the center position of the three possible positions (nRF power source = VDD)
 - Switch SW10, on the bottom edge left corner and to the right of the SW8 switch, is set to the OFF position; this is the left position of the two possible positions (VEXT -> nRF = OFF). Note that this switch is protected by Kapton tape.
