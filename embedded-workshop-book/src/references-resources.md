@@ -16,6 +16,7 @@ It is also recommended that you work through the advanced material of this cours
 
 ## Advanced Material
 
+- [Slides used during the workshop](./Advanced_Embedded_Training.pdf)
 - [nRF52840 Product Specification 1.1](https://infocenter.nordicsemi.com/pdf/nRF52840_PS_v1.1.pdf)
 - [Universal Serial Bus (USB) Specification Revision 2.0](https://www.usb.org/document-library/usb-20-specification)
 
