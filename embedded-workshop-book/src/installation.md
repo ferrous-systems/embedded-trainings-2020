@@ -147,6 +147,10 @@ Installed package `cargo-binutils v0.3.0` (..)
 $ cargo install cargo-bloat
 (..)
 Installed package `cargo-bloat v0.9.3` (..)
+
+$ cargo install probe-run
+(..)
+Installed package `probe-run v0.1.0` (..)
 ```
 
 ## Python

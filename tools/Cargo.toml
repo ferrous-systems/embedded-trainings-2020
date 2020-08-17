@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "change-channel",
-  "dk-run",
   "dongle-flash",
   "serial-term",
   "usb-list",

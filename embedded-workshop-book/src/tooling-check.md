@@ -28,7 +28,6 @@ nrfutil version 6.1.0
 
 From the `tools` folder run these commands *from different terminals so they'll run in parallel*:
 
-- `cargo install --path dk-run`
 - `cargo install --path usb-list`
 - `cargo install --path dongle-flash`
 - `cargo install --path serial-term`
@@ -40,7 +39,6 @@ Leave the processes running in the background.
 
 From the `tools` folder run these commands *from different terminals so they'll run in parallel*:
 
-- `cargo install --path dk-run`
 - `cargo install --path usb-list`
 
 Leave the processes running in the background.
