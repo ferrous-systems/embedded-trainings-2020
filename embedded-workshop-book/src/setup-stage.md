@@ -21,23 +21,29 @@ Start with the GET_DESCRIPTOR request, which is described in detail in section 9
 
 [usb_spec]: https://www.usb.org/document-library/usb-20-specification
 
-The fields of a GET_DESCRIPTOR request are as follows:
+We can recognize a GET_DESCRIPTOR request by the following properties:
 - `bmRequestType` is **0b10000000**
-- `bRequest` is **6** (i.e. the GET_DESCRIPTOR Request Code, see table 9-4 in the USB spec)
-- the high byte of `wValue` contains the descriptor type, whereas the low byte contains the descriptor index
-- `wIndex` is set to 0 for our purposes
+- `bRequest` is **6** (i.e. the GET_DESCRIPTOR Request Code, defined in table 9-4 in the USB spec)
+
+In this task, we only want to parse DEVICE descriptor requests. They have the following properties:
+
+- the descriptor type is **1** (i.e. DEVICE, defined in table 9-5 of the USB spec)
+- the descriptor index is **0**
+- the wIndex is **0** for our purposes
+- ❗️you need to fetch the descriptor type from the high byte of `wValue`, and the descriptor index from the the low byte of `wValue`
+
 
 You will also find this information in the `// TODO implement ...` comment in the `Request::parse()` function of `lib.rs` file.
  > NOTE: If you'd like to learn more, take a look at Section 9.4.3 Get Descriptor of the USB specification.
 
 To complete the task, proceed like this:
 
-1. **Parse GET_DESCRIPTOR requests:**  
-Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
+1. **Parse GET_DESCRIPTOR requests for DEVICE descriptors:**  
+Modify `Request::parse()` in `advanced/common/usb/src/lib.rs` to recognize a GET_DESCRIPTOR request of type DEVICE so that the `get_descriptor_device` test passes. Note that the parser already handles SET_ADDRESS requests.
 
     - remember the GET_DESCRIPTOR fields described at the start of this section
     - remember that you can define binary literals by prefixing them with `0b`
-    - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of a `u16`
+    - you can use bit shifts (`>>`) and casts (`as u8`) to get the high/low bytes of `wValue`
 
 See `advanced/common/usb/solution-get-descriptor-device.rs` for a solution.
 
