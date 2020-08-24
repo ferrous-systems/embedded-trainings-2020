@@ -150,7 +150,7 @@ Installed package `cargo-bloat v0.9.3` (..)
 
 $ cargo install probe-run
 (..)
-Installed package `probe-run v0.1.0` (..)
+Installed package `probe-run v0.1.3` (..)
 ```
 
 ## Python

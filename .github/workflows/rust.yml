@@ -47,7 +47,7 @@ jobs:
     - name: install all dependencies
       run: |
         sudo apt-get install libudev-dev libusb-1.0-0-dev
-        rustup +stable target add thumbv7em-none-eabi
+        rustup +stable target add thumbv7em-none-eabihf
 
     - name: build tools
       working-directory: ./tools
