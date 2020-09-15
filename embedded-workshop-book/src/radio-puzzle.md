@@ -16,6 +16,8 @@ Like in the previous sections the Dongle will listen for radio packets -- this t
 
 ## Dongle Responses
 
+❗ The Dongle responds to the DK's requests wirelessly (i.e. by sending back radio packets) as well. You'll see the dongle responses printed by the DK. This means you don't have to worry if serial-term doesn't work on your machine.
+
 The Dongle will respond differently depending on the length of the incoming packet:
 
 - On zero-sized packets it will respond with the encrypted string.
