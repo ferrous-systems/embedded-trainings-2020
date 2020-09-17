@@ -114,7 +114,7 @@ Go to [https://rustup.rs](https://rustup.rs/) and follow the instructions.
 **All**: Run this command in a terminal:
 
 ``` console
-$ rustup +stable target add thumbv7em-none-eabi
+$ rustup +stable target add thumbv7em-none-eabihf
 ```
 
 ### ELF analysis tools

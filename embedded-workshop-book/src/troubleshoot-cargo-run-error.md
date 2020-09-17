@@ -7,7 +7,7 @@ You may get one of these errors:
 
 ``` console
 $ cargo run --bin usb-4
-Running `probe-run target/thumbv7em-none-eabi/debug/usb-4`
+Running `probe-run target/thumbv7em-none-eabihf/debug/usb-4`
 Error: An error specific to a probe type occured: USB error while taking control over USB device: Access denied (insufficient permissions)
 
 Caused by:
@@ -16,7 +16,7 @@ Caused by:
 
 ``` console
 $ cargo run --bin usb-4
-Running `probe-run target/thumbv7em-none-eabi/debug/usb-4`
+Running `probe-run target/thumbv7em-none-eabihf/debug/usb-4`
 Error: An error specific to a probe type occured: USB error while taking control over USB device: Resource busy
 
 Caused by:
