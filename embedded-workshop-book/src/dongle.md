@@ -61,7 +61,7 @@ The `loopback` app will log messages over the USB interface. To display these me
 
 ❗ Do not use serial terminal emulators like `minicom` or `screen`. They use the USB TTY ACM interface in a slightly different manner and may result in data loss.
 
-✅ Run the `serial-term` application. You should see the following output:
+✅ Run the `serial-term` application. It shows you the logging output the Dongle is sending on its serial interface to your computer. This helps you monitor what's going on at the Dongle and debug connection issues. You should see the following output:
 
 ``` console
 $ serial-term

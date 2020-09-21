@@ -2,7 +2,11 @@
 
 > NOTE: this section only applies to the Beginner workshop
 
-If you don't get any output from `serial-term` it could just have been that first line got lost when re-enumerating the device from bootloader mode to the loopback application. Run these *two* commands:
+If you don't get any output from `serial-term` it could just have been that first line got lost when re-enumerating the device from bootloader mode to the loopback application.
+
+Start `serial-term` in one console window.
+
+In another window, run these *two* commands:
 
 ``` console
 $ change-channel 20
@@ -12,7 +16,7 @@ $ change-channel 20
 requested channel change to channel 20
 ```
 
-You should get *two* lines of output in `serial-term`
+If you get *two* lines of output in `serial-term` like this, you are good to go:
 
 ``` console
 $ serial-term
@@ -20,10 +24,30 @@ now listening on channel 20
 now listening on channel 20
 ```
 
-If that's the case you are good to go, return to the ["Interference"] section.
+Return to the ["Interference"] section.
+
+🔎 `serial-term` shows you the log output that the Dongle is sending to your computer via the serial interface (not over the wireless network!). After you've ran `change-channel`, it tells you that it is now listening for network traffic on channel 20. This is helpful for debugging, but not mission-critical.
 
 ["Interference"]: /dongle.html#interference
 
 If you only get one line of output then your OS may be losing some serial data -- we have seen this behavior on some macOS machines. You will still be able to work through the exercises but will miss log data every now and then. Return to the ["Interference"] section.
 
-If you don't get *any* output from `serial-term` and/or the `change-channel` command fails then the Dongle's USB functionality is not working correctly. In this case you should flash one of the `loopback-nousb*` programs (repeat the procedure: put the device in bootloader mode; then run `dongle-flash`). These programs have no USB functionality but you will be able to use them to do the exercises. There are four `.hex` files available; pick one of them and flash it but take note of the number in the file name; this is the radio channel the Dongle will listen to. The Dongle will toggle the state of its green LED when it receives a packet. Return to the ["Interference"] section.
+If you don't get *any* output from `serial-term` and/or the `change-channel` command fails then the Dongle's USB functionality is not working correctly.
+
+In this case you should flash one of the `loopback-nousb*` programs:
+
+Put the device in bootloader mode again. Now, run
+```console
+$ dongle-flash loopback-nousb21  # you can pick 11, 16, 21 or 26
+```
+
+❗️ The number in the `loopback-nousb*` file name is the radio channel the Dongle will listen on. This means that when you program the Development Kit to send data to the Dongle, you need to ensure they are communicating on the same channel by setting
+
+```rust
+/* make sure to pass the channel number of the loopback-nousb* program you picked */
+radio.set_channel(Channel::_21);
+```
+
+Note that the `loopback-nousb*` programs do not send you any logs via `serial-term` for debugging but you will be able do the exercises nonetheless.
+For your debugging convenience, the Dongle will toggle the state of its green LED when it receives a packet.
+When you're done, return to the ["Interference"] section.
