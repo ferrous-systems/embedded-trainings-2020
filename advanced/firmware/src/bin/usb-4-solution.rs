@@ -54,7 +54,7 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
 
         Event::UsbEp0DataDone => {
             log::info!("EP0IN: transfer complete");
-            ep0in.end(usbd)
+            ep0in.end(usbd);
         }
 
         Event::UsbEp0Setup => {
