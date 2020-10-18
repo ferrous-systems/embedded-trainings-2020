@@ -13,9 +13,9 @@ use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 #[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
+        usbd: USBD,
         ep0in: Ep0In,
         state: State,
-        usbd: USBD,
     }
 
     #[init]
@@ -31,19 +31,19 @@ const APP: () = {
         }
     }
 
-    #[task(binds = USBD, resources = [state, usbd, ep0in])]
+    #[task(binds = USBD, resources = [usbd, ep0in, state])]
     fn main(cx: main::Context) {
         let usbd = cx.resources.usbd;
-        let state = cx.resources.state;
         let ep0in = cx.resources.ep0in;
+        let state = cx.resources.state;
 
         while let Some(event) = usbd::next_event(usbd) {
-            on_event(usbd, state, ep0in, event)
+            on_event(usbd, ep0in, state, event)
         }
     }
 };
 
-fn on_event(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In, event: Event) {
+fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
     log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
@@ -54,12 +54,12 @@ fn on_event(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In, event: Event) {
 
         Event::UsbEp0DataDone => {
             log::info!("EP0IN: transfer complete");
-            ep0in.end(usbd)
+            ep0in.end(usbd);
         }
 
         Event::UsbEp0Setup => {
-            if ep0setup(usbd, state, ep0in).is_err() {
-                log::warn!("EP0IN: stalled");
+            if ep0setup(usbd, ep0in, state).is_err() {
+                log::warn!("EP0IN: unexpected request; stalling the endpoint");
                 usbd::ep0stall(usbd);
             }
         }
@@ -69,14 +69,24 @@ fn on_event(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In, event: Event) {
 /// The `bConfigurationValue` of the only supported configuration
 const CONFIG_VAL: u8 = 42;
 
-fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()> {
+fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()> {
     let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
     let brequest = usbd.brequest.read().brequest().bits();
     let wlength = usbd::wlength(usbd);
     let windex = usbd::windex(usbd);
     let wvalue = usbd::wvalue(usbd);
 
-    let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)?;
+    log::info!(
+        "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
+        bmrequesttype,
+        brequest,
+        wlength,
+        windex,
+        wvalue
+    );
+
+    let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
+        .expect("Error parsing request");
     log::info!("EP0: {:?}", request);
 
     match request {
@@ -90,7 +100,7 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
                     bDeviceSubClass: 0,
                     bMaxPacketSize0: usb2::device::bMaxPacketSize0::B64,
                     bNumConfigurations: core::num::NonZeroU8::new(1).unwrap(),
-                    bcdDevice: 0x0100, // 1.00
+                    bcdDevice: 0x01_00, // 1.00
                     iManufacturer: None,
                     iProduct: None,
                     iSerialNumber: None,
@@ -98,7 +108,7 @@ fn ep0setup(usbd: &USBD, state: &mut State, ep0in: &mut Ep0In) -> Result<(), ()>
                     idVendor: consts::VID,
                 };
                 let bytes = desc.bytes();
-                ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd);
+                let _ = ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd);
             }
 
             Descriptor::Configuration { index } => {
