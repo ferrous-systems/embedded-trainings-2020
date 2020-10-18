@@ -8,14 +8,14 @@ use dk::{
 use panic_log as _; // panic handler
 
 // use one of these
-use usb2::{GetDescriptor as Descriptor, StandardRequest as Request};
+use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 
 #[rtic::app(device = dk)]
 const APP: () = {
     struct Resources {
         usbd: USBD,
         ep0in: Ep0In,
-        state: usb2::State,
+        state: State,
     }
 
     #[init]
@@ -26,7 +26,7 @@ const APP: () = {
 
         init::LateResources {
             usbd: board.usbd,
-            state: usb2::State::Default,
+            state: State::Default,
             ep0in: board.ep0in,
         }
     }
@@ -43,7 +43,7 @@ const APP: () = {
     }
 };
 
-fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut usb2::State, event: Event) {
+fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
     log::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
@@ -56,13 +56,13 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut usb2::State, event: Even
             if ep0setup(usbd, ep0in, state).is_err() {
                 // unsupported or invalid request:
                 // TODO: add code to stall the endpoint
-                log::warn!("EP0: unexpected request; stalling the endpoint");
+                log::warn!("EP0IN: unexpected request; stalling the endpoint");
             }
         }
     }
 }
 
-fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut usb2::State) -> Result<(), ()> {
+fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut State) -> Result<(), ()> {
     let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
     let brequest = usbd.brequest.read().brequest().bits();
     let wlength = usbd::wlength(usbd);
