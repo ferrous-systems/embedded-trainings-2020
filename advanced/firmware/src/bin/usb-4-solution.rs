@@ -76,6 +76,15 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
     let windex = usbd::windex(usbd);
     let wvalue = usbd::wvalue(usbd);
 
+    log::info!(
+        "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
+        bmrequesttype,
+        brequest,
+        wlength,
+        windex,
+        wvalue
+    );
+
     let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
         .expect("Error parsing request");
     log::info!("EP0: {:?}", request);
