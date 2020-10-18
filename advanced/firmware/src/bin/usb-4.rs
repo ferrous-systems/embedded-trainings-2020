@@ -48,9 +48,15 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
 
     match event {
         // TODO change `state` as specified in chapter 9.1 USB Device States, of the USB specification
-        Event::UsbReset => todo!(),
+        Event::UsbReset => {
+            log::info!("USB reset condition detected");
+            todo!();
+        }
 
-        Event::UsbEp0DataDone => ep0in.end(usbd),
+        Event::UsbEp0DataDone => {
+            log::info!("EP0IN: transfer complete");
+            ep0in.end(usbd);
+        }
 
         Event::UsbEp0Setup => {
             if ep0setup(usbd, ep0in, state).is_err() {
