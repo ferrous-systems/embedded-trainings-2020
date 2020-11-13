@@ -53,10 +53,10 @@ $ ls /dev/tty.usbmodem*
 
 Connect one end of a micro USB cable to the USB connector *J2* of the board and the other end to your PC.
 
-💬 These directions assume you are holding the board "horizontally" with components (switches, buttons and pins) facing up. In this position, rotate the board, so that its concave shaped short side faces right. You'll find one USB connector (J2) on the left edge, another USB connector (J3) on the bottom edge and 4 buttons on the bottom right corner.
+💬 These directions assume you are holding the board "horizontally" with components (switches, buttons and pins) facing up. In this position, rotate the board, so that its convex shaped short side faces right. You'll find one USB connector (J2) on the left edge, another USB connector (J3) on the bottom edge and 4 buttons on the bottom right corner.
 
 
-![Labelled Diagram of the nRF52840 Development Kit (DK)](hardware/labelled.jpg)
+![Labeled Diagram of the nRF52840 Development Kit (DK)](hardware/labelled.jpg)
 
 After connecting the DK to your PC/laptop it will show up as:
 
