@@ -56,7 +56,7 @@ if the red LED was blinking and you got this message then the device wasn't corr
         let mut records = vec![];
         for ph in elf_file.program_iter() {
             if ph.get_type() == Ok(Type::Load) {
-                let start = ph.offset();
+                let start = ph.physical_addr();
 
                 match ph.get_data(&elf_file).map_err(anyhow::Error::msg)? {
                     SegmentData::Undefined(bytes) => {
