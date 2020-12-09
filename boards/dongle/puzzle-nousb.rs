@@ -9,6 +9,8 @@ use hal::{
 use heapless::{consts, LinearMap};
 use panic_abort as _;
 
+const CHANNEL: Channel = Channel::_26;
+
 static FROM: &[u8] = &[
     // <redacted>
 ];
@@ -22,7 +24,7 @@ static SECRET: &[u8] = b"<redacted>";
 
 #[no_mangle]
 fn main() -> ! {
-    let (mut rtx, mut rrx) = radio::claim(Channel::_26);
+    let (mut rtx, mut rrx) = radio::claim(CHANNEL);
     let led = led::Green;
 
     let mut dict = LinearMap::<_, _, consts::U128>::new();
