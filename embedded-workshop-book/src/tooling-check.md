@@ -2,7 +2,7 @@
 
 ## Setup check
 
-✅ First, let's check that you have installed all the tools listed in the previous section.
+✅ Let's check that you have installed all the tools listed in the previous section.
 
 ❗ The first two commands *must* return version `0.8.x`
 
@@ -20,25 +20,35 @@ $ nrfutil version
 nrfutil version 6.1.0
 ```
 
-## More tools
-
-✅ Now let's install some tools shipped with the workshop material.
+✅ Now let's make sure you've installed the tools shipped with the workshop material.
 
 ### Beginner workshop
 
-From the `tools` folder run these commands *from different terminals so they'll run in parallel*:
+Run the commands listed here and see if they produce similar output, i.e. *don't* yield `command not found: ...`
 
-- `cargo install --path usb-list`
-- `cargo install --path dongle-flash`
-- `cargo install --path serial-term`
-- `cargo install --path change-channel`
+```console
+$ usb-list
+Bus 020 Device 007: ID 1b1c:0a42
+Bus 020 Device 006: ID 1fc9:0132
+(..)
 
-Leave the processes running in the background.
+$ dongle-flash
+Error: expected exactly one argument
+
+$ serial-term
+(waiting for the Dongle to be connected)
+
+$ change-channel
+Error: expected exactly one argument
+```
 
 ### Advanced workshop
 
-From the `tools` folder run these commands *from different terminals so they'll run in parallel*:
+Run the commands listed here and see if they produce similar output, i.e. *don't* yield `command not found: ...`
 
-- `cargo install --path usb-list`
-
-Leave the processes running in the background.
+```console
+$ usb-list
+Bus 020 Device 007: ID 1b1c:0a42
+Bus 020 Device 006: ID 1fc9:0132
+(..)
+```

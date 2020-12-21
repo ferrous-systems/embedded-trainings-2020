@@ -150,8 +150,40 @@ Installed package `cargo-bloat v0.9.3` (..)
 
 $ cargo install probe-run
 (..)
-Installed package `probe-run v0.1.3` (..)
+Installed package `probe-run v0.1.8` (..)
 ```
+
+### Workshop tools
+
+The workshop git repository contains custom crates that help you with flashing and debugging the workshops. Depending on the workshop you're attending, you need to install all or some of them.
+
+#### Beginner workshop
+
+Change to the `tools` folder and run these commands *from different terminals so they'll run in parallel*:
+
+```console
+$ cd  embedded-trainings-2020/tools
+$ cargo install --path usb-list
+$ # in a new terminal, for parallelization
+$ cargo install --path dongle-flash
+$ # in a new terminal, for parallelization
+$ cargo install --path serial-term
+$ # in a new terminal, for parallelization
+$ cargo install --path change-channel
+```
+
+Leave the processes running in the background.
+
+#### Advanced workshop
+
+Change to the `tools` folder and run these commands:
+
+```console
+$ cd  embedded-trainings-2020/tools
+$ cargo install --path usb-list
+```
+
+Leave the process running in the background.
 
 ## Python
 
