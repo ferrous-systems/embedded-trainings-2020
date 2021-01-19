@@ -109,6 +109,10 @@ Go to [https://rustup.rs](https://rustup.rs/) and follow the instructions.
 
 **Windows**: It's OK to ignore the message about `git` not being installed, if you get one!
 
+### Better TOML
+
+**All**: For better handling of `Cargo.toml` files, we recommend you install [Better TOML](https://marketplace.visualstudio.com/items?itemName=bungcip.better-toml) if you're using VS Code.
+
 ### Rust Cross compilation support
 
 **All**: Run this command in a terminal:
@@ -155,7 +159,15 @@ Installed package `probe-run v0.1.8` (..)
 
 ### Workshop tools
 
-The workshop git repository contains custom crates that help you with flashing and debugging the workshops. Depending on the workshop you're attending, you need to install all or some of them.
+The [workshop git repository](https://github.com/ferrous-systems/embedded-trainings-2020) contains custom crates that help you with flashing and debugging the workshops. Depending on the workshop you're attending, you need to install all or some of them.
+
+In any case, clone and change into the repository first:
+
+```console
+$ git clone https://github.com/ferrous-systems/embedded-trainings-2020.git
+$ cd embedded-trainings-2020
+```
+
 
 #### Beginner workshop
 

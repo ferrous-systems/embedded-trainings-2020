@@ -1,10 +1,17 @@
 # `embedded-trainings-2020`
 
-Material for the beginner and advanced workshops of Oxidize Global (15.07.2020).
+This repository contains the material for the beginner and advanced Embedded Rust workshops held by [Ferrous Systems].
 
-Website for this workshop: [https://embedded-trainings.ferrous-systems.com][book]
+You can find the rendered book containing all instructions at [embedded-trainings.ferrous-systems.com][book]
+
+If you'd like to attend one of our open classes or book a custom training, please visit our [trainings website].
+
+*This workshop was initially held at [Oxidize Global 2020]*
 
 [book]: https://embedded-trainings.ferrous-systems.com
+[Ferrous Systems]: https://ferrous-systems.com
+[trainings website]: https://ferrous-systems.com/training/
+[Oxidize Global 2020]: https://oxidizeconf.com
 
 ## Required hardware
 
@@ -12,7 +19,6 @@ Website for this workshop: [https://embedded-trainings.ferrous-systems.com][book
 - [nRF52840 Dongle](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52840-Dongle)
 - 2 micro-USB cables
 - 2 available USB-A ports on your laptop / PC (you can use a USB hub if you don't have enough ports)
-
 
 ## License
 

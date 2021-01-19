@@ -6,8 +6,7 @@ Unlike `cargo flash`, `cargo-embed` has no `--chip` flag; instead the target chi
 
 ``` toml
 # Embed.toml
-[general]
-chip = "nRF52840_xxAA"
+{{#include ../../beginner/apps/Embed.toml}}
 ```
 
 ✅ Use the following command to view your logs.

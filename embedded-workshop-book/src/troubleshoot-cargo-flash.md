@@ -18,7 +18,10 @@ $ cargo flash --chip nRF52840_xxAA --bin hello
 Error failed to flash app: The execution of 'erase_sector' failed with code 1
 ```
 
-flash write protection is enabled in the device. To disable it use the `nrf-recover` tool. Instructions can be found in the [setup page](https://oxidizeconf.com/oxidize-global-setup/) and in the top-level README of this repository.
+flash write protection is enabled in the device. To disable it use the `nrf-recover` tool. Instructions can be found in the [`nrf-recover` section of the Installation Instructions].
+
+[`nrf-recover` section of the Installation Instructions]: ./installation.md#nrf-recover
+
 
 ## Linux permissions
 
@@ -30,7 +33,9 @@ Caused by:
     USB error while opening USB device: Access denied (insufficient permissions)
 ```
 
-udev rules need to be changed to allow non-root access. Instructions can be found in the [setup page](https://oxidizeconf.com/oxidize-global-setup/) and in the top-level README of this repository.
+udev rules need to be changed to allow non-root access. Instructions can be found in the [`Linux only: USB` section of the Installation Instructions].
+
+[`Linux only: USB` section of the Installation Instructions]: ./installation.md#linux-only-usb
 
 ## Wrong Windows Driver
 
@@ -42,4 +47,6 @@ Caused by:
     USB error while opening USB device: Entity not found
 ```
 
-You need to bind the BULK interface of the J-Link USB device to the WinUSB driver using the Zadig tool. Instructions can be found in the [setup page](https://oxidizeconf.com/oxidize-global-setup/) and in the top-level README of this repository.
+You need to bind the BULK interface of the J-Link USB device to the WinUSB driver using the Zadig tool. Instructions can be found in the [`Windows only: Zadig JLink driver` section of the Installation Instructions].
+
+[`Windows only: Zadig JLink driver` section of the Installation Instructions]: ./installation.md#windows-only-zadig-jlink-driver
