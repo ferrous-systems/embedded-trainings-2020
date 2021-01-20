@@ -18,10 +18,15 @@ $ cargo flash --chip nRF52840_xxAA --bin hello
 Error failed to flash app: The execution of 'erase_sector' failed with code 1
 ```
 
-flash write protection is enabled in the device. To disable it use the `nrf-recover` tool. Instructions can be found in the [`nrf-recover` section of the Installation Instructions].
+Ensure that you've installed version 0.10 or higher of `cargo-flash` and `cargo-embed`
 
-[`nrf-recover` section of the Installation Instructions]: ./installation.md#nrf-recover
+``` console
+$ cargo flash --version
+0.10.2
 
+$ cargo embed --version
+0.10.2
+````
 
 ## Linux permissions
 

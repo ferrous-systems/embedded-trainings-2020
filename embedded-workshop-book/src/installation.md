@@ -299,17 +299,3 @@ nrfutil version 6.1.0
 ```
 
 *end of nrfutil python 3.9 workaround*
-
-### `nrf-recover`
-
-Some nRF52840 devices, specially older revisions, may have parts of their Flash memory locked. To unlock the memory use the [`nrf-recover`](https://crates.io/crates/nrf-recover) tool.
-
-This is only relevant to the nRF52840 Development Kit. First connect the nRF52840 DK to your PC using micro-USB J2 (as done before) then run the following commands:
-
-``` console
-$ cargo install nrf-recover
-
-$ nrf-recover -y
-Starting mass erase...
-Mass erase completed, chip unlocked
-```
