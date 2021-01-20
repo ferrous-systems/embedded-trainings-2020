@@ -8,13 +8,13 @@
 
 ``` console
 $ cargo flash --version
-0.8.0
+0.10.2
 
 $ cargo embed --version
-0.8.0
+0.10.1
 
 $ cargo size --version
-cargo-size 0.3.0
+cargo-size 0.3.3
 
 $ nrfutil version
 nrfutil version 6.1.0
