@@ -133,7 +133,7 @@ $ cargo install cargo-binutils
 
 ### Cargo subcommands
 
-Install version v0.10.2 of the [`cargo-flash`](https://crates.io/crates/cargo-flash) and [`cargo-embed`](https://crates.io/crates/cargo-embed) subcommands, as well as the [`cargo-binutils`](https://crates.io/crates/cargo-binutils) set of subcommands and the [`cargo-bloat`](https://crates.io/crates/cargo-bloat) subcommand using the following Cargo commands:
+Install version v0.10.2 of the [`cargo-flash`](https://crates.io/crates/cargo-flash) and [`cargo-embed`](https://crates.io/crates/cargo-embed) subcommands, as well as the [`cargo-binutils`](https://crates.io/crates/cargo-binutils) set of subcommands using the following Cargo commands:
 
 ``` console
 $ cargo install cargo-flash --version 0.10.2 -f
@@ -147,10 +147,6 @@ Installed package `cargo-embed v0.10.1` (..)
 $ cargo install cargo-binutils
 (..)
 Installed package `cargo-binutils v0.3.3` (..)
-
-$ cargo install cargo-bloat
-(..)
-Installed package `cargo-bloat v0.9.3` (..)
 
 $ cargo install probe-run
 (..)
