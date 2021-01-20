@@ -58,6 +58,7 @@
     - [Getting it Configured](./getting-device-configured.md)
     - [Next Steps](./advanced-next-steps.md)
 - [References and Resources](./references-resources.md)
+    - [Tooltips](./tooltips.md)
 - [Troubleshooting](./troubleshooting.md)
     - [`cargo-size` is not working](./troubleshoot-cargo-size.md)
     - [`cargo-flash` is not working](./troubleshoot-cargo-flash.md)
