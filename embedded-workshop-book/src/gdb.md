@@ -7,8 +7,7 @@ Although `cargo-embed` v0.10 (and v0.10 of `probe-rs`, the library that powers `
 support spawning a GDB server it has some limitations
 - stepping through the code (e.g. GDB's `step` and `next` commands) is imprecise or doesn't work in
   some cases
-- it's not possible to have a GDB server and RTT channels running at the same time (this limitation
-  is likely to be removed in v0.11)
+- it's not possible to have a GDB server and RTT channels running at the same time so you can use GDB OR RTT but not both together (this limitation is likely to be removed in v0.11)
 
 The rest of this section covers how to debug an embedded application within VS code using OpenOCD as
 the GDB server.
@@ -24,7 +23,7 @@ the GDB server.
 ## Preparation
 
 For the best debugging experience, the `dev` (development) compilation profile should be set to its
-default settings. 
+default settings.
 For this tutorial, we'll be using the `beginner/` applications, so let's modify `beginner/apps/Cargo.toml` to revert the `dev` profile to its default.
 
 ``` diff
