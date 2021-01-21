@@ -6,8 +6,8 @@ name = "dk"
 version = "0.0.0"
 
 [dependencies]
-cortex-m = "0.6.2"
-cortex-m-rt = "0.6.12"
+cortex-m = "0.6.4"
+cortex-m-rt = "0.6.13"
 embedded-hal = "0.2.3"
 hal = { package = "nrf52840-hal", git = "https://github.com/japaric/nrf-hal", branch = "radio" }
 log = "0.4.8"

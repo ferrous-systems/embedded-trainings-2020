@@ -8,7 +8,6 @@ use cortex_m::asm;
 fn panic(info: &PanicInfo) -> ! {
     log::error!("{}", info);
 
-    loop {
-        asm::bkpt()
-    }
+    // abort instruction: triggers a HardFault exception which causes probe-run to exit
+    asm::udf()
 }
