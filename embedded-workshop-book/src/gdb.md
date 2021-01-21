@@ -18,9 +18,7 @@ the GDB server.
 
 1. You'll need to install OpenOCD. Installation instructions vary depending on your OS.
 
-2. Install the [cortex-debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug) extension in VS code. Head to the extensions marketplace and search for
-   "cortex-debug". Latest version at the time of writing is 0.3.7 and the author of the extension is
-   "marus25"
+2. Install the [cortex-debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug) extension in VS code.
 
 ## Preparation
 
