@@ -50,14 +50,14 @@ For this tutorial, we'll be using the `beginner/` applications, so let's modify 
 
 3. From the top menu, pick "Run" > "Start Debugging".
 
+[![GDB session within VS code using the cortex-debug extension](code-gdb.png)](./code-gdb.png)
+
 You are now in a GDB session. Switch to the "Run" view (4th icon from the top on the left sidebar)
 and you'll see debug information like the call stack, local variables, breakpoints and CPU registers
 on the left side. On the bottom panel, you can switch to the "Debug console" to issue commands to
 the GDB server. Near the top of the GUI you'll find a row of buttons to navigate through the program
 (step, continue, etc.). Breakpoints can be added by clicking to the left of line numbers in the file
 view.
-
-![GDB session within VS code using the cortex-debug extension](code-gdb.png)
 
 ## Debugging a different program
 
