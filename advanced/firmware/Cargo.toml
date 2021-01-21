@@ -12,8 +12,8 @@ usb2 = { git = "https://github.com/japaric/usb2" }
 
 [dependencies]
 consts = { path = "../common/consts" }
-cortex-m = "0.6.2"
-cortex-m-rt = "0.6.12"
+cortex-m = "0.6.4"
+cortex-m-rt = "0.6.13"
 cortex-m-rtic = "0.5.1"
 dk = { path = "../../boards/dk", features = ["advanced"] }
 heapless = "0.5.5"
