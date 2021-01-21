@@ -17,14 +17,15 @@ the GDB server.
 
 1. You'll need to install OpenOCD. Installation instructions vary depending on your OS.
 
-2. Install the cortex-debug extension in VS code. Head to the extensions marketplace and search for
+2. Install the [cortex-debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug) extension in VS code. Head to the extensions marketplace and search for
    "cortex-debug". Latest version at the time of writing is 0.3.7 and the author of the extension is
    "marus25"
 
 ## Preparation
 
 For the best debugging experience, the `dev` (development) compilation profile should be set to its
-default settings. Modify `beginner/apps/Cargo.toml` to revert the `dev` profile to its default.
+default settings. 
+For this tutorial, we'll be using the `beginner/` applications, so let's modify `beginner/apps/Cargo.toml` to revert the `dev` profile to its default.
 
 ``` diff
  panic-log = { path = "../../common/panic-log" }
