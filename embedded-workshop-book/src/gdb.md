@@ -14,6 +14,8 @@ the GDB server.
 
 ## Dependencies
 
+0. Make sure you've connected your Development Kit: USB port J2 on the board
+
 1. You'll need to install OpenOCD. Installation instructions vary depending on your OS.
 
 2. Install the [cortex-debug](https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug) extension in VS code. Head to the extensions marketplace and search for
