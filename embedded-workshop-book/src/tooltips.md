@@ -28,7 +28,7 @@ File  .text   Size      Crate Name
 5.1% 100.0% 9.4KiB            .text section size, the file size is 184.5KiB
 ```
 
-This breakdowns the size of the `.text` section by function. This breakdown can be used to identify the largest functions in the program; those could then be modified to make them smaller.
+This breaks down the size of the `.text` section by function. This breakdown can be used to identify the largest functions in the program; those could then be modified to make them smaller.
 
 ## `cargo-flash`
 
