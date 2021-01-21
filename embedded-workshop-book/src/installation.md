@@ -131,19 +131,11 @@ $ rustup +stable component add llvm-tools-preview
 $ cargo install cargo-binutils
 ```
 
-### Cargo subcommands
+### General purpose tools
 
-Install version v0.10.2 of the [`cargo-flash`](https://crates.io/crates/cargo-flash) and [`cargo-embed`](https://crates.io/crates/cargo-embed) subcommands, as well as the [`cargo-binutils`](https://crates.io/crates/cargo-binutils) set of subcommands using the following Cargo commands:
+Install the [`cargo-binutils`](https://crates.io/crates/cargo-binutils) and [`probe-run`](https://crates.io/crates/probe-run) tools using the following Cargo commands:
 
 ``` console
-$ cargo install cargo-flash --version 0.10.2 -f
-(..)
-Installed package `cargo-flash v0.8.0` (..)
-
-$ cargo install cargo-embed --version 0.10.1 -f
-(..)
-Installed package `cargo-embed v0.10.1` (..)
-
 $ cargo install cargo-binutils
 (..)
 Installed package `cargo-binutils v0.3.3` (..)
@@ -153,7 +145,7 @@ $ cargo install probe-run
 Installed package `probe-run v0.1.8` (..)
 ```
 
-### Workshop tools
+### Workshop specific tools
 
 The [workshop git repository](https://github.com/ferrous-systems/embedded-trainings-2020) contains custom crates that help you with flashing and debugging the workshops. Depending on the workshop you're attending, you need to install all or some of them.
 

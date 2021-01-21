@@ -1,6 +1,6 @@
 # Tooltips
 
-Besides the ones covered in this workshop, there are many more tools that make embedded development easier. 
+Besides the ones covered in this workshop, there are many more tools that make embedded development easier.
 Here, we'd like to introduce you to some of these tools and encourage you to play around with them and adopt them if you find them helpful!
 
 ## `cargo-bloat`
@@ -28,4 +28,33 @@ File  .text   Size      Crate Name
 5.1% 100.0% 9.4KiB            .text section size, the file size is 184.5KiB
 ```
 
-This breakdowns the size of the `.text` section by function. This breakdown can be used to identify the largest functions in the program; those could then be modified to make them smaller.
+This breaks down the size of the `.text` section by function. This breakdown can be used to identify the largest functions in the program; those could then be modified to make them smaller.
+
+## `cargo-flash`
+
+`cargo-flash` is a tool that flashes a Rust program on a microcontroller.
+From within a Cargo project it can be used like this:
+
+``` console
+$ # flash the `hello` program on an nRF52840 microcontroller
+$ cargo flash --chip nRF52840_xxAA --bin hello
+    Flashing target/thumbv7em-none-eabihf/debug/blinky
+     Erasing sectors ✔ [00:00:00] [####]  20.00KB/ 20.00KB @  21.24KB/s (eta 0s )
+ Programming pages   ✔ [00:00:01] [####]  20.00KB/ 20.00KB @   6.38KB/s (eta 0s )
+    Finished in 1.995s
+```
+
+The tool will reset the device after flashing it so when it finishes the device will be running the new firmware.
+This subcommand will build the program first so you'll always flash the latest version.
+
+The tool can also flash pre-built Rust programs so you could distribute binary releases of your firmware to your users and they can use `cargo-flash` to flash those binaries.
+
+``` console
+$ # you
+$ cargo build --bin app --release
+
+$ # distribute target/thumb*/release/app to your users
+
+$ # your users
+$ cargo flash --chip nRF52840_xxAA --elf ./app
+```

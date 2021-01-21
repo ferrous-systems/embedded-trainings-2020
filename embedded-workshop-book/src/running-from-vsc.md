@@ -1,6 +1,4 @@
-# Running the Program from VS Code
-
-Both `cargo-embed` and `cargo-flash` are tools based on the `probe-rs` library. This library exposes an API to communicate with the J-Link and perform all the operations exposed by the JTAG protocol. We have developed a small Cargo runner called [probe-run](https://github.com/knurling-rs/probe-run) that uses the `probe-rs` library to streamline the process of running a program and printing logs, like `cargo-embed`, while also having better integration into VS code. We'll be using it in this workshop, and you can utilize it in your future projects too.
+# Running the Program
 
 ✅ Open the `src/bin/hello.rs` file and click the "Run" button that's hovering over the `main` function.
 
@@ -9,18 +7,49 @@ Both `cargo-embed` and `cargo-flash` are tools based on the `probe-rs` library. 
 If you are not using VS code, you can run the program out of your console.
 Enter the command `cargo run --bin hello` from within the `beginer/apps` folder. Rust Analyzer's "Run" button is a short-cut for that command.
 
+> NOTE: If you run into an error along the lines of "Debug power request failed" retry the operation and the error should disappear.
+
 Expected output:
 
 ``` console
 $ cargo run --bin hello
+     Running `probe-run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/hello`
+  (HOST) INFO  flashing program (30.09 KiB)
+  (HOST) INFO  success!
+────────────────────────────────────────────────────────────────────────────────
 INFO:hello -- Hello, world!
 stack backtrace:
-   0: 0x0000229c - __bkpt
-   1: 0x0000030e - hello::__cortex_m_rt_main
-   2: 0x0000011a - main
-   3: 0x00001ba2 - Reset
+   0: __bkpt
+   1: hello::__cortex_m_rt_main
+        at src/bin/hello.rs:15
+   2: main
+        at src/bin/hello.rs:8
+   3: ResetTrampoline
+        at $REGISTRY/cortex-m-rt-0.6.13/src/lib.rs:547
+   4: Reset
+        at $REGISTRY/cortex-m-rt-0.6.13/src/lib.rs:550
 ```
 
-`cargo run` will compile the application and then invoke `probe-run` with its argument set to the path of the output ELF file.
+`cargo run` will compile the application and then invoke the `probe-run` tool with its argument set to the path of the output ELF file.
 
-Unlike `cargo-embed`, `probe-run` will terminate when the program reaches a breakpoint (`asm::bkpt`) that halts the device. Before exiting, `probe-run` will print a stack backtrace of the program starting from the breakpoint. This can be used to write small test programs that are meant to perform some work and then terminate.
+The `probe-run` tool will
+- flash (load) the program on the microcontroller
+- reset the microcontroller to make it execute the new program
+- collect logs from the microcontroller and print them to the console
+- print a backtrace of the program and exit when the devices reaches a breakpoint (`asm::bkpt()`)
+
+Should you need to configure the `probe-run` invocation to e.g. flash a different microcontroller you can do that in the `.cargo/config.toml` file.
+
+``` toml
+[target.thumbv7em-none-eabihf]
+runner = "probe-run --chip nRF52840_xxAA" # <- add/remove/modify flags here
+# ..
+```
+
+**🔎 How does flashing work?**
+
+The flashing process consists of the PC communicating with a second microcontroller on the nRF52840 DK over USB (J2 port). This second microcontroller, named J-Link, is connected to the nRF52840 through a electrical interface known as SWD. The SWD protocol specifies procedures for reading memory, writing to memory, halting the target processor, reading the target processor registers, etc.
+
+**🔎 How does logging work?**
+
+Logging is implemented using the Real Time Transfer (RTT) protocol. Under this protocol the target device writes log messages to a ring buffer stored in RAM; the PC communicates with the J-Link to read out log messages from this ring buffer. This logging approach is non-blocking in the sense that the target device does not have to wait for physical IO (USB comm, serial interface, etc.) to complete while logging messages since they are written to memory. It is possible, however, for the target device to run out of space in its logging ring buffer; this causes old log messages to be overwritten.
