@@ -7,12 +7,6 @@
 ❗ The first two commands *must* return version `0.8.x`
 
 ``` console
-$ cargo flash --version
-0.10.2
-
-$ cargo embed --version
-0.10.1
-
 $ cargo size --version
 cargo-size 0.3.3
 
