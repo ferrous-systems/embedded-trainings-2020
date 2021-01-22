@@ -20,7 +20,7 @@ fn main() -> ! {
 
 #[inline(never)]
 fn spam() {
-    // allocate and initialize one kilobyte of stack memory to provoke stack overflow
+    // allocate and initialize 4 kilobytes of stack memory to provoke stack overflow
     let use_stack = [0xAA_u32; 1024];
 
     log::info!(
