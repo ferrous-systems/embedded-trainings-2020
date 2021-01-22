@@ -143,6 +143,10 @@ Installed package `cargo-binutils v0.3.3` (..)
 $ cargo install probe-run
 (..)
 Installed package `probe-run v0.1.8` (..)
+
+$ cargo install flip-link
+(..)
+Installed package `flip-link v0.1.2` (..)
 ```
 
 ### Workshop specific tools
@@ -175,12 +179,6 @@ $ cargo install --path change-channel
 Leave the processes running in the background.
 
 #### Advanced workshop
-
-```console
-$ cargo install flip-link
-(..)
-Installed package `flip-link v0.1.2` (..)
-```
 
 Change to the `tools` folder and run these commands:
 

@@ -59,6 +59,7 @@ jobs:
     - name: build and fmt beginner/apps
       working-directory: ./beginner/apps
       run: |
+        cargo install flip-link
         cargo build --verbose
         cargo fmt --all -- --check
 

@@ -25,6 +25,5 @@ fn spam() {
 
     log::info!("address of current `use_stack`: {:?}", &use_stack as *const u32);
 
-    log::info!("entering next recursive step");
     spam(); // infinite recursion
 }
