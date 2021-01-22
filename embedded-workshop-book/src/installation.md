@@ -176,6 +176,12 @@ Leave the processes running in the background.
 
 #### Advanced workshop
 
+```console
+$ cargo install flip-link
+(..)
+Installed package `flip-link v0.1.2` (..)
+```
+
 Change to the `tools` folder and run these commands:
 
 ```console
