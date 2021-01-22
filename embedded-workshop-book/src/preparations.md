@@ -8,6 +8,7 @@ This chapter contains informations about the course material, the required hardw
 - [nRF52840 Development Kit (DK)](https://www.nordicsemi.com/Software-and-Tools/Development-Kits/nRF52840-DK)
 - [nRF52840 Dongle](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52840-Dongle)
 - 2 micro-USB cables
+    - ❗️ make sure you're using micro usb cables which can transmit data (some are charging-only; these are not suitable for our workshop)
 - 2 available USB-A ports on your laptop / PC (you can use a USB hub if you don't have enough ports)
 
 In this workshop we'll use both the nRF52840 Development Kit (DK) and the nRF52840 Dongle. We'll mainly develop programs for the DK and use the Dongle to assist with some exercises.
