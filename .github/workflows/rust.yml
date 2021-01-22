@@ -65,5 +65,6 @@ jobs:
     - name: build and fmt advanced/firmware
       working-directory: ./advanced/firmware
       run: |
+        cargo install flip-link
         cargo build --verbose
         cargo fmt --all -- --check
