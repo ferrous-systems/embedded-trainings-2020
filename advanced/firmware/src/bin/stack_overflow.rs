@@ -23,7 +23,10 @@ fn spam() {
     // allocate and initialize one kilobyte of stack memory to provoke stack overflow
     let use_stack = [0xAA_u32; 1024];
 
-    log::info!("address of current `use_stack`: {:?}", &use_stack as *const u32);
+    log::info!(
+        "address of current `use_stack`: {:?}",
+        &use_stack as *const u32
+    );
 
     spam(); // infinite recursion
 }
