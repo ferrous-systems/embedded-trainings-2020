@@ -11,7 +11,7 @@ fn main() -> ! {
     dk::init().unwrap();
 
     log::info!("provoking stack overflow...");
-    spam();
+    spam(0);
 
     loop {
         asm::bkpt();
@@ -19,14 +19,16 @@ fn main() -> ! {
 }
 
 #[inline(never)]
-fn spam() {
+fn spam(n: u32) {
     // allocate and initialize 4 kilobytes of stack memory to provoke stack overflow
-    let use_stack = [0xAA_u32; 1024];
+    let use_stack = [n; 1024];
 
     log::info!(
-        "address of current `use_stack`: {:?}",
+        "address of current `use_stack` at recursion depth {:?}: {:?}",
+        use_stack[1023], // "use" use_stack to prevent it from being optimized out
         &use_stack as *const u32
     );
 
-    spam(); // infinite recursion
+    let next = n + 1;
+    spam(next); // infinite recursion
 }
