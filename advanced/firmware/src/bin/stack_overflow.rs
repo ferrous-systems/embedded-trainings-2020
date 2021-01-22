@@ -20,11 +20,11 @@ fn main() -> ! {
 
 #[inline(never)]
 fn spam() {
-    // allocate and initialize one kilobyte of stack memory to provoke stack overflow quicker
-    let use_stack = [0xAA; 1024];
-    let addr = &use_stack as *const i32;
+    // allocate and initialize one kilobyte of stack memory to provoke stack overflow
+    let use_stack = [0xAA_u32; 1024];
 
-    log::info!("address of current `use_stack`: {:?}", addr);
+    log::info!("address of current `use_stack`: {:?}", &use_stack as *const u32);
 
+    log::info!("entering next recursive step");
     spam(); // infinite recursion
 }
