@@ -25,11 +25,11 @@ usb2 = { git = "https://github.com/japaric/usb2" }
 # optimize code in both profiles
 [profile.dev]
 codegen-units = 1
-debug = 1
+debug = 2
 debug-assertions = true # !
 incremental = false
 lto = "fat"
-opt-level = 'z' # !
+opt-level = 1 # !
 overflow-checks = false
 
 [profile.release]
