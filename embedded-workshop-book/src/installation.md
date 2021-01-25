@@ -126,19 +126,16 @@ $ rustup +stable target add thumbv7em-none-eabihf
 **All**: Run these commands in a terminal:
 
 ``` console
-$ rustup +stable component add llvm-tools-preview
-
 $ cargo install cargo-binutils
+
+$ rustup +stable component add llvm-tools-preview
 ```
 
 ### General purpose tools
 
-Install the [`cargo-binutils`](https://crates.io/crates/cargo-binutils) and [`probe-run`](https://crates.io/crates/probe-run) tools using the following Cargo commands:
+Install the [`flip-link`](https://crates.io/crates/flip-link) and [`probe-run`](https://crates.io/crates/probe-run) tools using the following Cargo commands:
 
 ``` console
-$ cargo install cargo-binutils
-(..)
-Installed package `cargo-binutils v0.3.3` (..)
 
 $ cargo install probe-run
 (..)
