@@ -1,11 +1,16 @@
-use core::convert::TryFrom;
 use std::{
-    env, fs,
+    convert::TryFrom,
+    fs,
+    io::{self, Write as _},
     path::Path,
     process::{Command, Stdio},
+    sync::atomic::{AtomicBool, Ordering},
+    thread,
+    time::Duration,
 };
 
-use anyhow::{anyhow, bail, ensure};
+use color_eyre::eyre::{anyhow, bail, Report};
+use hidapi::HidApi;
 use ihex::record::Record;
 use serialport::SerialPortType;
 use tempfile::TempDir;
@@ -14,13 +19,37 @@ use xmas_elf::{
     ElfFile,
 };
 
-const VID: u16 = 0x1915;
-const PID: u16 = 0x521f;
+use crate::config;
 
-fn main() -> Result<(), anyhow::Error> {
-    let args = env::args().skip(1 /* program name */).collect::<Vec<_>>();
+pub fn change_channel(channel: &str) -> color_eyre::Result<()> {
+    fn check_pid(pid: u16) -> bool {
+        pid == pids::LOOPBACK || pid == pids::PUZZLE
+    }
 
-    ensure!(args.len() == 1, "expected exactly one argument");
+    let api = HidApi::new()?;
+    let dev = api
+        .device_list()
+        .filter(|dev| dev.vendor_id() == consts::VID && check_pid(dev.product_id()))
+        .next()
+        .ok_or_else(|| anyhow!("device not found"))?
+        .open_device(&api)?;
+
+    let chan = channel.parse::<u8>()?;
+    if chan < 11 || chan > 26 {
+        bail!("channel is out of range (`11..=26`)")
+    }
+    const REPORT_ID: u8 = 0;
+    dev.write(&[REPORT_ID, chan])?;
+    println!("requested channel change to channel {}", chan);
+
+    Ok(())
+}
+
+pub fn dongle_flash(hex: &str) -> color_eyre::Result<()> {
+    const VID: u16 = 0x1915;
+    const PID: u16 = 0x521f;
+
+    crate::cd(config::DONGLE_PATH)?;
 
     let dongle = serialport::available_ports()?
         .into_iter()
@@ -35,7 +64,7 @@ connect the Dongle to your laptop or PC and press the reset button to put it in 
 if the red LED was blinking and you got this message then the device wasn't correctly enumerated; remove it and try again")
         })?;
 
-    let path = Path::new(&args[0]);
+    let path = Path::new(hex);
     let filename = Path::new(
         path.file_name()
             .ok_or_else(|| anyhow!("{} has no file name", path.display()))?,
@@ -52,13 +81,13 @@ if the red LED was blinking and you got this message then the device wasn't corr
         // here we map the ELF loadable segments -- these correspond to sections like `.text`, `.rodata`
         // and `.data` (initial values) -- to ihex records
         let bytes = fs::read(path)?;
-        let elf_file = ElfFile::new(&bytes).map_err(anyhow::Error::msg)?;
+        let elf_file = ElfFile::new(&bytes).map_err(Report::msg)?;
         let mut records = vec![];
         for ph in elf_file.program_iter() {
             if ph.get_type() == Ok(Type::Load) {
                 let start = ph.physical_addr();
 
-                match ph.get_data(&elf_file).map_err(anyhow::Error::msg)? {
+                match ph.get_data(&elf_file).map_err(Report::msg)? {
                     SegmentData::Undefined(bytes) => {
                         // this is what `objcopy -O ihex` uses and it works with `nrfutil`
                         const RECORD_SIZE: usize = 16;
@@ -144,6 +173,68 @@ if the red LED was blinking and you got this message then the device wasn't corr
         .status()?;
     if !status.success() {
         bail!("`nrfutil dfu` failed");
+    }
+
+    Ok(())
+}
+
+pub fn serial_term() -> color_eyre::Result<()> {
+    let mut once = true;
+    let dongle = loop {
+        if let Some(dongle) = serialport::available_ports()?
+            .into_iter()
+            .filter(|info| match &info.port_type {
+                SerialPortType::UsbPort(usb) => usb.vid == consts::VID,
+                _ => false,
+            })
+            .next()
+        {
+            break dongle;
+        } else if once {
+            once = false;
+
+            eprintln!("(waiting for the Dongle to be connected)");
+        }
+    };
+
+    let mut port = serialport::open(&dongle.port_name)?;
+
+    static CONTINUE: AtomicBool = AtomicBool::new(true);
+
+    // properly close the serial device on Ctrl-C
+    ctrlc::set_handler(|| CONTINUE.store(false, Ordering::Relaxed))?;
+
+    let stdout = io::stdout();
+    let mut stdout = stdout.lock();
+    let mut read_buf = [0; 64];
+    while CONTINUE.load(Ordering::Relaxed) {
+        if port.bytes_to_read()? != 0 {
+            let n = port.read(&mut read_buf)?;
+            stdout.write_all(&read_buf[..n])?;
+            stdout.flush()?;
+        } else {
+            // time span between two consecutive FS USB packets
+            thread::sleep(Duration::from_millis(1));
+        }
+    }
+
+    eprintln!("(closing the serial port)");
+    Ok(())
+}
+
+pub fn usb_list() -> color_eyre::Result<()> {
+    for dev in rusb::devices()?.iter() {
+        let desc = dev.device_descriptor()?;
+        let suffix = match (desc.vendor_id(), desc.product_id()) {
+            (0x1366, 0x1015) => " <- J-Link on the nRF52840 Development Kit",
+            (0x1915, 0x521f) => " <- nRF52840 Dongle (in bootloader mode)",
+            (0x2020, pids::LOOPBACK) => " <- nRF52840 Dongle (loopback.hex)",
+            (0x2020, pids::PUZZLE) => " <- nRF52840 Dongle (puzzle.hex)",
+            (consts::VID, consts::PID) => " <- nRF52840 on the nRF52840 Development Kit",
+            _ => "",
+        };
+
+        println!("{:?}{}", dev, suffix);
     }
 
     Ok(())

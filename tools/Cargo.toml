@@ -1,7 +1,0 @@
-[workspace]
-members = [
-  "change-channel",
-  "dongle-flash",
-  "serial-term",
-  "usb-list",
-]
