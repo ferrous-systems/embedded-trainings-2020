@@ -57,6 +57,7 @@
     - [Inspecting the Descriptors](./inspecting-descriptors.md)
     - [Getting it Configured](./getting-device-configured.md)
     - [Next Steps](./advanced-next-steps.md)
+        - [Stack Overflow Protection](./stack-overflow-protection.md)
 - [References and Resources](./references-resources.md)
     - [Tooltips](./tooltips.md)
 - [Troubleshooting](./troubleshooting.md)

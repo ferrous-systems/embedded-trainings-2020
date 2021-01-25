@@ -143,6 +143,10 @@ Installed package `cargo-binutils v0.3.3` (..)
 $ cargo install probe-run
 (..)
 Installed package `probe-run v0.1.8` (..)
+
+$ cargo install flip-link
+(..)
+Installed package `flip-link v0.1.2` (..)
 ```
 
 ### Workshop specific tools
