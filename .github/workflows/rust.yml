@@ -55,9 +55,7 @@ jobs:
       run: |
         cargo build --verbose
         cargo fmt --all -- --check
-
-    # todo try xtask basics
-
+        cargo xtask
 
     - name: build and fmt beginner/apps
       working-directory: ./beginner/apps
