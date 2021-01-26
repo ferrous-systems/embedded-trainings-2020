@@ -1,6 +1,6 @@
 # Radio In 
 
-In this section we'll explore the `recv_timeout` method of the Radio API. As the name implies, this is used to listen for packets. The method will block the program execution until a packet is received or the specified timeout has expired. We'll continue to use the Dongle in this section; it should be running the `loopback` application; and the `serial-term` application should also be running in the background.
+In this section we'll explore the `recv_timeout` method of the Radio API. As the name implies, this is used to listen for packets. The method will block the program execution until a packet is received or the specified timeout has expired. We'll continue to use the Dongle in this section; it should be running the `loopback` application; and `cargo xtask serial-term` should also be running in the background.
 
 The `loopback` application running on the Dongle will broadcast a radio packet after receiving one over channel 20. The contents of this outgoing packet will be the contents of the received one but reversed.
 
