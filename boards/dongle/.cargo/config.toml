@@ -1,8 +1,2 @@
-[target.thumbv7em-none-eabihf]
-runner = "dongle-flash"
-rustflags = [
-  "-C", "link-arg=-Tlink.x",
-]
-
-[build]
-target = "thumbv7em-none-eabihf"
+[alias]
+xtask = "run --manifest-path ../../xtask/Cargo.toml --"
