@@ -50,11 +50,14 @@ jobs:
         sudo apt-get install libudev-dev libusb-1.0-0-dev
         rustup +stable target add thumbv7em-none-eabihf
 
-    - name: build tools
-      working-directory: ./tools
+    - name: build xtask'ed tools
+      working-directory: ./xtask
       run: |
         cargo build --verbose
         cargo fmt --all -- --check
+
+    # todo try xtask basics
+
 
     - name: build and fmt beginner/apps
       working-directory: ./beginner/apps
