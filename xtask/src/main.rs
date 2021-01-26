@@ -14,7 +14,10 @@ fn main() -> color_eyre::Result<()> {
 
     match &args[..] {
         ["change-channel", channel] => tasks::change_channel(channel),
-        ["dongle-flash", hex] => tasks::dongle_flash(hex),
+        ["dongle-flash", hex] => {
+            let hexpath = env::current_dir()?.join(hex);
+            tasks::dongle_flash(hexpath.to_str().unwrap())
+        },
         ["serial-term"] => tasks::serial_term(),
         ["usb-list"] => tasks::usb_list(),
         _ => {

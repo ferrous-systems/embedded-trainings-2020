@@ -77,6 +77,7 @@ if the red LED was blinking and you got this message then the device wasn't corr
     let ihex = if is_hex {
         path.to_owned()
     } else {
+        // TODO move to own function
         // ELF -> IHEX
         // here we map the ELF loadable segments -- these correspond to sections like `.text`, `.rodata`
         // and `.data` (initial values) -- to ihex records
