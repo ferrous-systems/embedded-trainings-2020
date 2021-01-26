@@ -1,5 +1,18 @@
 # Installation Instructions
 
+## Workshop Materials
+
+Clone and change into the [workshop git repository](https://github.com/ferrous-systems/embedded-trainings-2020):
+
+```console
+$ git clone https://github.com/ferrous-systems/embedded-trainings-2020.git
+$ cd embedded-trainings-2020
+```
+
+The workshop repository contains all workshop materials, i.e. code snippets, custom tools and the source for this handbook.
+
+All programming will take place in its `beginner/` and `advanced/` subfolders.
+
 ## VS Code
 
 **Windows**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and run the installer.
