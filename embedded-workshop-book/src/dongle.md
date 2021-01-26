@@ -27,6 +27,8 @@ $ cargo xtask usb-list
 Bus 001 Device 016: ID 1915:521f <- nRF52840 Dongle (in bootloader mode)
 ```
 
+🔎 [`cargo xtask`](https://github.com/matklad/cargo-xtask) lets us extend `cargo` with custom commands which are installed as you run them for the first time. We've used it to add some helper tools to our workshop materials while keeping the preparation installations as minimal as possible.
+
 Now that the device is in bootloader mode browse to the `boards/dongle` directory. You'll find some `*.hex` files there. These are pre-compiled Rust programs that have been converted into the Intel Hex format that the `nrfutil` tool expects.
 
 For the next section you'll need to flash the `loopback.hex` file into the Dongle. There are two ways to do this. You can make 2 long `nrfutil` invocations or you can use our `cargo xtask dongle-flash` tool, which will invoke `nrfutil` for you. The `dongle-flash` way is shown below:
