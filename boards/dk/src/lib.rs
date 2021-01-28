@@ -10,7 +10,7 @@ use core::{
     time::Duration,
 };
 
-use cortex_m::asm;
+use cortex_m::{asm, peripheral::NVIC};
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 #[cfg(feature = "beginner")]
 pub use hal::ieee802154;
@@ -176,10 +176,7 @@ impl ops::DerefMut for Timer {
 ///
 /// This return an `Err`or if called more than once
 pub fn init() -> Result<Board, ()> {
-    if let (Some(mut core), Some(periph)) = (
-        cortex_m::Peripherals::take(),
-        hal::target::Peripherals::take(),
-    ) {
+    if let  Some(periph) = hal::target::Peripherals::take() {
         // NOTE(static mut) this branch runs at most once
         #[cfg(feature = "advanced")]
         static mut EP0IN_BUF: [u8; 64] = [0; 64];
@@ -216,8 +213,21 @@ pub fn init() -> Result<Board, ()> {
         log::debug!("Clocks configured");
 
         let mut rtc = Rtc::new(periph.RTC0);
-        rtc.enable_interrupt(RtcInterrupt::Overflow, Some(&mut core.NVIC));
+        rtc.enable_interrupt(RtcInterrupt::Overflow, None);
         rtc.enable_counter();
+        // NOTE(unsafe) because this crate defines the `#[interrupt] fn RTC0` interrupt handler,
+        // RTIC cannot manage that interrupt (trying to do so results in a linker error). Thus it
+        // is the task of this crate to mask/unmask the interrupt in a safe manner.
+        //
+        // Because the RTC0 interrupt handler does *not* access static variables through a critical
+        // section (that disables interrupts) this `unmask` operation cannot break critical sections
+        // and thus won't lead to undefined behavior (e.g. torn reads/writes)
+        //
+        // the preceding `enable_conuter` method consumes the `rtc` value. This is a semantic move
+        // of the RTC0 peripheral from this function (which can only be called at most once) to the
+        // interrupt handler (where the peripheral is accessed without any synchronization
+        // mechanism) 
+        unsafe { NVIC::unmask(Interrupt::RTC0) };
 
         log::debug!("RTC started");
 
@@ -291,7 +301,7 @@ impl Log for Logger {
 // Counter of OVERFLOW events -- an OVERFLOW occurs every (1<<24) ticks
 static OVERFLOWS: AtomicU32 = AtomicU32::new(0);
 
-// NOTE this will at the highest priority, higher priority than RTIC tasks
+// NOTE this will run at the highest priority, higher priority than RTIC tasks
 #[interrupt]
 fn RTC0() {
     let curr = OVERFLOWS.load(Ordering::Relaxed);
