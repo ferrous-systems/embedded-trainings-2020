@@ -176,7 +176,7 @@ impl ops::DerefMut for Timer {
 ///
 /// This return an `Err`or if called more than once
 pub fn init() -> Result<Board, ()> {
-    if let  Some(periph) = hal::target::Peripherals::take() {
+    if let Some(periph) = hal::target::Peripherals::take() {
         // NOTE(static mut) this branch runs at most once
         #[cfg(feature = "advanced")]
         static mut EP0IN_BUF: [u8; 64] = [0; 64];
@@ -226,7 +226,7 @@ pub fn init() -> Result<Board, ()> {
         // the preceding `enable_conuter` method consumes the `rtc` value. This is a semantic move
         // of the RTC0 peripheral from this function (which can only be called at most once) to the
         // interrupt handler (where the peripheral is accessed without any synchronization
-        // mechanism) 
+        // mechanism)
         unsafe { NVIC::unmask(Interrupt::RTC0) };
 
         log::debug!("RTC started");
