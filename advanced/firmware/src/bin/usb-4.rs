@@ -7,9 +7,10 @@ use dk::{
 };
 use panic_log as _; // panic handler
 
-// HEADS UP to use *your* USB packet parser uncomment this line  and remove the `usb2::Request`
-// use usb::Request;
-use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
+use usb2::State;
+// HEADS UP to use *your* USB packet parser uncomment line 12 and remove line 13
+// use usb::{Request, Descriptor};
+use usb2::{GetDescriptor as Descriptor, StandardRequest as Request};
 
 #[rtic::app(device = dk)]
 const APP: () = {
