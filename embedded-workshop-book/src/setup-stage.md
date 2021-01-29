@@ -17,7 +17,7 @@ The definition of `Descriptor::Configuration` as well as the associated test has
 
 ❗️ Keep the cable connected to the J3 port for the rest of the workshop
 
-Start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the [USB specification][usb_spec]. All the constants we'll be using are also described in Tables 9-3, 9-4 and 9-5 of the USB spec.
+Start with the GET_DESCRIPTOR request, which is described in detail in section 9.4.3 of the [USB specification][usb_spec]. All the constants we'll be using are also described in Tables 9-3, 9-4 and 9-5 of the same document.
 
 [usb_spec]: https://www.usb.org/document-library/usb-20-specification
 
