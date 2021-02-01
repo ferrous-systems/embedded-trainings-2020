@@ -94,13 +94,13 @@ $ arm-none-eabi-objcopy -O ihex ../target/thumbv7em-none-eabi/release/puzzle puz
 
 Test the produced `puzzle.hex` file:
 
-- flash it onto a dongle using the `dongle-flash` host tool. The green LED on the dongle should turn on
-- run the `serial-term` host tool; you should see the following output. `deviceid` will be different
+- flash it onto a dongle using `cargo xtask dongle-flash`. The green LED on the dongle should turn on
+- run `cargo xtask serial-term`; you should see the following output. `deviceid` will be different
 ``` text
 deviceid=d90eedf1978d5fd2 channel=25 TxPower=+8dBm app=puzzle.hex
 ```
 - run the `radio-puzzle-solution` program on a DK; it should be able to decrypt the new secret
-- run the `change-channel` host tool to test changing the Dongle's radio channel
+- run `cargo xtask change-channel <some number between 11 and 26>` to test changing the Dongle's radio channel
 - modify and re-run the `radio-puzzle-solution` program on a DK to solve the puzzle using a the channel you set in the previous step
 
 ### Generate `puzzle-nousb-*.hex`
@@ -111,7 +111,7 @@ The procedure is similar to the one for generating the `puzzle.hex`. The differe
 - you also need to change `const CHANNEL` in the `puzzle-nousb.rs` copy
 - you need to produce one hex file per hard-coded radio channel.
 
-Also test these `nousb` .hex files. Note that the green LED won't turn on when the dongle restarts! The green LED will toggle when a new packet is received and the blue LED will turn on when the decoded secret is received. Also, `change-channel` won't work with the `nousb` variants so you can skip that test.
+Also test these `nousb` .hex files. Note that the green LED won't turn on when the dongle restarts! The green LED will toggle when a new packet is received and the blue LED will turn on when the decoded secret is received. Also, `cargo xtask change-channel` won't work with the `nousb` variants so you can skip that test.
 
 ## References
 

@@ -16,25 +16,27 @@ When put in bootloader mode the Dongle will run a bootloader program instead of 
 
 When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
 
-You can also use our `usb-list` tool, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
+You can also use our `cargo xtask usb-list` tool, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
 
-✅ Run `usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
+✅ Run `cargo xtask usb-list` to list all USB devices; the Dongle will be highlighted in the output, along with a note if in bootloader mode.
 
 Output should look like this:
 ``` console
-$ usb-list
+$ cargo xtask usb-list
 (..)
 Bus 001 Device 016: ID 1915:521f <- nRF52840 Dongle (in bootloader mode)
 ```
 
+🔎 [`cargo xtask`](https://github.com/matklad/cargo-xtask) lets us extend `cargo` with custom commands which are installed as you run them for the first time. We've used it to add some helper tools to our workshop materials while keeping the preparation installations as minimal as possible.
+
 Now that the device is in bootloader mode browse to the `boards/dongle` directory. You'll find some `*.hex` files there. These are pre-compiled Rust programs that have been converted into the Intel Hex format that the `nrfutil` tool expects.
 
-For the next section you'll need to flash the `loopback.hex` file into the Dongle. There are two ways to do this. You can make 2 long `nrfutil` invocations or you can use our `dongle-flash` tool, which will invoke `nrfutil` for you. The `dongle-flash` way is shown below:
+For the next section you'll need to flash the `loopback.hex` file into the Dongle. There are two ways to do this. You can make 2 long `nrfutil` invocations or you can use our `cargo xtask dongle-flash` tool, which will invoke `nrfutil` for you. The `dongle-flash` way is shown below:
 
 ✅ Run the following command:
 
 ``` console
-$ dongle-flash loopback.hex
+$ cargo xtask dongle-flash boards/dongle/loopback.hex
 ```
 
 Expected output:
@@ -49,53 +51,53 @@ After the device has been programmed it will automatically reset and start runni
 
 The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device.
 
-✅ Run the `usb-list` tool to see the newly enumerated Dongle in the output:
+✅ Run `cargo xtask usb-list` tool to see the newly enumerated Dongle in the output:
 
 ``` console
-$ usb-list
+$ cargo xtask usb-list
 (..)
 Bus 001 Device 020: ID 2020:0309 <- nRF52840 Dongle (loopback.hex)
 ```
 
-The `loopback` app will log messages over the USB interface. To display these messages on the host we have provided a cross-platform tool: `serial-term`.
+The `loopback` app will log messages over the USB interface. To display these messages on the host we have provided a cross-platform tool: `cargo xtask  serial-term`.
 
 ❗ Do not use serial terminal emulators like `minicom` or `screen`. They use the USB TTY ACM interface in a slightly different manner and may result in data loss.
 
-✅ Run the `serial-term` application. It shows you the logging output the Dongle is sending on its serial interface to your computer. This helps you monitor what's going on at the Dongle and debug connection issues. You should see the following output:
+✅ Run `cargo xtask serial-term`. It shows you the logging output the Dongle is sending on its serial interface to your computer. This helps you monitor what's going on at the Dongle and debug connection issues. You should see the following output:
 
 ``` console
-$ serial-term
+$ cargo xtask serial-term
 deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm app=loopback.hex
 ```
 
 This line is printed by the `loopback` app on boot. It contains the device ID of the dongle, a 64-bit unique identifier (so everyone will see a different number); the radio channel that the device will use to communicate; and the transmission power of the radio in dBm.
 
-If you don't get any output from `serial-term` check [the USB dongle troubleshooting section][usb-issues].
+If you don't get any output from `cargo xtask serial-term` check [the USB dongle troubleshooting section][usb-issues].
 
 [usb-issues]: /troubleshoot-usb-dongle.html
 
 ## Interference
 
-At this point you should *not* get more output from `serial-term`.
+At this point you should *not* get more output from `cargo xtask serial-term`.
 
 ❗If you get "received N bytes" lines in output like this:
 
 ``` console
-$ serial-term
+$ cargo xtask serial-term
 deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
 received 7 bytes (CRC=Ok(0x2459), LQI=0)
 received 5 bytes (CRC=Ok(0xdad9), LQI=0)
 received 6 bytes (CRC=Ok(0x72bb), LQI=0)
 ```
 
-That means the device is observing interference traffic, likely from 2.4 GHz WiFi or Bluetooth. In this scenario you should switch the listening channel to one where you don't observe interference. Use the `tools/change-channel` tool to do this. The tool takes a single argument: the new listening channel which must be in the range 11-26.
+That means the device is observing interference traffic, likely from 2.4 GHz WiFi or Bluetooth. In this scenario you should switch the listening channel to one where you don't observe interference. Use the `cargo xtask change-channel` tool to do this. The tool takes a single argument: the new listening channel which must be in the range 11-26.
 
 ``` console
-$ change-channel 11
+$ cargo xtask change-channel 11
 requested channel change to channel 11
 ```
 
-Then you should see new output from `serial-term`:
+Then you should see new output from `cargo xtask serial-term`:
 
 ``` console
 deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
@@ -103,4 +105,4 @@ deviceid=588c06af0877c8f2 channel=20 TxPower=+8dBm
 now listening on channel 11
 ```
 
-Leave the Dongle connected and the `serial-term` application running. Now we'll switch back to the Development Kit.
+Leave the Dongle connected and `cargo xtask serial-term` running. Now we'll switch back to the Development Kit.

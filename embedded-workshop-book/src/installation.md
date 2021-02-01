@@ -1,5 +1,18 @@
 # Installation Instructions
 
+## Workshop Materials
+
+Clone and change into the [workshop git repository](https://github.com/ferrous-systems/embedded-trainings-2020):
+
+```console
+$ git clone https://github.com/ferrous-systems/embedded-trainings-2020.git
+$ cd embedded-trainings-2020
+```
+
+The workshop repository contains all workshop materials, i.e. code snippets, custom tools and the source for this handbook.
+
+All programming will take place in its `beginner/` and `advanced/` subfolders.
+
 ## VS Code
 
 **Windows**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and run the installer.
@@ -145,46 +158,6 @@ $ cargo install flip-link
 (..)
 Installed package `flip-link v0.1.2` (..)
 ```
-
-### Workshop specific tools
-
-The [workshop git repository](https://github.com/ferrous-systems/embedded-trainings-2020) contains custom crates that help you with flashing and debugging the workshops. Depending on the workshop you're attending, you need to install all or some of them.
-
-In any case, clone and change into the repository first:
-
-```console
-$ git clone https://github.com/ferrous-systems/embedded-trainings-2020.git
-$ cd embedded-trainings-2020
-```
-
-
-#### Beginner workshop
-
-Change to the `tools` folder and run these commands *from different terminals so they'll run in parallel*:
-
-```console
-$ cd  embedded-trainings-2020/tools
-$ cargo install --path usb-list
-$ # in a new terminal, for parallelization
-$ cargo install --path dongle-flash
-$ # in a new terminal, for parallelization
-$ cargo install --path serial-term
-$ # in a new terminal, for parallelization
-$ cargo install --path change-channel
-```
-
-Leave the processes running in the background.
-
-#### Advanced workshop
-
-Change to the `tools` folder and run these commands:
-
-```console
-$ cd  embedded-trainings-2020/tools
-$ cargo install --path usb-list
-```
-
-Leave the process running in the background.
 
 ## Python
 
