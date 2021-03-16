@@ -27,7 +27,7 @@ fn main() -> ! {
     for source in 0..=127 {
         packet.copy_from_slice(&[source]);
 
-        radio.send(&packet);
+        radio.send(&mut packet);
 
         if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_ok() {
             // response should be one byte large
@@ -48,7 +48,7 @@ fn main() -> ! {
 
     /* # Retrieve the secret string */
     packet.copy_from_slice(&[]); // empty packet
-    radio.send(&packet);
+    radio.send(&mut packet);
 
     if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_err() {
         log::error!("no response or response packet was corrupted");
@@ -79,7 +79,7 @@ fn main() -> ! {
     /* # (NEW) Verify decrypted text */
     packet.copy_from_slice(&buffer);
 
-    radio.send(&packet);
+    radio.send(&mut packet);
 
     if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_err() {
         log::error!("no response or response packet was corrupted");

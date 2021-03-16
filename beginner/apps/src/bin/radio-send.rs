@@ -32,7 +32,7 @@ fn main() -> ! {
 
     packet.copy_from_slice(msg);
 
-    radio.send(&packet);
+    radio.send(&mut packet);
 
     dk::exit();
 }
