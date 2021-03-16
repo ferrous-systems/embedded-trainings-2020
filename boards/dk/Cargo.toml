@@ -9,7 +9,7 @@ version = "0.0.0"
 cortex-m = "0.6.4"
 cortex-m-rt = "0.6.13"
 embedded-hal = "0.2.3"
-hal = { package = "nrf52840-hal", git = "https://github.com/japaric/nrf-hal", branch = "radio" }
+hal = { package = "nrf52840-hal", version = "0.12.1" }
 log = "0.4.8"
 rtt-target = { version = "0.2.0", features = ["cortex-m"] }
 

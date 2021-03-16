@@ -14,15 +14,17 @@ use cortex_m::{asm, peripheral::NVIC};
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 #[cfg(feature = "beginner")]
 pub use hal::ieee802154;
-pub use hal::target::{interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
+pub use hal::pac::{interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
 use hal::{
     clocks::{self, Clocks},
-    gpio::{p0, Level, Output, Pin, PushPull},
+    gpio::{p0, Level, Output, Pin, Port, PushPull},
     rtc::{Rtc, RtcInterrupt},
     timer::OneShot,
 };
 use log::{LevelFilter, Log};
-use rtt_target::{rprintln, rtt_init_print};
+use rtt_target::rprintln;
+#[cfg(any(feature = "beginner", feature = "advanced"))]
+use rtt_target::rtt_init_print;
 
 #[cfg(feature = "advanced")]
 use crate::{
@@ -79,8 +81,12 @@ impl Led {
     pub fn on(&mut self) {
         log::trace!(
             "setting P{}.{} low (LED on)",
-            if self.inner.port { '1' } else { '0' },
-            self.inner.pin
+            if self.inner.port() == Port::Port1 {
+                '1'
+            } else {
+                '0'
+            },
+            self.inner.pin()
         );
 
         // NOTE this operations returns a `Result` but never returns the `Err` variant
@@ -91,8 +97,12 @@ impl Led {
     pub fn off(&mut self) {
         log::trace!(
             "setting P{}.{} high (LED off)",
-            if self.inner.port { '1' } else { '0' },
-            self.inner.pin
+            if self.inner.port() == Port::Port1 {
+                '1'
+            } else {
+                '0'
+            },
+            self.inner.pin()
         );
 
         // NOTE this operations returns a `Result` but never returns the `Err` variant
@@ -121,7 +131,7 @@ impl Led {
 
 /// A timer for creating blocking delays
 pub struct Timer {
-    inner: hal::Timer<hal::target::TIMER0, OneShot>,
+    inner: hal::Timer<hal::pac::TIMER0, OneShot>,
 }
 
 impl Timer {
@@ -159,7 +169,7 @@ impl Timer {
 }
 
 impl ops::Deref for Timer {
-    type Target = hal::Timer<hal::target::TIMER0, OneShot>;
+    type Target = hal::Timer<hal::pac::TIMER0, OneShot>;
 
     fn deref(&self) -> &Self::Target {
         &self.inner
@@ -176,7 +186,7 @@ impl ops::DerefMut for Timer {
 ///
 /// This return an `Err`or if called more than once
 pub fn init() -> Result<Board, ()> {
-    if let Some(periph) = hal::target::Peripherals::take() {
+    if let Some(periph) = hal::pac::Peripherals::take() {
         // NOTE(static mut) this branch runs at most once
         #[cfg(feature = "advanced")]
         static mut EP0IN_BUF: [u8; 64] = [0; 64];
@@ -212,7 +222,7 @@ pub fn init() -> Result<Board, ()> {
 
         log::debug!("Clocks configured");
 
-        let mut rtc = Rtc::new(periph.RTC0);
+        let mut rtc = Rtc::new(periph.RTC0, 0).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Overflow, None);
         rtc.enable_counter();
         // NOTE(unsafe) because this crate defines the `#[interrupt] fn RTC0` interrupt handler,
