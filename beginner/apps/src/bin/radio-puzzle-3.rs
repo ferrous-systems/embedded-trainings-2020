@@ -26,7 +26,7 @@ fn main() -> ! {
     for source in b'A'..=b'B' {
         packet.copy_from_slice(&[source]);
 
-        radio.send(&packet);
+        radio.send(&mut packet);
 
         if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_ok() {
             // response should be one byte large

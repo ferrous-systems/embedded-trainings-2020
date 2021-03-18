@@ -8,7 +8,7 @@ version = "0.0.0"
 [build-dependencies]
 consts = { path = "../common/consts" }
 quote = "1"
-usb2 = { git = "https://github.com/japaric/usb2" }
+usb2 = "0.0.1"
 
 [dependencies]
 consts = { path = "../common/consts" }
@@ -20,7 +20,7 @@ heapless = "0.5.5"
 log = "0.4.8"
 panic-log = { path = "../../common/panic-log" }
 usb = { path = "../common/usb" }
-usb2 = { git = "https://github.com/japaric/usb2" }
+usb2 = "0.0.1"
 
 # optimize code in both profiles
 [profile.dev]

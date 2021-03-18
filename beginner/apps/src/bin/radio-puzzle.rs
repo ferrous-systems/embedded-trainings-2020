@@ -38,7 +38,7 @@ fn main() -> ! {
         str::from_utf8(msg).expect("msg was not valid UTF-8 data")
     );
 
-    radio.send(&packet);
+    radio.send(&mut packet);
     if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_ok() {
         log::info!(
             "received: {}",

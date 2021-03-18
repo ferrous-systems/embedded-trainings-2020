@@ -28,7 +28,7 @@ fn main() -> ! {
         "sending: {}",
         str::from_utf8(msg).expect("message is not valid UTF-8")
     );
-    radio.send(&packet);
+    radio.send(&mut packet);
 
     // TODO try uncommenting this line
     // timer.delay(1_000);

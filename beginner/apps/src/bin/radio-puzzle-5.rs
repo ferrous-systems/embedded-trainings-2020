@@ -24,7 +24,7 @@ fn main() -> ! {
 
     /* # Retrieve the secret string */
     packet.copy_from_slice(&[]); // empty packet
-    radio.send(&packet);
+    radio.send(&mut packet);
 
     if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_err() {
         log::error!("no response or response packet was corrupted");
