@@ -3,7 +3,9 @@
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
+
 
 #[entry]
 fn main() -> ! {
@@ -28,7 +30,7 @@ fn bar() {
     let array = [0, 1, 2];
     let x = array[i]; // out of bounds access
 
-    log::info!("{}", x);
+    defmt::info!("{}", x);
 }
 
 fn index() -> usize {

@@ -7,7 +7,8 @@ use cortex_m_rt::entry;
 // lookup performance when the dictionary contains a large number of items but performance is
 // not important for this exercise
 use heapless::{consts, LinearMap};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {
@@ -25,9 +26,9 @@ fn main() -> ! {
     let key = b'A';
     let value = dict[&key]; // the key needs to be passed by reference
 
-    log::info!("{} -> {}", key, value);
+    defmt::info!("{} -> {}", key, value);
     // more readable
-    log::info!("{:?} -> {:?}", key as char, value as char);
+    defmt::info!("{:?} -> {:?}", key as char, value as char);
 
     // TODO try another insertion
     // TODO try looking up a key not contained in the dictionary

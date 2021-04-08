@@ -10,7 +10,6 @@ cortex-m = "0.6.4"
 cortex-m-rt = "0.6.13"
 dk = { path = "../../boards/dk", features = ["beginner"] }
 heapless = "0.5.5"
-panic-log = { path = "../../common/panic-log" }
 panic-probe = { version = "0.2.0", features = ["print-defmt"] }
 defmt = "0.2.0"
 defmt-rtt = "0.2.0"
@@ -18,7 +17,7 @@ defmt-rtt = "0.2.0"
 # optimize code in both profiles
 [profile.dev]
 codegen-units = 1
-debug = 1
+debug = 2
 debug-assertions = true # !
 incremental = false
 lto = "fat"

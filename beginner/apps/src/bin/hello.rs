@@ -3,8 +3,8 @@
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
-use defmt_rtt as _; // global logger
-use panic_probe as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {

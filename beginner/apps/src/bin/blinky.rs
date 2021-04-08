@@ -4,7 +4,8 @@
 use core::time::Duration;
 
 use cortex_m_rt::entry;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {
@@ -19,7 +20,7 @@ fn main() -> ! {
     for _ in 0..10 {
         led.toggle();
         timer.wait(Duration::from_secs(1));
-        log::info!("LED toggled at {:?}", dk::uptime());
+        defmt::debug!("LED toggled at {:?}", dk::uptime());
     }
 
     dk::exit()
