@@ -21,10 +21,11 @@ use hal::{
     rtc::{Rtc, RtcInterrupt},
     timer::OneShot,
 };
-use log::{LevelFilter, Log};
-use rtt_target::rprintln;
+
+use defmt;
 #[cfg(any(feature = "beginner", feature = "advanced"))]
-use rtt_target::rtt_init_print;
+use defmt_rtt as _; // global logger
+
 
 #[cfg(feature = "advanced")]
 use crate::{
@@ -79,7 +80,7 @@ pub struct Led {
 impl Led {
     /// Turns on the LED
     pub fn on(&mut self) {
-        log::trace!(
+        defmt::trace!(
             "setting P{}.{} low (LED on)",
             if self.inner.port() == Port::Port1 {
                 '1'
@@ -137,7 +138,7 @@ pub struct Timer {
 impl Timer {
     /// Blocks program execution for at least the specified `duration`
     pub fn wait(&mut self, duration: Duration) {
-        log::trace!("blocking for {:?} ...", duration);
+        defmt::trace!("blocking for {:?} ...", duration);
 
         // 1 cycle = 1 microsecond
         const NANOS_IN_ONE_MICRO: u32 = 1_000;
@@ -164,7 +165,7 @@ impl Timer {
             self.inner.delay(cycles)
         }
 
-        log::trace!("... DONE");
+        defmt::trace!("... DONE");
     }
 }
 
@@ -195,21 +196,7 @@ pub fn init() -> Result<Board, ()> {
             Clocks<clocks::ExternalOscillator, clocks::ExternalOscillator, clocks::LfOscStarted>,
         > = None;
 
-        // NOTE this must be executed as early as possible or the tool will timeout
-        // NOTE the unsafety of this macro is incorrect; it must be run at most once
-        #[cfg(feature = "beginner")]
-        rtt_init_print!(BlockIfFull, 16384);
-        #[cfg(feature = "advanced")]
-        rtt_init_print!(NoBlockSkip, 16384);
-
-        log::set_logger(&Logger).unwrap();
-
-        // if not configured in the application we default to the `Info` level
-        if log::max_level() == LevelFilter::Off {
-            log::set_max_level(LevelFilter::Info)
-        }
-
-        log::debug!("Initializing the board");
+        defmt::debug!("Initializing the board");
 
         let clocks = Clocks::new(periph.CLOCK);
         let clocks = clocks.enable_ext_hfosc();
@@ -220,7 +207,7 @@ pub fn init() -> Result<Board, ()> {
         #[cfg(feature = "beginner")]
         let clocks = unsafe { CLOCKS.get_or_insert(_clocks) };
 
-        log::debug!("Clocks configured");
+        defmt::debug!("Clocks configured");
 
         let mut rtc = Rtc::new(periph.RTC0, 0).unwrap();
         rtc.enable_interrupt(RtcInterrupt::Overflow, None);
@@ -239,7 +226,7 @@ pub fn init() -> Result<Board, ()> {
         // mechanism)
         unsafe { NVIC::unmask(Interrupt::RTC0) };
 
-        log::debug!("RTC started");
+        defmt::debug!("RTC started");
 
         let pins = p0::Parts::new(periph.P0);
 
@@ -249,7 +236,7 @@ pub fn init() -> Result<Board, ()> {
         let _3 = pins.p0_15.degrade().into_push_pull_output(Level::High);
         let _4 = pins.p0_16.degrade().into_push_pull_output(Level::High);
 
-        log::debug!("I/O pins have been configured for digital output");
+        defmt::debug!("I/O pins have been configured for digital output");
 
         let timer = hal::Timer::new(periph.TIMER0);
 
@@ -259,7 +246,7 @@ pub fn init() -> Result<Board, ()> {
 
             // set TX power to its maximum value
             radio.set_txpower(ieee802154::TxPower::Pos8dBm);
-            log::debug!("Radio initialized and configured with TX power set to the maximum value");
+            defmt::debug!("Radio initialized and configured with TX power set to the maximum value");
             radio
         };
 
@@ -285,29 +272,6 @@ pub fn init() -> Result<Board, ()> {
     }
 }
 
-struct Logger;
-
-impl Log for Logger {
-    fn enabled(&self, metadata: &log::Metadata) -> bool {
-        metadata.level() <= log::STATIC_MAX_LEVEL
-    }
-
-    fn log(&self, record: &log::Record) {
-        if !self.enabled(record.metadata()) {
-            return;
-        }
-
-        rprintln!(
-            "{}:{} -- {}",
-            record.level(),
-            record.target(),
-            record.args()
-        );
-    }
-
-    fn flush(&self) {}
-}
-
 // Counter of OVERFLOW events -- an OVERFLOW occurs every (1<<24) ticks
 static OVERFLOWS: AtomicU32 = AtomicU32::new(0);
 
@@ -324,7 +288,7 @@ fn RTC0() {
 /// Exits the application and prints a backtrace when the program is executed through the `probe-run`
 /// Cargo runner
 pub fn exit() -> ! {
-    log::info!("`dk::exit() called; exiting ...`");
+    defmt::info!("`dk::exit() called; exiting ...`");
     // force any pending memory operation to complete before the BKPT instruction that follows
     atomic::compiler_fence(Ordering::SeqCst);
     loop {
