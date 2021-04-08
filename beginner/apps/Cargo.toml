@@ -10,8 +10,10 @@ cortex-m = "0.6.4"
 cortex-m-rt = "0.6.13"
 dk = { path = "../../boards/dk", features = ["beginner"] }
 heapless = "0.5.5"
-log = "0.4.8"
 panic-log = { path = "../../common/panic-log" }
+panic-probe = { version = "0.2.0", features = ["print-defmt"] }
+defmt = "0.2.0"
+defmt-rtt = "0.2.0"
 
 # optimize code in both profiles
 [profile.dev]
@@ -31,3 +33,18 @@ incremental = false
 lto = "fat"
 opt-level = 3
 overflow-checks = false
+
+[features]
+# set logging levels here
+default = [
+  "defmt-default",
+  # "dependency-a/defmt-trace",
+]
+
+# do NOT modify these features
+defmt-default = []
+defmt-trace = []
+defmt-debug = []
+defmt-info = []
+defmt-warn = []
+defmt-error = []
