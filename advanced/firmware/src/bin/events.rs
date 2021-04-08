@@ -2,7 +2,8 @@
 #![no_std]
 
 use cortex_m::asm;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -22,7 +23,7 @@ const APP: () = {
             w.usbdetected().set_bit()
         });
 
-        log::info!("USBDETECTED interrupt enabled");
+        defmt::info!("USBDETECTED interrupt enabled");
 
         // read the whole 32-bit usb supply register
         // the `read()` method returns a reader which can then be used to access the register content
@@ -30,19 +31,19 @@ const APP: () = {
         // (the layout of the USBREGSTATUS register can be found in section 5.3.7.13 of the PS)
         let regstatus: u32 = power.usbregstatus.read().bits();
         //                                             ^^^^ complete register content
-        log::info!("USBREGSTATUS: {:b}", regstatus);
+        defmt::info!("USBREGSTATUS: {:b}", regstatus);
 
         // read the 1-bit VBUSDETECT field that is part of the USBREGSTATUS register content
         // to show that its contents reflect our usb connection status
         // (the USBDETECTED event that will trigger `on_power_event()` is derived from this information)
         let vbusdetect: bool = power.usbregstatus.read().vbusdetect().bits();
         //                                               ^^^^^^^^^^ bitfield name
-        log::info!("USBREGSTATUS.VBUSDETECT: {}", vbusdetect);
+        defmt::info!("USBREGSTATUS.VBUSDETECT: {}", vbusdetect);
     }
 
     #[idle]
     fn main(_cx: main::Context) -> ! {
-        log::info!("idle: going to sleep");
+        defmt::info!("idle: going to sleep");
 
         // sleep in the background
         loop {
@@ -52,7 +53,7 @@ const APP: () = {
 
     #[task(binds = POWER_CLOCK)]
     fn on_power_event(_cx: on_power_event::Context) {
-        log::info!("POWER event occurred");
+        defmt::info!("POWER event occurred");
         dk::exit()
     }
 };

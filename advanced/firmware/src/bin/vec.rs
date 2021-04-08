@@ -4,7 +4,8 @@
 
 use cortex_m_rt::entry;
 use heapless::{consts, Vec};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[entry]
 fn main() -> ! {
@@ -16,13 +17,16 @@ fn main() -> ! {
 
     // `heapless::Vec` exposes the same API surface as `std::Vec` but some of its methods return a
     // `Result` to indicate whether the operation failed due to the `heapless::Vec` being full
-    log::info!("start: {:?}", buffer);
+    defmt::info!("start: {:?}", defmt::Debug2Format(&buffer));
+    //                                 ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
+    //                                                     `heapless` data structures (like `Vec` here)
+    //                                                     with `defmt`
 
     buffer.push(0).expect("buffer full");
-    log::info!("after `push`: {:?}", buffer);
+    defmt::info!("after `push`: {:?}", defmt::Debug2Format(&buffer));
 
     buffer.extend_from_slice(&[1, 2, 3]).expect("buffer full");
-    log::info!("after `extend`: {:?}", buffer);
+    defmt::info!("after `extend`: {:?}", defmt::Debug2Format(&buffer));
 
     // TODO try this operation
     // buffer.extend_from_slice(&[4, 5, 6, 7]).expect("buffer full");

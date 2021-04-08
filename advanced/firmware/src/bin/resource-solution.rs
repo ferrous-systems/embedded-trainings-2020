@@ -3,7 +3,8 @@
 
 use cortex_m::asm;
 use dk::peripheral::POWER;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -20,7 +21,7 @@ const APP: () = {
 
         power.intenset.write(|w| w.usbdetected().set_bit());
 
-        log::info!("USBDETECTED interrupt enabled");
+        defmt::info!("USBDETECTED interrupt enabled");
 
         init::LateResources {
             power,
@@ -31,23 +32,23 @@ const APP: () = {
     #[idle]
     fn main(_cx: main::Context) -> ! {
         loop {
-            log::info!("idle: going to sleep");
+            defmt::info!("idle: going to sleep");
             asm::wfi();
-            log::info!("idle: woke up");
+            defmt::info!("idle: woke up");
         }
     }
 
     #[task(binds = POWER_CLOCK, resources = [power, counter])]
     //                                              ^^^^^^^ we want to access the resource from here
     fn on_power_event(cx: on_power_event::Context) {
-        log::debug!("POWER event occurred");
+        defmt::debug!("POWER event occurred");
 
         let power = cx.resources.power;
         let counter = cx.resources.counter;
 
         *counter += 1;
         let n = *counter;
-        log::info!(
+        defmt::info!(
             "on_power_event: cable connected {} time{}",
             n,
             if n != 1 { "s" } else { "" }
