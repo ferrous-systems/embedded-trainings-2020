@@ -6,7 +6,8 @@ use core::str;
 
 use cortex_m_rt::entry;
 use heapless::{consts, Vec};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {
@@ -21,10 +22,13 @@ fn main() -> ! {
     buffer.push(b'i').expect("buffer full");
 
     // look into the contents so far
-    log::info!("{:?}", buffer);
+    defmt::info!("{:?}", defmt::Debug2Format(&buffer));
+    //                   ^^^^^^^^^^^^^^^^^^^ this adapter iscurrently needed to log `heapless`
+    //                                       data structures (like `Vec` here) with `defmt`
+
     // or more readable
-    // NOTE as long as you only push bytes in the ASCII range (0..=127) the conversion should work
-    log::info!(
+    // NOTE utf-8 conversion works as long as you only push bytes in the ASCII range (0..=127)
+    defmt::info!(
         "{}",
         str::from_utf8(&buffer).expect("content was not UTF-8")
     );

@@ -5,7 +5,8 @@
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
 use heapless::{consts, LinearMap};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 const TEN_MS: u32 = 10_000;
 
@@ -36,16 +37,18 @@ fn main() -> ! {
             // TODO insert the key-value pair
             // dict.insert(/* ? */, /* ? */).expect("dictionary full");
             } else {
-                log::error!("response packet was not a single byte");
+                defmt::error!("response packet was not a single byte");
                 dk::exit()
             }
         } else {
-            log::error!("no response or response packet was corrupted");
+            defmt::error!("no response or response packet was corrupted");
             dk::exit()
         }
     }
 
-    log::info!("{:?}", dict);
+    defmt::info!("{:?}", defmt::Debug2Format(&dict));
+    //                   ^^^^^^^^^^^^^^^^^^^ this adapter iscurrently needed to log `heapless`
+    //                                       data structures (like `LinearMap` here) with `defmt`
 
     dk::exit()
 }

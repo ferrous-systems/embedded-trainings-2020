@@ -3,14 +3,15 @@
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {
     // board initialization
     dk::init().unwrap();
 
-    log::info!("fib(100) = {:?}", fib(100));
+    defmt::info!("fib(100) = {:?}", fib(100));
 
     loop {
         asm::bkpt();
