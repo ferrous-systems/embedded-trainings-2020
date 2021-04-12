@@ -7,7 +7,8 @@ use core::str;
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
 use heapless::{consts, LinearMap, Vec};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 const TEN_MS: u32 = 10_000;
 
@@ -37,11 +38,11 @@ fn main() -> ! {
             // TODO insert the key-value pair
             // dict.insert(/* ? */, /* ? */).expect("dictionary full");
             } else {
-                log::error!("response packet was not a single byte");
+                defmt::error!("response packet was not a single byte");
                 dk::exit()
             }
         } else {
-            log::error!("no response or response packet was corrupted");
+            defmt::error!("no response or response packet was corrupted");
             dk::exit()
         }
     }
@@ -51,11 +52,11 @@ fn main() -> ! {
     radio.send(&mut packet);
 
     if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_err() {
-        log::error!("no response or response packet was corrupted");
+        defmt::error!("no response or response packet was corrupted");
         dk::exit()
     }
 
-    log::info!(
+    defmt::info!(
         "ciphertext: {}",
         str::from_utf8(&packet).expect("packet was not valid UTF-8")
     );
@@ -71,7 +72,7 @@ fn main() -> ! {
         buffer.push(value).expect("buffer full");
     }
 
-    log::info!(
+    defmt::info!(
         "plaintext: {}",
         str::from_utf8(&buffer).expect("buffer contains non-UTF-8 data")
     );

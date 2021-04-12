@@ -6,7 +6,8 @@ use core::str;
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet, TxPower};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {
@@ -25,7 +26,7 @@ fn main() -> ! {
     // let msg: &[u8; 5] = &[b'H', b'e', b'l', b'l', b'o'];
     // let msg: &[u8; 5] = b"Hello";
 
-    log::info!(
+    defmt::info!(
         "sending: {}",
         str::from_utf8(msg).expect("msg is not valid UTF-8 data")
     );

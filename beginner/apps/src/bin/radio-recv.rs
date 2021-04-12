@@ -6,7 +6,8 @@ use core::str;
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Error, Packet};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 const TEN_MS: u32 = 10_000;
 
@@ -24,7 +25,7 @@ fn main() -> ! {
     let msg = b"olleh";
     packet.copy_from_slice(msg);
 
-    log::info!(
+    defmt::info!(
         "sending: {}",
         str::from_utf8(msg).expect("message is not valid UTF-8")
     );
@@ -37,14 +38,15 @@ fn main() -> ! {
 
     match res {
         Ok(crc) => {
-            log::info!(
-                "received: {} (CRC={})",
+            defmt::info!(
+                "received: {} (CRC = {:X})",
+                //                    ^^ print as uppercase hexadecimal
                 str::from_utf8(&*packet).expect("response is not valid UTF-8"),
                 crc
             );
         }
-        Err(Error::Crc(crc)) => log::error!("invalid CRC: {:06x}", crc),
-        Err(Error::Timeout) => log::error!("no response within {} ms", TEN_MS / 1_000),
+        Err(Error::Crc(crc)) => defmt::error!("invalid CRC: {=u16:x}", crc),
+        Err(Error::Timeout) => defmt::error!("no response within {} ms", TEN_MS / 1_000),
     }
 
     dk::exit()
