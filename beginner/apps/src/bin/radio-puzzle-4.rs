@@ -23,7 +23,7 @@ fn main() -> ! {
 
     // look into the contents so far
     defmt::info!("{:?}", defmt::Debug2Format(&buffer));
-    //                   ^^^^^^^^^^^^^^^^^^^ this adapter iscurrently needed to log `heapless`
+    //                   ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log `heapless`
     //                                       data structures (like `Vec` here) with `defmt`
 
     // or more readable

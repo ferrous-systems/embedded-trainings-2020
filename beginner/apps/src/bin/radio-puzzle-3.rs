@@ -47,7 +47,7 @@ fn main() -> ! {
     }
 
     defmt::info!("{:?}", defmt::Debug2Format(&dict));
-    //                   ^^^^^^^^^^^^^^^^^^^ this adapter iscurrently needed to log `heapless`
+    //                   ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log `heapless`
     //                                       data structures (like `LinearMap` here) with `defmt`
 
     dk::exit()
