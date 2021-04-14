@@ -96,7 +96,7 @@ impl Led {
 
     /// Turns off the LED
     pub fn off(&mut self) {
-        log::trace!(
+        defmt::trace!(
             "setting P{}.{} high (LED off)",
             if self.inner.port() == Port::Port1 {
                 '1'
