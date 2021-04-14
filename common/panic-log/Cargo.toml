@@ -11,7 +11,7 @@ defmt = "0.2.1"
 
 
 [features]
-# defmt logging levels
+# set defmt logging levels here
 default = [
   "defmt-debug",
   # "dependency-a/defmt-trace",
