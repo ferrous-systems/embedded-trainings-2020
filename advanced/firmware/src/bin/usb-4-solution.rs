@@ -89,7 +89,7 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
     let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
         .expect("Error parsing request");
     defmt::info!("EP0: {:?}", defmt::Debug2Format(&request));
-    //                        ^^^^^^^^^^^^^^^^^^^ this adapter iscurrently needed to log
+    //                        ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
     //                                            `StandardRequest` with `defmt`
 
     match request {
