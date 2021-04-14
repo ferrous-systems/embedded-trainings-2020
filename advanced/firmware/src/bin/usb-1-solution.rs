@@ -5,7 +5,8 @@ use dk::{
     peripheral::USBD,
     usbd::{self, Event},
 };
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -33,18 +34,18 @@ const APP: () = {
 };
 
 fn on_event(_usbd: &USBD, event: Event) {
-    log::info!("USB: {:?}", event);
+    defmt::info!("USB: {:?}", event);
 
     match event {
         Event::UsbReset => {
             // going from the Default state to the Default state is a no-operation
-            log::info!("returning to the Default state");
+            defmt::info!("returning to the Default state");
         }
 
         Event::UsbEp0DataDone => todo!(),
 
         Event::UsbEp0Setup => {
-            log::info!("goal reached; move to the next section");
+            defmt::info!("goal reached; move to the next section");
             dk::exit()
         }
     }

@@ -7,7 +7,8 @@ use dk::{
     peripheral::USBD,
     usbd::{self, Ep0In, Event},
 };
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 
 #[rtic::app(device = dk)]
@@ -44,22 +45,22 @@ const APP: () = {
 };
 
 fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
-    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
+    defmt::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         Event::UsbReset => {
-            log::info!("USB reset condition detected");
+            defmt::info!("USB reset condition detected");
             *state = State::Default;
         }
 
         Event::UsbEp0DataDone => {
-            log::info!("EP0IN: transfer complete");
+            defmt::info!("EP0IN: transfer complete");
             ep0in.end(usbd);
         }
 
         Event::UsbEp0Setup => {
             if ep0setup(usbd, ep0in, state).is_err() {
-                log::warn!("EP0IN: unexpected request; stalling the endpoint");
+                defmt::warn!("EP0IN: unexpected request; stalling the endpoint");
                 usbd::ep0stall(usbd);
             }
         }
@@ -76,7 +77,7 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
     let windex = usbd::windex(usbd);
     let wvalue = usbd::wvalue(usbd);
 
-    log::info!(
+    defmt::info!(
         "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
         bmrequesttype,
         brequest,
@@ -87,7 +88,9 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
 
     let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
         .expect("Error parsing request");
-    log::info!("EP0: {:?}", request);
+    defmt::info!("EP0: {:?}", defmt::Debug2Format(&request));
+    //                        ^^^^^^^^^^^^^^^^^^^ this adapter iscurrently needed to log
+    //                                            `StandardRequest` with `defmt`
 
     match request {
         // section 9.4.3
@@ -185,10 +188,10 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
                 State::Address(address) => {
                     if let Some(value) = value {
                         if value.get() == CONFIG_VAL {
-                            log::info!("entering the configured state");
+                            defmt::info!("entering the configured state");
                             *state = State::Configured { address, value };
                         } else {
-                            log::error!("unsupported configuration value");
+                            defmt::error!("unsupported configuration value");
                             return Err(());
                         }
                     } else {
@@ -203,18 +206,18 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
                     if let Some(new_value) = value {
                         if new_value.get() == CONFIG_VAL {
                             if new_value != curr_value {
-                                log::info!("changing configuration");
+                                defmt::info!("changing configuration");
                                 *state = State::Configured {
                                     address,
                                     value: new_value,
                                 };
                             }
                         } else {
-                            log::error!("unsupported configuration value");
+                            defmt::error!("unsupported configuration value");
                             return Err(());
                         }
                     } else {
-                        log::info!("returned to the address state");
+                        defmt::info!("returned to the address state");
                         *state = State::Address(address);
                     }
                 }

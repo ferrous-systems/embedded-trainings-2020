@@ -161,7 +161,7 @@ pub fn ep0stall(usbd: &USBD) {
 }
 
 /// USBD.EVENTS registers mapped to an enum
-#[derive(Debug)]
+#[derive(Debug, defmt::Format)]
 pub enum Event {
     /// `EVENTS_USBRESET` register was active
     UsbReset,

@@ -3,15 +3,15 @@
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[entry]
 fn main() -> ! {
     // board initialization
     dk::init().unwrap();
 
-    log::info!("provoking stack overflow...");
-    spam(0);
+    defmt::info!("fib(100) = {:?}", fib(100));
 
     loop {
         asm::bkpt();
@@ -19,16 +19,13 @@ fn main() -> ! {
 }
 
 #[inline(never)]
-fn spam(n: u32) {
-    // allocate and initialize 4 kilobytes of stack memory to provoke stack overflow
-    let use_stack = [n; 1024];
+fn fib(n: u32) -> u32 {
+    // allocate and initialize one kilobyte of stack memory to provoke stack overflow
+    let _use_stack = [0xAA; 1024];
 
-    log::info!(
-        "address of current `use_stack` at recursion depth {:?}: {:?}",
-        use_stack[1023], // "use" use_stack to prevent it from being optimized out
-        &use_stack as *const u32
-    );
-
-    let next = n + 1;
-    spam(next); // infinite recursion
+    if n < 2 {
+        1
+    } else {
+        fib(n - 1) + fib(n - 2) // recursion
+    }
 }
