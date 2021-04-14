@@ -18,7 +18,7 @@ panic-probe = { version = "0.2.0", features = ["print-defmt" ] }
 beginner = []
 advanced = []
 
-# defmt logging levels
+# set defmt logging levels here
 default = [
   "defmt-debug",
   # "dependency-a/defmt-trace",
