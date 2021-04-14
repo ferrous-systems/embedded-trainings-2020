@@ -5,7 +5,8 @@ use dk::{
     peripheral::USBD,
     usbd::{self, Event},
 };
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -21,7 +22,7 @@ const APP: () = {
         // NOTE this will block if the USB cable is not connected to port J3
         usbd::init(board.power, &board.usbd);
 
-        log::info!("USBD initialized");
+        defmt::info!("USBD initialized");
 
         init::LateResources { usbd: board.usbd }
     }
@@ -37,7 +38,7 @@ const APP: () = {
 };
 
 fn on_event(_usbd: &USBD, event: Event) {
-    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
+    defmt::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         Event::UsbReset => todo!(),
@@ -45,7 +46,7 @@ fn on_event(_usbd: &USBD, event: Event) {
         Event::UsbEp0DataDone => todo!(),
         // leave this at it is for now.
         Event::UsbEp0Setup => {
-            log::info!("goal reached; move to the next section");
+            defmt::info!("goal reached; move to the next section");
             dk::exit()
         }
     }
