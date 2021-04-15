@@ -16,7 +16,7 @@ The `dk::init` function we have been calling in all programs initializes a few o
 $ cargo doc -p dk --open
 ```
 
-✅ Check the API docs of the `Led` abstraction then run the `led` program. Change the `led` program, so that the bottom two leds are turned on, and the top two are turned off.
+✅ Check the API docs of the `Led` abstraction. Change the `led` program, so that the bottom two leds are turned on, and the top two are turned off.
 
 ✅ Uncomment the `log::set_max_level` line. This will make the logs more verbose; they will now include logs from the board initialization function (`dk::init`) and from the `Led` API.
 
