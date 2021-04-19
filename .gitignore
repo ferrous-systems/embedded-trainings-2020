@@ -1,3 +1,6 @@
 target/
 book/
 Cargo.lock
+
+.vscode/
+*.DS_Store
