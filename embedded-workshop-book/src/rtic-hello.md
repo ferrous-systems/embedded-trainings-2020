@@ -12,7 +12,7 @@ RTIC makes a clearer distinction between the application's initialization phase,
 
 ✅ Build the `rtic-hello` example and look at the generated `rtic-expansion.rs` file.
 
-The generated code should look like this. Note that interrupts are disabled during the execution of the `init` function:
+You can use `rustfmt` on `target/rtic-expansion.rs` to make the generated code easier to read. Among other things, the file should contain the following lines. Note that interrupts are disabled during the execution of the `init` function:
 
 ``` rust
 fn main() -> ! {
