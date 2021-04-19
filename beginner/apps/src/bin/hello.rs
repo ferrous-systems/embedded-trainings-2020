@@ -9,11 +9,12 @@ use cortex_m_rt::entry;
 use panic_log as _; // the panicking behavior
 
 
+// the custom entry point
+// vvvvv
 #[entry]
-// ˆˆˆˆ the custom entry point
 fn main() -> ! {
     //      ˆˆˆ
-    //      ! is the 'never' type: this function never returns
+    //       ! is the 'never' type: this function never returns
 
     // initializes the peripherals
     dk::init().unwrap();
