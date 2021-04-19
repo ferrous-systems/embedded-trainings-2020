@@ -1,12 +1,20 @@
-#![no_main]
+// this program does not use the standard library to avoid heap allocations.
+// only the `core` library functions are available.
 #![no_std]
+// this program uses a custom entry point instead of `fn main()`
+#![no_main]
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
 use panic_log as _; // the panicking behavior
 
+
 #[entry]
+// ˆˆˆˆ the custom entry point
 fn main() -> ! {
+    //      ˆˆˆ
+    //      ! is the 'never' type: this function never returns
+
     // initializes the peripherals
     dk::init().unwrap();
 
