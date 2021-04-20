@@ -17,12 +17,7 @@ All programming will take place in its `beginner/` and `advanced/` subfolders.
 
 **Windows**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and run the installer.
 
-**Linux**: Check your Linux distribution package manager (example below). If it's not there, follow the instructions on [https://code.visualstudio.com/docs/setup/linux](https://code.visualstudio.com/docs/setup/linux).
-
-``` console
-$ # Arch Linux
-$ sudo pacman -S code
-```
+**Linux**: Follow the instructions for your distribution on [https://code.visualstudio.com/docs/setup/linux](https://code.visualstudio.com/docs/setup/linux).
 
 **macOS**: Go to [https://code.visualstudio.com](https://code.visualstudio.com) and click on "Download for Mac"
 
@@ -169,8 +164,11 @@ Installed package `flip-link v0.1.2` (..)
 **Linux**: Install `pip` using the package manager; this will also install Python.
 
 ``` console
-$ # Arch Linux
+$ # If you're using Arch Linux
 $ sudo pacman -S python-pip
+
+$ # If you're using Ubuntu
+$ sudo apt-get install python3-pip
 ```
 
 **macOS**:
