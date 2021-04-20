@@ -14,7 +14,7 @@ pids = { path = "../common/pids" }
 rusb = "0.5.5"
 # Note: we are using a fork due compatibility problems.
 # See https://github.com/ferrous-systems/embedded-trainings-2020/issues/148 for more details.
-# serialport = "3.3.0"
+# serialport = "4.0.2"
 serialport = { git = "https://github.com/ferrous-systems/serialport-rs-hotfix.git", branch = "fix-usb-deprecation"}
 tempfile = "3.2.0"
 xmas-elf = "0.7.0"
