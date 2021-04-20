@@ -198,7 +198,7 @@ pub fn serial_term() -> color_eyre::Result<()> {
         }
     };
 
-    let mut port = serialport::open(&dongle.port_name)?;
+    let mut port = serialport::new(&dongle.port_name, 9600).open()?;
 
     static CONTINUE: AtomicBool = AtomicBool::new(true);
 

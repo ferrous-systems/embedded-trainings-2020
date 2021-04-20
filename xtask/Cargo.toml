@@ -12,6 +12,7 @@ hidapi = "1.2.2"
 ihex = "1.1.2"
 pids = { path = "../common/pids" }
 rusb = "0.5.5"
-serialport = "3.3.0"
+#serialport = "3.3.0"
+serialport = { git = "https://gitlab.com/spookyvision1/serialport-rs.git", branch = "fix-usb-deprecation"}
 tempfile = "3.2.0"
 xmas-elf = "0.7.0"
