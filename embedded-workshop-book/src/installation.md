@@ -225,7 +225,7 @@ Apply the following 2 patches (can also be done manually by editing these 2 file
  intelhex
  libusb1
 -pc_ble_driver_py >= 0.14.2
-+# pc_ble_driver_py >= 0.14.2
++pc_ble_driver_py
  piccata
  protobuf
  pyserial
