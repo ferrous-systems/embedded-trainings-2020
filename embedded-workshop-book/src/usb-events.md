@@ -14,9 +14,9 @@ Go to `fn on_event`, line 39. In this section you'll need to implement the follo
 
 - `USBRESET`. This event indicates that the host issued a USB reset signal. According to the USB specification this will move the device from any state to the `Default` state. Since we are currently not dealing with any other state, you can handle this state by doing nothing.
 
-- `EP0SETUP`. The USBD peripheral has detected the SETUP stage of a control transfer. If you get to this point move to the next section.
-
 - `EP0DATADONE`. The USBD peripheral is signaling the end of the DATA stage of a control transfer. You won't encounter this event just yet.
+
+- `EP0SETUP`. The USBD peripheral has detected the SETUP stage of a control transfer. If you get to this point move to the next section.
 
 When you are done you should see this output:
 
