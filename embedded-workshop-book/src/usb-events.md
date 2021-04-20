@@ -10,22 +10,24 @@ In this starter code the USBD peripheral is initialized in `init` and a task, na
 
 ❗️ Keep the cable connected to the J3 port for the rest of the workshop
 
-Go to `fn on_event`, line 39. In this section you'll need to implement the following USB events until you reach the EP0SETUP event:
+This code will panic because `USBRESET` is not implemented yet.
 
-- `USBRESET`. This event indicates that the host issued a USB reset signal. According to the USB specification this will move the device from any state to the `Default` state. Since we are currently not dealing with any other state, you can handle this state by doing nothing.
-
-- `EP0DATADONE`. The USBD peripheral is signaling the end of the DATA stage of a control transfer. You won't encounter this event just yet.
-
-- `EP0SETUP`. The USBD peripheral has detected the SETUP stage of a control transfer. If you get to this point move to the next section.
-
-When you are done you should see this output:
+✅ Go to `fn on_event`, line 39. In this section you'll need to implement the following USB events `USBRESET` and `EP0SETUP` so that your log output will look like this:
 
 ``` console
-(..)
+INFO:usb_1 -- USB: UsbReset
+INFO:usb_1 -- returning to the Default state
 INFO:usb_1 -- USB: UsbEp0Setup
 INFO:usb_1 -- goal reached; move to the next section
+INFO:dk -- `dk::exit() called; exiting ...
 ```
 
-Do not overthink this exercise; it is not a trick question. There is very little to do and no new functionality to add.
+## Help
+
+- `USBRESET`. This event indicates that the host issued a USB reset signal. According to the USB specification this will move the device from any state to the `Default` state. Since we are currently not dealing with any other state, you can handle this state by adding a log statement to provide information that this event occurred.
+
+- `EP0DATADONE`. The USBD peripheral is signaling the end of the DATA stage of a control transfer. Since you won't encounter this event just yet, you can leave it as it is.
+
+- `EP0SETUP`. The USBD peripheral has detected the SETUP stage of a control transfer. Add a log statement containing "goal reached; move to the next section" and exit the application.
 
 You can find the solution in the `usb-1-solution.rs` file.
