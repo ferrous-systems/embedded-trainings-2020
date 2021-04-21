@@ -24,6 +24,7 @@ fn main() -> ! {
     let mut dict = LinearMap::<u8, u8, consts::U128>::new();
     //                                 ^^^^^^^^^^^^ NOTE larger capacity
 
+    // the IEEE 802.15.4 packet that will carry our data
     let mut packet = Packet::new();
     for plainletter in 0..=127 {
         //             ^^^^^^^ NOTE complete ASCII range
