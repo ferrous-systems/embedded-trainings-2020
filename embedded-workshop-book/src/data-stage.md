@@ -13,7 +13,7 @@ We'll use the `dk::usb::Ep0In` abstraction. An instance of it is available in th
 
 The `Ep0In` API has two methods: `start` and `end`. `start` is used to start a DATA stage; this method takes a *slice of bytes* (`[u8]`) as argument; this argument is the response data. The `end` method needs to be called after `start`, when the EP0DATADONE event is raised, to complete the control transfer. `Ep0In` will automatically issue the STATUS stage that must follow the DATA stage.
 
-✅ Implement the EP0DATADONE event by calling the `end` method of the `EP0In` API.
+✅ Handle the EP0DATADONE event by calling the `end` method of the `EP0In` API.
 
 ✅ Implement the response to the GET_DESCRIPTOR request. Extend `usb-3.rs` so that it uses `Ep0In` to respond to the `GET_DESCRIPTOR Device` request (and only to that request). 
 
@@ -30,6 +30,7 @@ The `Ep0In` API has two methods: `start` and `end`. `start` is used to start a D
 - `bNumConfigurations = 1`, must be at least `1` so this is the minimum value
 
 >(\*) the `common` crate refers to the crate in the `advanced/common` folder. It is already part of the `firmware` crate dependencies.
+
 **Use the `usb2::device::Descriptor` abstraction**
 
 Although you can create the device descriptor by hand as an array filled with magic values we *strongly* recommend you use the `usb2::device::Descriptor` abstraction. The crate is already in the dependency list of the project; you can open its API documentation with the following command: `cargo doc -p usb2 --open`.
