@@ -50,6 +50,7 @@ impl Request {
         windex: u16,
         wlength: u16,
     ) -> Result<Self, ()> {
+        // Request Codes
         // see table 9-4 (USB specification)
         const SET_ADDRESS: u8 = 5;
 

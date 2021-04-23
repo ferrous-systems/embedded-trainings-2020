@@ -60,13 +60,16 @@ modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EP0S
 
 **Getting Started:**
 
-    - for a mapping of register names to the `USBD` API, check the entry for `nrf52840_hal::target::usbd` in the documentation you've created using `cargo doc`
-    - let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
-    - remember that we've learned how to read registers in `events.rs`.
-    - you will need to put together the higher and lower bits of `wlength`, `windex` and `wvalue` to get the whole field
-    - > Note: If you're using a Mac, you need to catch `SetAddress` requests returned by the parser as these are sent before the first GetDescriptor request. You can handle them by doing nothing.
+- for a mapping of register names to the `USBD` API, check the entry for `nrf52840_hal::target::usbd` in the documentation you've created using `cargo doc`
+- let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
+- remember that we've learned how to read registers in `events.rs`.
+- you will need to put together the higher and lower bits of `wlength`, `windex` and `wvalue` to get the whole field
 
-1. when you have successfully received a GET_DESCRIPTOR request for a Device descriptor you are done. You should see an output like this:
+- > Note: If you're using a Mac, you need to catch `SetAddress` requests returned by the parser as these are sent before the first GetDescriptor request. You can handle them by doing nothing.
+
+**Expected Result:**
+
+When you have successfully received a GET_DESCRIPTOR request for a Device descriptor you are done. You should see an output like this:
 
 ``` console
 INFO:usb_2 -- USB: UsbReset @ 438.842772ms
@@ -77,7 +80,7 @@ INFO:usb_2 -- GET_DESCRIPTOR Device [length=64]
 INFO:usb_2 -- Goal reached; move to the next section
 ```
 
-`wlength` / `length` can vary depending on the OS, USB port (USB 2.0 vs USB 3.0) or the presence of a USB hub so you may see a different value.
+> Note: `wlength` / `length` can vary depending on the OS, USB port (USB 2.0 vs USB 3.0) or the presence of a USB hub so you may see a different value.
 
 
 You can find a solution to this step in `advanced/firmware/src/bin/usb-2-solution.rs`.
