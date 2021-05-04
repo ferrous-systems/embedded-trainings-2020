@@ -155,5 +155,5 @@ Installed package `flip-link v0.1.2` (..)
 
 $ cargo install nrfdfu
 (..)
-Installed package `nrfdfu v0.0.1` (..)
+Installed package `nrfdfu v0.1.0` (..)
 ```
