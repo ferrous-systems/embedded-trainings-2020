@@ -7,7 +7,4 @@
 ``` console
 $ cargo size --version
 cargo-size 0.3.3
-
-$ nrfutil version
-nrfutil version 6.1.0
 ```
