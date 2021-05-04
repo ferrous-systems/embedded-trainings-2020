@@ -157,30 +157,3 @@ $ cargo install nrfdfu
 (..)
 Installed package `nrfdfu v0.0.1` (..)
 ```
-
-## Python
-
-**Windows**: Go to [https://www.python.org/downloads/](https://www.python.org/downloads/) and run the Python *3* installer
-
-- in the installer check the "add Python 3.x to PATH" box
-- also run the "Disable path length limit" action at the end, if you are on Windows 10 and the option is displayed to you
-
-**Linux**: Install `pip` using the package manager; this will also install Python.
-
-``` console
-$ # If you're using Arch Linux
-$ sudo pacman -S python-pip
-
-$ # If you're using Ubuntu
-$ sudo apt-get install python3-pip
-```
-
-**macOS**:
-Ensure that you have python 3 and pip installed. Refer to the following link for [Instructions on how to install python 3 and pip](https://docs.python-guide.org/starting/install3/osx/)
-
-```console
-$ python --version
-Python 3.7.7
-$ pip --version
-pip 20.0.2 from /usr/local/lib/python3.7/site-packages/pip (python 3.7)
-```
