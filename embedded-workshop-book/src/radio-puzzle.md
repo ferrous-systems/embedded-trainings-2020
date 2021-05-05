@@ -5,7 +5,7 @@ Your task in this section is to decrypt the [substitution cipher] encrypted *ASC
 
 [substitution cipher]: https://en.wikipedia.org/wiki/Substitution_cipher
 
-  ✅ Flash the `puzzle.hex` program on the Dongle. Follow the instructions from the "nRF52840 Dongle" section but flash the `puzzle.hex` program instead of the `loopback.hex` one -- don't forget to put the Dongle in bootloader mode before invoking `dongle-flash`.
+  ✅ Flash the `puzzle.hex` program on the Dongle. Follow the instructions from the "nRF52840 Dongle" section but flash the `puzzle.hex` program instead of the `loopback.hex` one -- don't forget to put the Dongle in bootloader mode before invoking `nrfdfu`.
 
 > Note: If you experienced USB issues with `loopback.hex` you use the `puzzle-nousb*.hex` variants.
 
