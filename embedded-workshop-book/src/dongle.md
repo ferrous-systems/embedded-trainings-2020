@@ -50,7 +50,7 @@ After the device has been programmed it will automatically reset and start runni
 
 🔎 Alternatively, you can also use nordic's own [`nrfutil`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutil%2FUG%2Fnrfutil%2Fnrfutil_intro.html) tool to convert a .hex file and flash it for you, among many other things `nrfutil` is a very powerful tool, but also unstable at times, which is why we replaced the parts we needed from it with `nrfdfu`.
 
-The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device.
+🔎 The `loopback` application will make the Dongle enumerate itself as a CDC ACM device.
 
 ✅ Run `cargo xtask usb-list` tool to see the newly enumerated Dongle in the output:
 

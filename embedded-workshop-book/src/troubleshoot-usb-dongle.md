@@ -38,7 +38,7 @@ In this case you should flash one of the `loopback-nousb*` programs:
 
 Put the device in bootloader mode again. Now, run
 ```console
-$ cargo xtask dongle-flash boards/dongle/loopback-nousb21.hex # you can pick 11, 16, 21 or 26
+$ nrfdfu boards/dongle/loopback-nousb21  # you can pick 11, 16, 21 or 26
 ```
 
 ❗️ The number in the `loopback-nousb*` file name is the radio channel the Dongle will listen on. This means that when you program the Development Kit to send data to the Dongle, you need to ensure they are communicating on the same channel by setting
