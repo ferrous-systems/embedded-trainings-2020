@@ -62,7 +62,7 @@ After connecting the DK to your PC/laptop it will show up as:
 
 **Windows**: a removable USB flash drive (named JLINK) and also as a USB Serial Device (COM port) in the Device Manager under the Ports section
 
-**Linux**: a USB device under `lsusb`. The device will have a VID of `0x1366` and a PID of `0x1015`  -- the `0x` prefix will be omitted in the output of `lsusb`:
+**Linux**: a USB device under `lsusb`. The device will have a VID of `0x1366` and a PID of `0x10??` or `0x01??` (`?` is a hex digit)  -- the `0x` prefix will be omitted in the output of `lsusb`:
 
 ``` console
 $ lsusb
