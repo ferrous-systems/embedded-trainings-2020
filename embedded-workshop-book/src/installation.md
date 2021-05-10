@@ -60,7 +60,7 @@ ATTRS{idVendor}=="1915", ATTRS{idProduct}=="521f", TAG+="uaccess"
 ATTRS{idVendor}=="2020", TAG+="uaccess"
 
 # nRF52840 Development Kit
-ATTRS{idVendor}=="1366", ATTRS{idProduct}=="1015", TAG+="uaccess"
+ATTRS{idVendor}=="1366", ENV{ID_MM_DEVICE_IGNORE}="1", TAG+="uaccess"
 ```
 
 3. Run the following command to make the new udev rules effective
