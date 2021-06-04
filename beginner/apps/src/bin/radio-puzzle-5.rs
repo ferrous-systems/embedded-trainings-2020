@@ -6,7 +6,7 @@ use core::str;
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use heapless::{consts, Vec};
+use heapless::Vec;
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -38,7 +38,7 @@ fn main() -> ! {
     );
 
     /* # Decrypt the string */
-    let mut buf = Vec::<u8, consts::U128>::new();
+    let mut buf = Vec::<u8, 128>::new();
 
     // iterate over the bytes
     for input in packet.iter() {

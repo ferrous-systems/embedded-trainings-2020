@@ -6,7 +6,7 @@ use core::str;
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use heapless::{consts, LinearMap, Vec};
+use heapless::{LinearMap, Vec};
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -22,7 +22,7 @@ fn main() -> ! {
     radio.set_channel(Channel::_25);
 
     /* # Build a dictionary */
-    let dict = LinearMap::<u8, u8, consts::U128>::new();
+    let dict = LinearMap::<u8, u8, 128>::new();
 
     let mut packet = Packet::new();
     for source in 0..=127 {
@@ -62,7 +62,7 @@ fn main() -> ! {
     );
 
     /* # Decrypt the string */
-    let mut buffer = Vec::<u8, consts::U128>::new();
+    let mut buffer = Vec::<u8, 128>::new();
 
     // iterate over the bytes
     for byte in packet.iter() {

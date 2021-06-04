@@ -91,7 +91,6 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
     defmt::info!("EP0: {:?}", defmt::Debug2Format(&request));
     //                        ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
     //                                            `StandardRequest` with `defmt`
-
     match request {
         // section 9.4.3
         // this request is valid in any state
@@ -116,7 +115,7 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
 
             Descriptor::Configuration { index } => {
                 if index == 0 {
-                    let mut resp = heapless::Vec::<u8, heapless::consts::U64>::new();
+                    let mut resp = heapless::Vec::<u8, 64>::new();
 
                     let conf_desc = usb2::configuration::Descriptor {
                         wTotalLength: (usb2::configuration::Descriptor::SIZE
