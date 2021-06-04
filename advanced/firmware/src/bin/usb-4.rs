@@ -5,7 +5,8 @@ use dk::{
     peripheral::USBD,
     usbd::{self, Ep0In, Event},
 };
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 use usb2::State;
 // HEADS UP to use *your* USB packet parser uncomment line 12 and remove line 13
@@ -46,17 +47,17 @@ const APP: () = {
 };
 
 fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
-    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
+    defmt::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         // TODO change `state` as specified in chapter 9.1 USB Device States, of the USB specification
         Event::UsbReset => {
-            log::info!("USB reset condition detected");
+            defmt::info!("USB reset condition detected");
             todo!();
         }
 
         Event::UsbEp0DataDone => {
-            log::info!("EP0IN: transfer complete");
+            defmt::info!("EP0IN: transfer complete");
             ep0in.end(usbd);
         }
 
@@ -64,7 +65,7 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
             if ep0setup(usbd, ep0in, state).is_err() {
                 // unsupported or invalid request:
                 // TODO: add code to stall the endpoint
-                log::warn!("EP0IN: unexpected request; stalling the endpoint");
+                defmt::warn!("EP0IN: unexpected request; stalling the endpoint");
             }
         }
     }
@@ -77,7 +78,7 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut State) -> Result<(), ()
     let windex = usbd::windex(usbd);
     let wvalue = usbd::wvalue(usbd);
 
-    log::info!(
+    defmt::info!(
         "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
         bmrequesttype,
         brequest,
@@ -88,7 +89,9 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, _state: &mut State) -> Result<(), ()
 
     let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
         .expect("Error parsing request");
-    log::info!("EP0: {:?}", request);
+    defmt::info!("EP0: {:?}", defmt::Debug2Format(&request));
+    //                        ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
+    //                                            `StandardRequest` with `defmt`
 
     match request {
         Request::GetDescriptor { descriptor, length } => match descriptor {

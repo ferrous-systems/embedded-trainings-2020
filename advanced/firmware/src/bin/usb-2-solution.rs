@@ -5,7 +5,8 @@ use dk::{
     peripheral::USBD,
     usbd::{self, Event},
 };
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 use usb::{Descriptor, Request};
 
 #[rtic::app(device = dk)]
@@ -34,7 +35,7 @@ const APP: () = {
 };
 
 fn on_event(usbd: &USBD, event: Event) {
-    log::info!("USB: {:?} @ {:?}", event, dk::uptime());
+    defmt::info!("USB: {:?} @ {:?}", event, dk::uptime());
 
     match event {
         Event::UsbReset => {
@@ -69,7 +70,7 @@ fn on_event(usbd: &USBD, event: Event) {
             // let windex = usbd::windex(usbd);
             // let wvalue = usbd::wvalue(usbd);
 
-            log::info!(
+            defmt::info!(
                 "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                 bmrequesttype,
                 brequest,
@@ -84,9 +85,9 @@ fn on_event(usbd: &USBD, event: Event) {
                 Request::GetDescriptor { descriptor, length }
                     if descriptor == Descriptor::Device =>
                 {
-                    log::info!("GET_DESCRIPTOR Device [length={}]", length);
+                    defmt::info!("GET_DESCRIPTOR Device [length={}]", length);
 
-                    log::info!("Goal reached; move to the next section");
+                    defmt::info!("Goal reached; move to the next section");
                     dk::exit()
                 }
                 Request::SetAddress { .. } => {

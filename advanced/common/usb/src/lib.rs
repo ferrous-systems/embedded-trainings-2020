@@ -5,6 +5,7 @@
 #![no_std]
 
 use core::num::NonZeroU8;
+use defmt;
 
 /// Device address assigned by the host; will be in the range 1..=127
 pub type Address = NonZeroU8;
@@ -78,7 +79,7 @@ impl Request {
                 Err(())
             }
         } else {
-            log::warn!("unhandled case in `Request` parser");
+            defmt::warn!("unhandled case in `Request` parser");
             Err(())
         }
     }

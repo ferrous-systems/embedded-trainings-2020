@@ -2,7 +2,8 @@
 #![no_std]
 
 use cortex_m::asm;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
 #[rtic::app(device = dk)]
 const APP: () = {
@@ -10,12 +11,12 @@ const APP: () = {
     fn init(_cx: init::Context) {
         dk::init().unwrap();
 
-        log::info!("Hello");
+        defmt::info!("Hello");
     }
 
     #[idle]
     fn main(_cx: main::Context) -> ! {
-        log::info!("world!");
+        defmt::info!("world!");
 
         loop {
             asm::bkpt();
