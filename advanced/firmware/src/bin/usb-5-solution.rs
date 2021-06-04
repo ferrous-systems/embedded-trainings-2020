@@ -116,7 +116,7 @@ fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()>
 
             Descriptor::Configuration { index } => {
                 if index == 0 {
-                    let mut resp = heapless::Vec::<u8, heapless::consts::U64>::new();
+                    let mut resp = heapless::Vec::<u8, 64>::new();
 
                     let conf_desc = usb2::configuration::Descriptor {
                         wTotalLength: (usb2::configuration::Descriptor::SIZE

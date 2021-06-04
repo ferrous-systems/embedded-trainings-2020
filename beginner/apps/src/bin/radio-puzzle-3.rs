@@ -4,7 +4,7 @@
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use heapless::{consts, LinearMap};
+use heapless::LinearMap;
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -20,7 +20,7 @@ fn main() -> ! {
     radio.set_channel(Channel::_25);
 
     // capacity (128) should be large enough for the ASCII range
-    let dict = LinearMap::<u8, u8, consts::U128>::new();
+    let mut dict = LinearMap::<u8, u8, 128>::new();
 
     let mut packet = Packet::new();
     // TODO do the whole ASCII range [0, 127]

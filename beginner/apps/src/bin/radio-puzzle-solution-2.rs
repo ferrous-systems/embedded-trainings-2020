@@ -6,7 +6,7 @@ use core::str;
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use heapless::{consts, LinearMap};
+use heapless::LinearMap;
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -22,7 +22,7 @@ fn main() -> ! {
     radio.set_channel(Channel::_25);
 
     /* # Build a dictionary */
-    let mut dict = LinearMap::<u8, u8, consts::U128>::new();
+    let mut dict = LinearMap::<u8, u8, 128>::new();
 
     // the IEEE 802.15.4 packet that will carry our data
     let mut packet = Packet::new();
