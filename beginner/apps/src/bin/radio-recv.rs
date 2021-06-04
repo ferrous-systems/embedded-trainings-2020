@@ -45,7 +45,7 @@ fn main() -> ! {
                 crc
             );
         }
-        Err(Error::Crc(crc)) => defmt::error!("invalid CRC: {=u16:x}", crc),
+        Err(Error::Crc(crc)) => defmt::error!("invalid CRC: {:X}", crc),
         Err(Error::Timeout) => defmt::error!("no response within {} ms", TEN_MS / 1_000),
     }
 
