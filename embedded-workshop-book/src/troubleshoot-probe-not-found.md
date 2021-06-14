@@ -1,4 +1,4 @@
-# `Error: no probe was found` error
+# `no probe was found` error
 
 You may encounter this error:
 ``` console
