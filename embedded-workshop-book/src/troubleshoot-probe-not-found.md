@@ -8,3 +8,4 @@ Error: no probe was found
 
 - It may be caused by the micro-USB cable plugged on the long side of the board, instead of the short side.
 - Check that the board is powered on. 
+- Check that your cable is a data cable and not power-only.
