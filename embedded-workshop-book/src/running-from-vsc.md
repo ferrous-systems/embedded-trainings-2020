@@ -14,20 +14,13 @@ Expected output:
 ``` console
 $ cargo run --bin hello
      Running `probe-run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/hello`
-  (HOST) INFO  flashing program (30.09 KiB)
-  (HOST) INFO  success!
+(HOST) INFO  flashing program (34.79 KiB)
+(HOST) INFO  success!
 ────────────────────────────────────────────────────────────────────────────────
 INFO:hello -- Hello, world!
-stack backtrace:
-   0: __bkpt
-   1: hello::__cortex_m_rt_main
-        at src/bin/hello.rs:15
-   2: main
-        at src/bin/hello.rs:8
-   3: ResetTrampoline
-        at $REGISTRY/cortex-m-rt-0.6.13/src/lib.rs:547
-   4: Reset
-        at $REGISTRY/cortex-m-rt-0.6.13/src/lib.rs:550
+────────────────────────────────────────────────────────────────────────────────
+(HOST) INFO  device halted without error
+
 ```
 
 `cargo run` will compile the application and then invoke the `probe-run` tool with its argument set to the path of the output ELF file.

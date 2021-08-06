@@ -16,24 +16,24 @@ The `spam()` function allocates data on the stack until the stack boundaries are
 
 ✅ Run `stack_overflow.rs`
 
-You should see output similar to this:
+You should see output similar to this (the program output between the horizontal bars might be missing):
 
 ``` console
-  (...)
-  (HOST) INFO  flashing program (32.68 KiB)
-  (HOST) INFO  success!
+(HOST) INFO  flashing program (35.25 KiB)
+(HOST) INFO  success!
 ────────────────────────────────────────────────────────────────────────────────
 INFO:stack_overflow -- provoking stack overflow...
 INFO:stack_overflow -- address of current `use_stack` at recursion depth 0: 0x2003aec0
 INFO:stack_overflow -- address of current `use_stack` at recursion depth 1: 0x20039e50
 (...)
 INFO:stack_overflow -- address of current `use_stack` at recursion depth 10: 0x20030a60
-INFO:stack_overflow -- address of current `use_stack` at recursionstack backtrace:
+INFO:stack_overflow -- address of current `use_stack` at recursion
+────────────────────────────────────────────────────────────────────────────────
+stack backtrace:
    0: HardFaultTrampoline
       <exception entry>
-   1: ???
-error: the stack appears to be corrupted beyond this point
-  (HOST) ERROR the program has overflowed its stack
+(HOST) WARN  call stack was corrupted; unwinding could not be completed
+(HOST) ERROR the program has overflowed its stack
 ```
 
 ❗️ `flip-link` is a third-party tool, so make sure you've installed it through `cargo install flip-link`
