@@ -11,7 +11,7 @@ ctrlc = "3.1.4"
 hidapi = "1.2.2"
 ihex = "1.1.2"
 pids = { path = "../common/pids" }
-rusb = "0.5.5"
+rusb = "0.8"
 # Note: we are using a fork due compatibility problems.
 # See https://github.com/ferrous-systems/embedded-trainings-2020/issues/148 for more details.
 # serialport = "4.0.2"
