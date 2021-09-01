@@ -61,7 +61,7 @@ modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EP0S
 **Getting Started:**
 
 - for a mapping of register names to the `USBD` API, check the entry for `nrf52840_hal::target::usbd` in the documentation you've created using `cargo doc`
-- let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
+- `let bmrequesttype = usbd.bmrequesttype.read().bits() as u8`;
 - remember that we've learned how to read registers in `events.rs`.
 - you will need to put together the higher and lower bits of `wlength`, `windex` and `wvalue` to get the whole field
 
