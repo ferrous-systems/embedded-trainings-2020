@@ -46,6 +46,7 @@ fn on_event(_usbd: &USBD, event: Event) {
         // leave this at it is for now.
         Event::UsbEp0Setup => {
             log::info!("goal reached; move to the next section");
+            dk::exit()
         }
     }
 }

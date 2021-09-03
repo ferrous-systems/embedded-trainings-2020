@@ -76,6 +76,9 @@ fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
                     // TODO send back a valid device descriptor, truncated to `length` bytes
                     // let desc = usb2::device::Descriptor { .. };
                     let resp = [];
+
+                    // ensure we're not overstepping boundaries
+                    assert!(resp.len() <= length as usize);
                     ep0in.start(&resp, usbd);
                 }
                 Request::SetAddress { .. } => {
