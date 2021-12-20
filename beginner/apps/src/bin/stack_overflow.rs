@@ -11,7 +11,7 @@ fn main() -> ! {
     // board initialization
     dk::init().unwrap();
 
-    defmt::info!("fib(100) = {:?}", fib(100));
+    fib(100);
 
     loop {
         asm::bkpt();
@@ -21,7 +21,8 @@ fn main() -> ! {
 #[inline(never)]
 fn fib(n: u32) -> u32 {
     // allocate and initialize one kilobyte of stack memory to provoke stack overflow
-    let _use_stack = [0xAA; 1024];
+    let use_stack = [0xAA; 1024];
+    defmt::info!("allocating [{}; 1024]; round #{}", use_stack[1023], n);
 
     if n < 2 {
         1

@@ -26,7 +26,6 @@ use defmt;
 #[cfg(any(feature = "beginner", feature = "advanced"))]
 use defmt_rtt as _; // global logger
 
-
 #[cfg(feature = "advanced")]
 use crate::{
     peripheral::{POWER, USBD},
@@ -246,7 +245,9 @@ pub fn init() -> Result<Board, ()> {
 
             // set TX power to its maximum value
             radio.set_txpower(ieee802154::TxPower::Pos8dBm);
-            defmt::debug!("Radio initialized and configured with TX power set to the maximum value");
+            defmt::debug!(
+                "Radio initialized and configured with TX power set to the maximum value"
+            );
             radio
         };
 

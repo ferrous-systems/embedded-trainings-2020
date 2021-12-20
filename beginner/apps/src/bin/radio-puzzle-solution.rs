@@ -6,7 +6,7 @@ use core::str;
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use heapless::{consts, LinearMap, Vec};
+use heapless::{LinearMap, Vec};
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -22,9 +22,10 @@ fn main() -> ! {
     radio.set_channel(Channel::_25);
 
     /* # Build a dictionary */
-    let mut dict = LinearMap::<u8, u8, consts::U128>::new();
-    //                                 ^^^^^^^^^^^^ NOTE larger capacity
+    let mut dict = LinearMap::<u8, u8, 128>::new();
+    //                                                 ^^^ NOTE larger capacity
 
+    // the IEEE 802.15.4 packet that will carry our data
     let mut packet = Packet::new();
     for plainletter in 0..=127 {
         //             ^^^^^^^ NOTE complete ASCII range
@@ -65,7 +66,7 @@ fn main() -> ! {
     );
 
     /* # Decrypt the string */
-    let mut buffer = Vec::<u8, consts::U128>::new();
+    let mut buffer = Vec::<u8, 128>::new();
 
     // iterate over the bytes
     for cipherletter in packet.iter() {

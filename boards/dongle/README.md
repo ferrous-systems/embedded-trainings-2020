@@ -47,7 +47,7 @@ to: [81, 78, 109, 61, 120, 87, 125, 98, 100, 91, 97, 66, 57, 117, 49, 64, 48, 85
 secret: "<p=-*Uh5&Ph6=PQ_z_6=Q_-Zh_-h&IPh?cj?>>?>h$IUQhL&P*Up&6w"
 ```
 
-### Generate `puzzle.hex`
+### Generate `puzzle` ELF
 
 ``` console
 $ git clone --branch dongle-puzzle https://github.com/japaric/embedded2020
@@ -55,9 +55,9 @@ $ git clone --branch dongle-puzzle https://github.com/japaric/embedded2020
 $ cd embedded2020/firmware/apps
 ```
 
-Copy the `puzzle.rs` from this folder into the `embedded2020/firmware/apps/src/bin` folder.
+Find `puzzle.rs` in the `embedded2020/firmware/apps/src/bin` folder.
 
-Update that copy of `puzzle.rs` with the `FROM`, `TO` and `SECRET` data that you got from `puzzlegen`
+Update `puzzle.rs` with the `FROM`, `TO` and `SECRET` data that you got from `puzzlegen`
 
 ```` rust
 static FROM: &[u8] = &[
@@ -80,38 +80,34 @@ static TO: &[u8] = &[
 static SECRET: &[u8] = b"<p=-*Uh5&Ph6=PQ_z_6=Q_-Zh_-h&IPh?cj?>>?>h$IUQhL&P*Up&6w";
 ````
 
-Build the program; this will produce an ELF file.
+Build the program; this will produce an ELF file called `puzzle` (no file ending).
 
 ``` console
 $ cargo build --bin puzzle --release
 ```
 
-Convert that ELF file into a .hex file.
+Copy this ELF file from `embedded2020/firmware/target/thumbv7em-none-eabi/release` to `embedded-trainings-2020/boards/dongle`
 
-``` console
-$ arm-none-eabi-objcopy -O ihex ../target/thumbv7em-none-eabi/release/puzzle puzzle.hex
-```
+Test the produced `puzzle` file:
 
-Test the produced `puzzle.hex` file:
-
-- flash it onto a dongle using `cargo xtask dongle-flash`. The green LED on the dongle should turn on
+- flash it onto a dongle using `nrfdfu puzzle`. The green LED on the dongle should turn on
 - run `cargo xtask serial-term`; you should see the following output. `deviceid` will be different
 ``` text
-deviceid=d90eedf1978d5fd2 channel=25 TxPower=+8dBm app=puzzle.hex
+deviceid=d90eedf1978d5fd2 channel=25 TxPower=+8dBm app=puzzle
 ```
 - run the `radio-puzzle-solution` program on a DK; it should be able to decrypt the new secret
 - run `cargo xtask change-channel <some number between 11 and 26>` to test changing the Dongle's radio channel
 - modify and re-run the `radio-puzzle-solution` program on a DK to solve the puzzle using a the channel you set in the previous step
 
-### Generate `puzzle-nousb-*.hex`
+### Generate `puzzle-nousb-*`
 
-The procedure is similar to the one for generating the `puzzle.hex`. The differences are:
+The procedure is similar to the one for generating the `puzzle` ELF file. The differences are:
 
-- you copy `puzzle-nousb.rs` into the `embedded2020` repository
-- you also need to change `const CHANNEL` in the `puzzle-nousb.rs` copy
-- you need to produce one hex file per hard-coded radio channel.
+- you build `puzzle-nousb.rs` in the `embedded2020` repository and copy `embedded2020/firmware/target/thumbv7em-none-eabi/release/puzzle-nousb` over
+- you also need to change `const CHANNEL` in `puzzle-nousb.rs`
+- you need to produce one ELF file per hard-coded radio channel.
 
-Also test these `nousb` .hex files. Note that the green LED won't turn on when the dongle restarts! The green LED will toggle when a new packet is received and the blue LED will turn on when the decoded secret is received. Also, `cargo xtask change-channel` won't work with the `nousb` variants so you can skip that test.
+Also test these `nousb` ELF files. Note that the green LED won't turn on when the dongle restarts! The green LED will toggle when a new packet is received and the blue LED will turn on when the decoded secret is received. Also, `cargo xtask change-channel` won't work with the `nousb` variants so you can skip that test.
 
 ## References
 

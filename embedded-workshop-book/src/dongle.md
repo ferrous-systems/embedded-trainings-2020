@@ -10,11 +10,11 @@ From this section on, we'll use the nRF52840 Dongle in addition to the nRF52840 
 
 The Dongle does not contain an on-board debugger, like the DK, so we cannot use `probe-rs` tools to write programs into it. Instead, the Dongle's stock firmware comes with a *bootloader*.
 
-When put in bootloader mode the Dongle will run a bootloader program instead of the last application that was flashed into it. This bootloader program will make the Dongle show up as a USB CDC ACM device (AKA Serial over USB device) that accepts new application images over this interface. We'll use the `nrfutil` tool to communicate with the bootloader-mode Dongle and flash new images into it.
+When put in bootloader mode the Dongle will run a bootloader program instead of the last application that was flashed into it. This bootloader program will make the Dongle show up as a USB CDC ACM device (AKA Serial over USB device) that accepts new application images over this interface. We'll use the `nrfdfu` tool to communicate with the bootloader-mode Dongle and flash new images into it.
 
 ✅ Connect the Dongle to your computer. Put the Dongle in bootloader mode by  pressing its *reset* button.
 
-When the Dongle is in bootloader mode its red LED will oscillate in intensity. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
+When the Dongle is in bootloader mode its red LED will pulsate. The Dongle will also appear as a USB CDC ACM device with vendor ID `0x1915` and product ID `0x521f`.
 
 You can also use our `cargo xtask usb-list` tool, a minimal cross-platform version of the `lsusb` tool, to check out the status of the Dongle.
 
@@ -29,27 +29,28 @@ Bus 001 Device 016: ID 1915:521f <- nRF52840 Dongle (in bootloader mode)
 
 🔎 [`cargo xtask`](https://github.com/matklad/cargo-xtask) lets us extend `cargo` with custom commands which are installed as you run them for the first time. We've used it to add some helper tools to our workshop materials while keeping the preparation installations as minimal as possible.
 
-Now that the device is in bootloader mode browse to the `boards/dongle` directory. You'll find some `*.hex` files there. These are pre-compiled Rust programs that have been converted into the Intel Hex format that the `nrfutil` tool expects.
+Now that the device is in bootloader mode browse to the `boards/dongle` directory. You'll find some `ELF` files (without a file ending) there. These are pre-compiled Rust programs to be flashed onto your dongle.
 
-For the next section you'll need to flash the `loopback.hex` file into the Dongle. There are two ways to do this. You can make 2 long `nrfutil` invocations or you can use our `cargo xtask dongle-flash` tool, which will invoke `nrfutil` for you. The `dongle-flash` way is shown below:
+For the next section you'll need to flash the `loopback` file onto the Dongle.
 
 ✅ Run the following command:
 
 ``` console
-$ cargo xtask dongle-flash boards/dongle/loopback.hex
+$ nrfdfu boards/dongle/loopback
 ```
 
 Expected output:
 ``` console
-packaging iHex using nrfutil ...
-DONE
-  [####################################]  100%
-Device programmed.
+[INFO  nrfdfu] Sending init packet...
+[INFO  nrfdfu] Sending firmware image of size 37328...
+[INFO  nrfdfu] Done.
 ```
 
 After the device has been programmed it will automatically reset and start running the new application.
 
-The `loopback` application will *blink* the red LED in a heartbeat fashion: two fast blinks (LED on then off) followed by two periods of silence (LED off). The application will also make the Dongle enumerate itself as a CDC ACM device.
+🔎 Alternatively, you can also use nordic's own [`nrfutil`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutil%2FUG%2Fnrfutil%2Fnrfutil_intro.html) tool to convert a .hex file and flash it for you, among many other things `nrfutil` is a very powerful tool, but also unstable at times, which is why we replaced the parts we needed from it with `nrfdfu`.
+
+🔎 The `loopback` application will make the Dongle enumerate itself as a CDC ACM device.
 
 ✅ Run `cargo xtask usb-list` tool to see the newly enumerated Dongle in the output:
 

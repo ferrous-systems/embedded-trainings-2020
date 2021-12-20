@@ -68,5 +68,6 @@
     - [`dongle-flash` is not working](./troubleshoot-dongle-flash.md)
     - [Dongle USB functionality is not working](./troubleshoot-usb-dongle.md)
     - [`cargo run` errors](./troubleshoot-cargo-run-error.md)
+    - [DEPRECATED - `nrfutil` setup](DEPRECATED-nrfutil-setup.md)
 - [Appendix](./appendix.md)
   - [Using GDB](./gdb.md)

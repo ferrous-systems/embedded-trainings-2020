@@ -15,13 +15,16 @@ consts = { path = "../common/consts" }
 cortex-m = "0.6.4"
 cortex-m-rt = "0.6.13"
 cortex-m-rtic = "0.5.1"
-dk = { path = "../../boards/dk", features = ["advanced"] }
-heapless = "0.5.5"
-panic-probe = { version = "0.2.0", features = ["print-defmt"] }
 defmt = "0.2.1"
 defmt-rtt = "0.2.0"
+dk = { path = "../../boards/dk", features = ["advanced"] }
+panic-probe = { version = "0.2.0", features = ["print-defmt"] }
 usb = { path = "../common/usb" }
 usb2 = "0.0.1"
+
+[dependencies.heapless]
+version = "0.7.1"
+features = ["defmt-impl"]
 
 # optimize code in both profiles
 [profile.dev]

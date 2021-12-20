@@ -18,6 +18,7 @@ fn main() -> ! {
     // puzzle.hex uses channel 25
     radio.set_channel(Channel::_25);
 
+    // the IEEE 802.15.4 packet that will carry our data
     let mut packet = Packet::new();
 
     // first exchange a single packet with the Dongle

@@ -6,7 +6,7 @@ use cortex_m_rt::entry;
 // NOTE you can use `FnvIndexMap` instead of `LinearMap`; the former may have better
 // lookup performance when the dictionary contains a large number of items but performance is
 // not important for this exercise
-use heapless::{consts, LinearMap};
+use heapless::LinearMap;
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -15,8 +15,9 @@ fn main() -> ! {
     dk::init().unwrap();
 
     // a dictionary with capacity for 2 elements
-    let mut dict = LinearMap::<_, _, consts::U2>::new();
-    //                                       ^^ capacity; this is a type not a value
+    let mut dict = LinearMap::<_, _, 2>::new();
+    //                          content types ^^ ^^  ^ capacity
+    //                     (inferred by rust)
 
     // do some insertions
     dict.insert(b'A', b'*').expect("dictionary full");

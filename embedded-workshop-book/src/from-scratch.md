@@ -104,7 +104,7 @@ If the debugger is not supported by `probe-rs` then you'll need to use [OpenOCD]
 
 [OpenOCD]: http://openocd.org/
 
-If the board does not expose a JTAG, SWD or similar interface then the microcontroller probably comes with a bootloader as part of its stock firmware. In that case you'll need to use `dfu-util` or a vendor specific tool like `nrfutil` to flash programs onto the chip. This is the case of the nRF52840 Dongle.
+If the board does not expose a JTAG, SWD or similar interface then the microcontroller probably comes with a bootloader as part of its stock firmware. In that case you'll need to use `dfu-util` or a vendor specific tool like [`nrfdfu`](https://crates.io/crates/nrfdfu) or [`nrfutil`](https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrfutil%2FUG%2Fnrfutil%2Fnrfutil_intro.html) to flash programs onto the chip. This is the case of the nRF52840 Dongle.
 
 ## Getting output
 

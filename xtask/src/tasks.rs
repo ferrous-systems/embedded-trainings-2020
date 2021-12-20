@@ -198,7 +198,7 @@ pub fn serial_term() -> color_eyre::Result<()> {
         }
     };
 
-    let mut port = serialport::open(&dongle.port_name)?;
+    let mut port = serialport::new(&dongle.port_name, 115200).open()?;
 
     static CONTINUE: AtomicBool = AtomicBool::new(true);
 
@@ -227,7 +227,15 @@ pub fn usb_list() -> color_eyre::Result<()> {
     for dev in rusb::devices()?.iter() {
         let desc = dev.device_descriptor()?;
         let suffix = match (desc.vendor_id(), desc.product_id()) {
-            (0x1366, 0x1015) => " <- J-Link on the nRF52840 Development Kit",
+            (0x1366, pid) => {
+                let higher_byte = pid >> 8;
+                // 0x1015 and 0x0105 are valid PIDs for a J-Link probe
+                if higher_byte == 0x10 || higher_byte == 0x01 {
+                    " <- J-Link on the nRF52840 Development Kit"
+                } else {
+                    ""
+                }
+            }
             (0x1915, 0x521f) => " <- nRF52840 Dongle (in bootloader mode)",
             (0x2020, pids::LOOPBACK) => " <- nRF52840 Dongle (loopback.hex)",
             (0x2020, pids::PUZZLE) => " <- nRF52840 Dongle (puzzle.hex)",
