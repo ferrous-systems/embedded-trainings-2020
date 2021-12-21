@@ -1,5 +1,27 @@
 # Running the Program
 
+## Setting the log level 
+
+Enter the appropriate command into the terminal you're using. This will set the log level for this session. 
+
+### MacOS & Linux
+
+```console
+$ export DEFMT_LOG=warn
+```
+
+### PowerShell
+```console
+$ Env: DEFMT_LOG = "warn"
+```
+
+### Windows
+
+```console
+$ set DEFMT_LOG=warn
+```
+## Running the Program
+
 ✅ Open the `src/bin/hello.rs` file and click the "Run" button that's hovering over the `main` function.
 
 > Note: you will get the "Run" button if the Rust analyzer's workspace is set to the `beginner/apps` folder. This will be the case if the current folder in VS code (left side panel) is set to `beginner/apps`.
@@ -14,7 +36,7 @@ Expected output:
 ``` console
 $ cargo run --bin hello
     Running `probe-run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/hello`
-(HOST) INFO  flashing program (4 pages / 16.00 KiB)
+(HOST) INFO  flashing program (2 pages / 16.00 KiB)
 (HOST) INFO  success!
 ────────────────────────────────────────────────────────────────────────────────
 INFO:hello -- Hello, world!
