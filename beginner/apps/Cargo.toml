@@ -7,7 +7,7 @@ version = "0.0.0"
 
 [dependencies]
 cortex-m = "0.7.3"
-cortex-m-rt = "0.7.1"
+cortex-m-rt = "0.6.15"
 dk = { path = "../../boards/dk", features = ["beginner"] }
 heapless = "0.7.9"
 panic-probe = { version = "0.3.0", features = ["print-defmt"] }
