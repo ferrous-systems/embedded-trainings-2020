@@ -6,19 +6,6 @@ name = "usb"
 version = "0.0.0"
 
 [dependencies]
-defmt = "0.2.1"
+defmt = "0.3.0"
 
-[features]
-# set defmt logging levels here
-default = [
-"defmt-default",
-# "dependency-a/defmt-trace",
-]
 
-# do NOT modify these features
-defmt-default = []
-defmt-trace = []
-defmt-debug = []
-defmt-info = []
-defmt-warn = []
-defmt-error = []
