@@ -8,7 +8,6 @@ use firmware as _;
 #[rtic::app(device = dk, peripherals = false)]
 mod app {
     use cortex_m::asm;
-    use dk::Peripherals;
 
     #[local]
     struct MyLocalResources {
