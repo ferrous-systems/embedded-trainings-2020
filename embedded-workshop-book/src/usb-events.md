@@ -15,11 +15,11 @@ This code will panic because `USBRESET` is not implemented yet.
 ✅ Go to `fn on_event`, line 39. In this section you'll need to implement the following USB events `USBRESET` and `EP0SETUP` so that your log output will look like this:
 
 ``` console
-INFO:usb_1 -- USB: UsbReset
-INFO:usb_1 -- returning to the Default state
-INFO:usb_1 -- USB: UsbEp0Setup
-INFO:usb_1 -- goal reached; move to the next section
-INFO:dk -- `dk::exit() called; exiting ...
+USBD initialized
+USB: UsbReset
+returning to the Default state
+USB: UsbEp0Setup
+goal reached; move to the next section
 ```
 
 ## Help

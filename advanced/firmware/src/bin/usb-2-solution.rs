@@ -21,7 +21,6 @@ mod app {
 
     #[shared]
     struct MySharedResources {
-        
     }
 
     #[init]
@@ -41,6 +40,7 @@ mod app {
             on_event(usbd, event)
         }
     }
+
     fn on_event(usbd: &USBD, event: Event) {
         defmt::println!("USB: {:?} @ {:?}", event, dk::uptime());
     
@@ -106,7 +106,6 @@ mod app {
                 }
             }
         }
-    }
-    
+    }  
 }
 

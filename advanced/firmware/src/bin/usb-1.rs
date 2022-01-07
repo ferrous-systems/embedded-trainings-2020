@@ -1,19 +1,15 @@
 #![no_main]
 #![no_std]
 
-use dk::{
-    peripheral::USBD,
-    usbd::{self, Event},
-};
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use firmware as _;
 
 #[rtic::app(device = dk, peripherals = false)]
 mod app {
+    use cortex_m::asm;
     use dk::{
         peripheral::USBD,
         usbd::{self, Event},
-        Peripherals,
     };
 
     #[local]
@@ -22,8 +18,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
+    struct MySharedResources {  
     }
 
     #[init]
@@ -58,7 +53,7 @@ mod app {
             // leave this at it is for now.
             Event::UsbEp0Setup => {
                 defmt::println!("goal reached; move to the next section");
-                dk::exit()
+                asm::bkpt()
             }
         }
     }
