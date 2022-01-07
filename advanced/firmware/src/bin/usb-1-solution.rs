@@ -7,10 +7,10 @@ use firmware as _;
 
 #[rtic::app(device = dk, peripherals = false)]
 mod app {
+    use cortex_m::asm;
     use dk::{
         peripheral::USBD,
         usbd::{self, Event},
-        Peripherals,
     };
 
     #[local]
@@ -46,19 +46,19 @@ mod app {
     }
 
     fn on_event(_usbd: &USBD, event: Event) {
-        defmt::println("USB: {:?}", event);
+        defmt::println!("USB: {:?}", event);
     
         match event {
             Event::UsbReset => {
                 // going from the Default state to the Default state is a no-operation
-                defmt::println("returning to the Default state");
+                defmt::println!("returning to the Default state");
             }
     
             Event::UsbEp0DataDone => todo!(),
     
             Event::UsbEp0Setup => {
-                defmt::println("goal reached; move to the next section");
-                dk::exit()
+                defmt::println!("goal reached; move to the next section");
+                asm::bkpt();
             }
         }
     }
