@@ -21,12 +21,15 @@ Also note that in the starter code the `idle` function has been modified. Pay at
 ✅ Modify the program so that it prints the number of times the USB cable has been connected to the DK every time the cable is connected, as shown below.
 
 ``` console
-(..)
-INFO:resource -- on_power_event: cable connected 1 time
-(..)
-INFO:resource -- on_power_event: cable connected 2 times
-(..)
-INFO:resource -- on_power_event: cable connected 3 times
+USBDETECTED interrupt enabled
+idle: going to sleep
+on_power_event: cable connected 1 time
+idle: woke up
+idle: going to sleep
+on_power_event: cable connected 2 times
+idle: woke up
+idle: going to sleep
+on_power_event: cable connected 3 times
 ```
 
 You can find a solution to this exercise in the `resource-solution.rs` file.
