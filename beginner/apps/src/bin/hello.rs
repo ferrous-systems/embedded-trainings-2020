@@ -19,7 +19,7 @@ fn main() -> ! {
     // initializes the peripherals
     dk::init().unwrap();
 
-    defmt::info!("Hello, world!"); // :wave:
+    defmt::println!("Hello, world!"); // :wave:
 
     loop {
         // breakpoint: halts the program's execution

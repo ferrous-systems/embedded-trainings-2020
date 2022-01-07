@@ -25,7 +25,7 @@ fn main() -> ! {
     let msg = b"olleh";
     packet.copy_from_slice(msg);
 
-    defmt::info!(
+    defmt::println!(
         "sending: {}",
         str::from_utf8(msg).expect("message is not valid UTF-8")
     );
@@ -38,7 +38,7 @@ fn main() -> ! {
 
     match res {
         Ok(crc) => {
-            defmt::info!(
+            defmt::println!(
                 "received: {} (CRC = {:X})",
                 //                    ^^ print as uppercase hexadecimal
                 str::from_utf8(&*packet).expect("response is not valid UTF-8"),

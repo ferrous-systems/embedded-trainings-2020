@@ -34,14 +34,14 @@ fn main() -> ! {
     // let msg = b"Hello?";
 
     packet.copy_from_slice(msg);
-    defmt::info!(
+    defmt::println!(
         "sending: {}",
         str::from_utf8(msg).expect("msg was not valid UTF-8 data")
     );
 
     radio.send(&mut packet);
     if radio.recv_timeout(&mut packet, &mut timer, TEN_MS).is_ok() {
-        defmt::info!(
+        defmt::println!(
             "received: {}",
             str::from_utf8(&packet).expect("response was not valid UTF-8 data")
         );

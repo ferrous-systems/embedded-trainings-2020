@@ -22,11 +22,11 @@ fn main() -> ! {
     buffer.push(b'i').expect("buffer full");
 
     // look into the contents so far
-    defmt::info!("{:?}", buffer);
+    defmt::println!("{:?}", buffer);
 
     // or more readable
     // NOTE utf-8 conversion works as long as you only push bytes in the ASCII range (0..=127)
-    defmt::info!(
+    defmt::println!(
         "{}",
         str::from_utf8(&buffer).expect("content was not UTF-8")
     );

@@ -22,7 +22,7 @@ fn main() -> ! {
 fn fib(n: u32) -> u32 {
     // allocate and initialize one kilobyte of stack memory to provoke stack overflow
     let use_stack = [0xAA; 1024];
-    defmt::info!("allocating [{}; 1024]; round #{}", use_stack[1023], n);
+    defmt::println!("allocating [{}; 1024]; round #{}", use_stack[1023], n);
 
     if n < 2 {
         1
