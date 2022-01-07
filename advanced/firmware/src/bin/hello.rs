@@ -11,7 +11,7 @@ fn main() -> ! {
     // board initialization
     dk::init().unwrap();
 
-    defmt::info!("Hello, world!");
+    defmt::println!("Hello, world!");
 
     loop {
         asm::bkpt();

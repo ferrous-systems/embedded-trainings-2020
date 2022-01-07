@@ -32,7 +32,7 @@ fn main() -> ! {
         dk::exit()
     }
 
-    defmt::info!(
+    defmt::println!(
         "ciphertext: {}",
         str::from_utf8(&packet).expect("packet was not valid UTF-8")
     );
@@ -48,7 +48,7 @@ fn main() -> ! {
         buf.push(output).expect("buffer full");
     }
 
-    defmt::info!(
+    defmt::println!(
         "plaintext: {}",
         str::from_utf8(&buf).expect("buffer contains non-UTF-8 data")
     );

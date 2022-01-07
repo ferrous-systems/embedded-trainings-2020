@@ -21,7 +21,7 @@ const APP: () = {
 
         power.intenset.write(|w| w.usbdetected().set_bit());
 
-        defmt::info!("USBDETECTED interrupt enabled");
+        defmt::println!("USBDETECTED interrupt enabled");
 
         init::LateResources {
             power,
@@ -32,9 +32,9 @@ const APP: () = {
     #[idle]
     fn main(_cx: main::Context) -> ! {
         loop {
-            defmt::info!("idle: going to sleep");
+            defmt::println!("idle: going to sleep");
             asm::wfi();
-            defmt::info!("idle: woke up");
+            defmt::println!("idle: woke up");
         }
     }
 
@@ -48,7 +48,7 @@ const APP: () = {
 
         *counter += 1;
         let n = *counter;
-        defmt::info!(
+        defmt::println!(
             "on_power_event: cable connected {} time{}",
             n,
             if n != 1 { "s" } else { "" }

@@ -5,7 +5,7 @@
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use firmware as _;
 
-#[rtic::app(device = dk, peripherals = true)]
+#[rtic::app(device = dk, peripherals = false)]
 mod app {
     use cortex_m::asm;
     use dk::Peripherals;
@@ -23,13 +23,13 @@ mod app {
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
         dk::init().unwrap();
 
-        defmt::info!("Hello");
+        defmt::println!("Hello");
         (MySharedResources {}, MyLocalResources {}, init::Monotonics())
     }
 
     #[idle]
     fn idle(_cx: idle::Context) -> ! {
-        defmt::info!("world!");
+        defmt::println!("world!");
 
         loop {
             asm::bkpt();

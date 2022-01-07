@@ -38,9 +38,9 @@ fn main() -> ! {
         if packet.len() == 1 {
             let destination = packet[0];
 
-            defmt::info!("{} -> {}", source, destination);
+            defmt::println!("{} -> {}", source, destination);
             // or cast to `char` for a more readable output
-            defmt::info!("{:?} -> {:?}", source as char, destination as char);
+            defmt::println!("{:?} -> {:?}", source as char, destination as char);
         } else {
             defmt::error!("response packet was not a single byte");
             dk::exit()

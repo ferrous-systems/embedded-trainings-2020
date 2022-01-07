@@ -12,4 +12,4 @@ The other time related API exposed by the `dk` HAL is the `dk::uptime` function.
 
 ✅ Try changing the `Duration` value passed to `Timer.wait`. Try values larger than one second and smaller than one second. What values of `Duration` make the blinking imperceptible?
 
-❗If you set the duration to below 2ms, try removing the `defmt::info!` command in the loop. Too much logging will fill the logging buffer and cause the loop to slow down, resulting in the blink frequency to reduce after a while.
+❗If you set the duration to below 2ms, try removing the `defmt::println!` command in the loop. Too much logging will fill the logging buffer and cause the loop to slow down, resulting in the blink frequency to reduce after a while.

@@ -26,7 +26,7 @@ fn main() -> ! {
     // let msg: &[u8; 5] = &[b'H', b'e', b'l', b'l', b'o'];
     // let msg: &[u8; 5] = b"Hello";
 
-    defmt::info!(
+    defmt::println!(
         "sending: {}",
         str::from_utf8(msg).expect("msg is not valid UTF-8 data")
     );

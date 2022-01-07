@@ -20,7 +20,7 @@ const APP: () = {
 
         power.intenset.write(|w| w.usbdetected().set_bit());
 
-        defmt::info!("USBDETECTED interrupt enabled");
+        defmt::println!("USBDETECTED interrupt enabled");
 
         init::LateResources {
             power, // <- resource initialization
@@ -30,16 +30,16 @@ const APP: () = {
     #[idle]
     fn main(_cx: main::Context) -> ! {
         loop {
-            defmt::info!("idle: going to sleep");
+            defmt::println!("idle: going to sleep");
             asm::wfi();
-            defmt::info!("idle: woke up");
+            defmt::println!("idle: woke up");
         }
     }
 
     #[task(binds = POWER_CLOCK, resources = [power])]
     //                                      ^^^^^^^ resource access list
     fn on_power_event(cx: on_power_event::Context) {
-        defmt::info!("POWER event occurred");
+        defmt::println!("POWER event occurred");
 
         // resources available to this task
         let resources = cx.resources;

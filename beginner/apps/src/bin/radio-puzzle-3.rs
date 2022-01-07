@@ -46,7 +46,7 @@ fn main() -> ! {
         }
     }
 
-    defmt::info!("{:?}", defmt::Debug2Format(&dict));
+    defmt::println!("{:?}", defmt::Debug2Format(&dict));
     //                   ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log `heapless`
     //                                       data structures (like `LinearMap` here) with `defmt`
 

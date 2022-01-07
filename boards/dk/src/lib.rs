@@ -14,7 +14,8 @@ use cortex_m::{asm, peripheral::NVIC};
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 #[cfg(feature = "beginner")]
 pub use hal::ieee802154;
-pub use hal::pac::{interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
+#[doc(hidden)] 
+pub use hal::pac::{Peripherals, interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
 use hal::{
     clocks::{self, Clocks},
     gpio::{p0, Level, Output, Pin, Port, PushPull},
@@ -289,7 +290,7 @@ fn RTC0() {
 /// Exits the application and prints a backtrace when the program is executed through the `probe-run`
 /// Cargo runner
 pub fn exit() -> ! {
-    defmt::info!("`dk::exit()` called; exiting ...");
+    defmt::println!("`dk::exit()` called; exiting ...");
     // force any pending memory operation to complete before the BKPT instruction that follows
     atomic::compiler_fence(Ordering::SeqCst);
     loop {

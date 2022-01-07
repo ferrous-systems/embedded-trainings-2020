@@ -27,9 +27,9 @@ fn main() -> ! {
     let key = b'A';
     let value = dict[&key]; // the key needs to be passed by reference
 
-    defmt::info!("{} -> {}", key, value);
+    defmt::println!("{} -> {}", key, value);
     // more readable
-    defmt::info!("{:?} -> {:?}", key as char, value as char);
+    defmt::println!("{:?} -> {:?}", key as char, value as char);
 
     // TODO try another insertion
     // TODO try looking up a key not contained in the dictionary
