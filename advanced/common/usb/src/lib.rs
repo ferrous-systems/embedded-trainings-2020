@@ -1,5 +1,4 @@
 //! Some USB 2.0 data types
-// NOTE this is a partial solution to exercise `usb-2`
 
 #![deny(missing_docs)]
 #![deny(warnings)]
@@ -51,33 +50,22 @@ impl Request {
         windex: u16,
         wlength: u16,
     ) -> Result<Self, ()> {
+        // Request Codes
         // see table 9-4 (USB specification)
         const SET_ADDRESS: u8 = 5;
-        const GET_DESCRIPTOR: u8 = 6;
 
+        // TODO implement another branch handling GET_DESCRIPTOR requests:
+        //
+        // 1. get descriptor type and descriptor index from `wValue`
+        //
+        // 2. confirm that
+        //    - the descriptor type is DEVICE, i.e. of value 1 and
+        //    - the descriptor index is 0 (i.e. it is the first implemented descriptor for this type) and
+        //    - `wIndex` is 0 (i.e. no language ID since it's not a string descriptor)
+        //
+        // For more details, see https://embedded-trainings.ferrous-systems.com/setup-stage.html
 
-        if bmrequesttype == 0b10000000 && brequest == GET_DESCRIPTOR {
-            // see table 9-5
-            const DEVICE: u8 = 1;
-
-            // 1. get descriptor type and descriptor index from wValue
-            let desc_ty = (wvalue >> 8) as u8;
-            let desc_index = wvalue as u8;
-            let langid = windex;
-
-            // 2. confirm that the descriptor
-            //    - is of type DEVICE and
-            //    - has descriptor index 0 (i.e. it is the first implemented descriptor for this type) and
-            //    - has wIndex 0 (i.e. no language ID since it's not a string descriptor)
-            if desc_ty == DEVICE && desc_index == 0 && langid == 0 {
-                Ok(Request::GetDescriptor {
-                    descriptor: Descriptor::Device,
-                    length: wlength,
-                })
-            } else {
-                Err(())
-            }
-        } else if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
+        if bmrequesttype == 0b00000000 && brequest == SET_ADDRESS {
             // Set the device address for all future accesses.
             // (Needed to successfully init when conected to Apple devices)
             // Section 9.4.6 Set Address of the USB specification explains which values for wvalue,
@@ -90,6 +78,7 @@ impl Request {
                 Err(())
             }
         } else {
+            defmt::println!("unhandled case in `Request` parser");
             Err(())
         }
     }
@@ -208,4 +197,3 @@ mod tests {
         //                                                    ^
     }
 }
-

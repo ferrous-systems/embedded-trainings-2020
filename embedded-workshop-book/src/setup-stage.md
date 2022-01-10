@@ -72,12 +72,14 @@ modify `usb-2.rs` to read `USBD` registers and parse the SETUP data when an EP0S
 When you have successfully received a GET_DESCRIPTOR request for a Device descriptor you are done. You should see an output like this:
 
 ``` console
-INFO:usb_2 -- USB: UsbReset @ 438.842772ms
-INFO:usb_2 -- USB: UsbEp0Setup @ 514.984128ms
-...
-INFO:usb_2 -- SETUP: bmrequesttype: 128, brequest: 6, wlength: 64, windex: 0, wvalue: 256
-INFO:usb_2 -- GET_DESCRIPTOR Device [length=64]
-INFO:usb_2 -- Goal reached; move to the next section
+USB: UsbReset @ Duration { secs: 0, nanos: 361145018 }
+USB: UsbEp0Setup @ Duration { secs: 0, nanos: 402465820 }
+SETUP: bmrequesttype: 0, brequest: 5, wlength: 0, windex: 0, wvalue: 10
+USB: UsbEp0Setup @ Duration { secs: 0, nanos: 404754637 }
+SETUP: bmrequesttype: 128, brequest: 6, wlength: 8, windex: 0, wvalue: 256
+GET_DESCRIPTOR Device [length=8]
+Goal reached; move to the next section
+`dk::exit()` called; exiting ...
 ```
 
 > Note: `wlength` / `length` can vary depending on the OS, USB port (USB 2.0 vs USB 3.0) or the presence of a USB hub so you may see a different value.
