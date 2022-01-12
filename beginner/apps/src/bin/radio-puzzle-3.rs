@@ -4,8 +4,9 @@
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use heapless::{consts, LinearMap};
-use panic_log as _; // the panicking behavior
+use heapless::LinearMap;
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 const TEN_MS: u32 = 10_000;
 
@@ -19,7 +20,7 @@ fn main() -> ! {
     radio.set_channel(Channel::_25);
 
     // capacity (128) should be large enough for the ASCII range
-    let dict = LinearMap::<u8, u8, consts::U128>::new();
+    let mut dict = LinearMap::<u8, u8, 128>::new();
 
     let mut packet = Packet::new();
     // TODO do the whole ASCII range [0, 127]
@@ -36,16 +37,18 @@ fn main() -> ! {
             // TODO insert the key-value pair
             // dict.insert(/* ? */, /* ? */).expect("dictionary full");
             } else {
-                log::error!("response packet was not a single byte");
+                defmt::error!("response packet was not a single byte");
                 dk::exit()
             }
         } else {
-            log::error!("no response or response packet was corrupted");
+            defmt::error!("no response or response packet was corrupted");
             dk::exit()
         }
     }
 
-    log::info!("{:?}", dict);
+    defmt::println!("{:?}", defmt::Debug2Format(&dict));
+    //                   ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log `heapless`
+    //                                       data structures (like `LinearMap` here) with `defmt`
 
     dk::exit()
 }

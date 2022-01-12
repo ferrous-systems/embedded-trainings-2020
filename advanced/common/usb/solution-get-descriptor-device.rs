@@ -90,6 +90,7 @@ impl Request {
                 Err(())
             }
         } else {
+            defmt::println!("unhandled case in `Request` parser");
             Err(())
         }
     }

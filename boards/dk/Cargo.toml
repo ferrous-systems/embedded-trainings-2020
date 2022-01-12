@@ -6,13 +6,28 @@ name = "dk"
 version = "0.0.0"
 
 [dependencies]
-cortex-m = "0.6.4"
-cortex-m-rt = "0.6.13"
-embedded-hal = "0.2.3"
-hal = { package = "nrf52840-hal", version = "0.12.1" }
-log = "0.4.8"
-rtt-target = { version = "0.2.0", features = ["cortex-m"] }
+cortex-m = "0.7.3"
+cortex-m-rt = "0.7.1"
+embedded-hal = "0.2.6"
+hal = { package = "nrf52840-hal", version = "0.14.0" }
+panic-probe = { version = "0.3.0", features = ["print-defmt"] }
+defmt = "0.3.0"
+defmt-rtt = "0.3.1"
 
 [features]
-beginner = []
 advanced = []
+beginner = []
+
+# set defmt logging levels here
+default = [
+  "defmt-info",
+  # "dependency-a/defmt-trace",
+]
+
+# do NOT modify these features
+defmt-default = []
+defmt-trace = []
+defmt-debug = []
+defmt-info = []
+defmt-warn = []
+defmt-error = []

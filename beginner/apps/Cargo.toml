@@ -6,17 +6,18 @@ name = "apps"
 version = "0.0.0"
 
 [dependencies]
-cortex-m = "0.6.4"
-cortex-m-rt = "0.6.13"
+cortex-m = "0.7.3"
+cortex-m-rt = "0.7.1"
 dk = { path = "../../boards/dk", features = ["beginner"] }
-heapless = "0.5.5"
-log = "0.4.8"
-panic-log = { path = "../../common/panic-log" }
+heapless = "0.7.9"
+panic-probe = { version = "0.3.0", features = ["print-defmt"] }
+defmt = "0.3.0"
+defmt-rtt = "0.3.1"
 
 # optimize code in both profiles
 [profile.dev]
 codegen-units = 1
-debug = 1
+debug = 2
 debug-assertions = true # !
 incremental = false
 lto = "fat"
@@ -31,3 +32,18 @@ incremental = false
 lto = "fat"
 opt-level = 3
 overflow-checks = false
+
+[features]
+# set defmt logging levels here
+default = [
+  "defmt-default",
+  # "dependency-a/defmt-trace",
+]
+
+# do NOT modify these features
+defmt-default = []
+defmt-trace = []
+defmt-debug = []
+defmt-info = []
+defmt-warn = []
+defmt-error = []

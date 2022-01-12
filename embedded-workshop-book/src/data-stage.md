@@ -46,18 +46,25 @@ The device descriptor is 18 bytes long but the host may ask for fewer bytes (see
 Once you have successfully responded to the GET_DESCRIPTOR Device request you should get logs like these (if you are logging like `usb-3` does):
 
 ``` console
-INFO:usb_3 -- USB: UsbReset @ 342.071532ms
-INFO:usb_3 -- USB: UsbEp0Setup @ 414.855956ms
-INFO:usb_3 -- SETUP: bmrequesttype: 128, brequest: 6, wlength: 64, windex: 0, wvalue: 256
-INFO:usb_3 -- GET_DESCRIPTOR Device [length=64]
-INFO:dk::usbd -- EP0IN: start 18B transfer
-INFO:usb_3 -- USB: UsbEp0DataDone @ 415.222166ms
-INFO:dk::usbd -- EP0IN: transfer done
-INFO:usb_3 -- USB: UsbReset @ 465.637206ms
-INFO:usb_3 -- USB: UsbEp0Setup @ 538.208007ms
-INFO:usb_3 -- SETUP: bmrequesttype: 0, brequest: 5, wlength: 0, windex: 0, wvalue: 27
-ERROR:usb_3 -- unknown request (goal achieved if GET_DESCRIPTOR Device was handled)
-INFO:dk -- `dk::exit() called; exiting ...`
+USB: UsbReset @ Duration { secs: 0, nanos: 211334227 }
+USB: UsbEp0Setup @ Duration { secs: 0, nanos: 252380370 }
+SETUP: bmrequesttype: 0, brequest: 5, wlength: 0, windex: 0, wvalue: 52
+USB: UsbEp0Setup @ Duration { secs: 0, nanos: 254577635 }
+SETUP: bmrequesttype: 128, brequest: 6, wlength: 8, windex: 0, wvalue: 256
+GET_DESCRIPTOR Device [length=8]
+EP0IN: start 8B transfer
+USB: UsbEp0DataDone @ Duration { secs: 0, nanos: 254852293 }
+EP0IN: transfer done
+USB: UsbEp0Setup @ Duration { secs: 0, nanos: 257568358 }
+SETUP: bmrequesttype: 128, brequest: 6, wlength: 18, windex: 0, wvalue: 256
+GET_DESCRIPTOR Device [length=18]
+EP0IN: start 18B transfer
+USB: UsbEp0DataDone @ Duration { secs: 0, nanos: 257843016 }
+EP0IN: transfer done
+USB: UsbEp0Setup @ Duration { secs: 0, nanos: 259674071 }
+SETUP: bmrequesttype: 128, brequest: 6, wlength: 9, windex: 0, wvalue: 512
+ERROR unknown request (goal achieved if GET_DESCRIPTOR Device was handled before)
+`dk::exit()` called; exiting ...
 ```
 
 A solution to this exercise can be found in `src/bin/usb-3-solution.rs`.

@@ -1,53 +1,63 @@
 #![no_main]
 #![no_std]
 
-use cortex_m::asm;
-use dk::peripheral::POWER;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
-#[rtic::app(device = dk)]
-const APP: () = {
-    struct Resources {
+#[rtic::app(device = dk, peripherals = false)]
+mod app {
+    use cortex_m::asm;
+    use dk::peripheral::POWER;
+
+    #[local]
+    struct MyLocalResources {
         power: POWER,
-        counter: usize, // <- new resource
+        counter: usize,
     }
 
+    #[shared]
+    struct MySharedResources {}
+
     #[init]
-    fn init(_cx: init::Context) -> init::LateResources {
+    fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
         let board = dk::init().unwrap();
 
         let power = board.power;
 
         power.intenset.write(|w| w.usbdetected().set_bit());
 
-        log::info!("USBDETECTED interrupt enabled");
+        defmt::println!("USBDETECTED interrupt enabled");
 
-        init::LateResources {
-            power,
-            counter: 0, // <- initialize the new resource
-        }
+        (
+            MySharedResources {},
+            MyLocalResources {
+                power,
+                counter: 0, // <- initialize the new resource
+            },
+            init::Monotonics(),
+        )
     }
 
     #[idle]
-    fn main(_cx: main::Context) -> ! {
+    fn idle(_cx: idle::Context) -> ! {
         loop {
-            log::info!("idle: going to sleep");
+            defmt::println!("idle: going to sleep");
             asm::wfi();
-            log::info!("idle: woke up");
+            defmt::println!("idle: woke up");
         }
     }
 
-    #[task(binds = POWER_CLOCK, resources = [power, counter])]
-    //                                              ^^^^^^^ we want to access the resource from here
+    #[task(binds = POWER_CLOCK, local = [power, counter])]
+    //                                          ^^^^^^^ we want to access the resource from here
     fn on_power_event(cx: on_power_event::Context) {
-        log::debug!("POWER event occurred");
+        defmt::debug!("POWER event occurred");
 
-        let power = cx.resources.power;
-        let counter = cx.resources.counter;
+        let power = cx.local.power;
+        let counter = cx.local.counter;
 
         *counter += 1;
         let n = *counter;
-        log::info!(
+        defmt::println!(
             "on_power_event: cable connected {} time{}",
             n,
             if n != 1 { "s" } else { "" }
@@ -56,4 +66,4 @@ const APP: () = {
         // clear the interrupt flag; otherwise this task will run again after it returns
         power.events_usbdetected.reset();
     }
-};
+}

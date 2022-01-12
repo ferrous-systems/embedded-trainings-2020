@@ -4,12 +4,13 @@
 use core::time::Duration;
 
 use cortex_m_rt::entry;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 #[entry]
 fn main() -> ! {
-    // uncomment to enable more verbose logs
-    // log::set_max_level(log::LevelFilter::Trace);
+    // to enable more verbose logs, go to your `Cargo.toml` and set defmt logging levels
+    // to `defmt-trace` by changing the `default = []` entry in `[features]`
 
     let board = dk::init().unwrap();
 
@@ -19,7 +20,7 @@ fn main() -> ! {
     for _ in 0..10 {
         led.toggle();
         timer.wait(Duration::from_secs(1));
-        log::info!("LED toggled at {:?}", dk::uptime());
+        defmt::println!("LED toggled at {:?}", dk::uptime());
     }
 
     dk::exit()

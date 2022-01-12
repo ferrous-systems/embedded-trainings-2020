@@ -1,24 +1,37 @@
 #![no_main]
 #![no_std]
 
-use cortex_m::asm;
-use panic_log as _; // panic handler
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use firmware as _;
 
-#[rtic::app(device = dk)]
-const APP: () = {
+#[rtic::app(device = dk, peripherals = false)]
+mod app {
+    use cortex_m::asm;
+
+    #[local]
+    struct MyLocalResources {}
+
+    #[shared]
+    struct MySharedResources {}
+
     #[init]
-    fn init(_cx: init::Context) {
+    fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
         dk::init().unwrap();
 
-        log::info!("Hello");
+        defmt::println!("Hello");
+        (
+            MySharedResources {},
+            MyLocalResources {},
+            init::Monotonics(),
+        )
     }
 
     #[idle]
-    fn main(_cx: main::Context) -> ! {
-        log::info!("world!");
+    fn idle(_cx: idle::Context) -> ! {
+        defmt::println!("world!");
 
         loop {
             asm::bkpt();
         }
     }
-};
+}

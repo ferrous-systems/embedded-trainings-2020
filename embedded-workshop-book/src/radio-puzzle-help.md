@@ -56,7 +56,7 @@ fn main() -> ! {
 
     for plainletter in 0..=127 {
         /* ... send letter to dongle ... */
-        log::info!("got response");
+        defmt::println!("got response");
         /* ... store output ... */
 
         timer.wait(Duration::from_millis(20));

@@ -78,7 +78,7 @@ impl Request {
                 Err(())
             }
         } else {
-            log::warn!("unhandled case in `Request` parser");
+            defmt::println!("unhandled case in `Request` parser");
             Err(())
         }
     }

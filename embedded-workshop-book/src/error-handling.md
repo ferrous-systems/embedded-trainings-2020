@@ -10,7 +10,7 @@ fn on_event(/* parameters */) {
             if ep0setup(/* arguments */).is_err() {
                 // unsupported or invalid request:
                 // TODO add code to stall the endpoint
-                log::warn!("EP0: unexpected request; stalling the endpoint");
+                defmt::warn!("EP0IN: unexpected request; stalling the endpoint");
             }
         }
     }
@@ -32,4 +32,4 @@ Note that there's a difference between the error handling done here and the erro
 (3) stopping the program, and e.g. requiring the user to reset it to make it work again, may not be desirable behavior.  
 For these reasons in embedded software errors tend to be handled as early as possible rather than propagated all the way up.
 
-This does not preclude error *reporting*. The above snippet includes error reporting in the form of a `log::warn!` statement. This log statement may not be included in the final release of the program as it may not be useful, or even visible, to an end user but it is useful during development.
+This does not preclude error *reporting*. The above snippet includes error reporting in the form of a `defmt::warn!` statement. This log statement may not be included in the final release of the program as it may not be useful, or even visible, to an end user but it is useful during development.

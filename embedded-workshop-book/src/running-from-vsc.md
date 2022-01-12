@@ -1,5 +1,27 @@
 # Running the Program
 
+## Setting the log level 
+
+Enter the appropriate command into the terminal you're using. This will set the log level for this session. 
+
+### MacOS & Linux
+
+```console
+$ export DEFMT_LOG=warn
+```
+
+### PowerShell
+```console
+$ Env: DEFMT_LOG = "warn"
+```
+
+### Windows
+
+```console
+$ set DEFMT_LOG=warn
+```
+## Running the Program
+
 ✅ Open the `src/bin/hello.rs` file and click the "Run" button that's hovering over the `main` function.
 
 > Note: you will get the "Run" button if the Rust analyzer's workspace is set to the `beginner/apps` folder. This will be the case if the current folder in VS code (left side panel) is set to `beginner/apps`.
@@ -13,14 +35,13 @@ Expected output:
 
 ``` console
 $ cargo run --bin hello
-     Running `probe-run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/hello`
-(HOST) INFO  flashing program (34.79 KiB)
+    Running `probe-run --chip nRF52840_xxAA target/thumbv7em-none-eabihf/debug/hello`
+(HOST) INFO  flashing program (2 pages / 16.00 KiB)
 (HOST) INFO  success!
 ────────────────────────────────────────────────────────────────────────────────
 INFO:hello -- Hello, world!
 ────────────────────────────────────────────────────────────────────────────────
 (HOST) INFO  device halted without error
-
 ```
 
 `cargo run` will compile the application and then invoke the `probe-run` tool with its argument set to the path of the output ELF file.
@@ -29,7 +50,7 @@ The `probe-run` tool will
 - flash (load) the program on the microcontroller
 - reset the microcontroller to make it execute the new program
 - collect logs from the microcontroller and print them to the console
-- print a backtrace of the program and exit when the devices reaches a breakpoint (`asm::bkpt()`)
+- print a backtrace of the program if the halt was due to an error. 
 
 Should you need to configure the `probe-run` invocation to e.g. flash a different microcontroller you can do that in the `.cargo/config.toml` file.
 

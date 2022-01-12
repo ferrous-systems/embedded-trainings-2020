@@ -4,7 +4,8 @@
 
 use cortex_m_rt::entry;
 use dk::ieee802154::{Channel, Packet};
-use panic_log as _; // the panicking behavior
+// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+use apps as _;
 
 const TEN_MS: u32 = 10_000;
 
@@ -37,15 +38,15 @@ fn main() -> ! {
         if packet.len() == 1 {
             let destination = packet[0];
 
-            log::info!("{} -> {}", source, destination);
+            defmt::println!("{} -> {}", source, destination);
             // or cast to `char` for a more readable output
-            log::info!("{:?} -> {:?}", source as char, destination as char);
+            defmt::println!("{:?} -> {:?}", source as char, destination as char);
         } else {
-            log::error!("response packet was not a single byte");
+            defmt::error!("response packet was not a single byte");
             dk::exit()
         }
     } else {
-        log::error!("no response or response packet was corrupted");
+        defmt::error!("no response or response packet was corrupted");
         dk::exit()
     }
 

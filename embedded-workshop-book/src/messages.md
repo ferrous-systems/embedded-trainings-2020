@@ -32,11 +32,11 @@ let array1: [u8; 3] = [0, 1, 2];
 let array2: [u8; 4] = [0, 1, 2, 3];
 
 let mut slice: &[u8] = &array1;
-log::info!("{:?}", slice); // length = 3
+defmt::println!("{:?}", slice); // length = 3
 
 // now point to the other array
 slice = &array2;
-log::info!("{:?}", slice); // length = 4
+defmt::println!("{:?}", slice); // length = 4
 ```
 
 ## Byte literals
@@ -82,8 +82,8 @@ On the other hand, `"Hello"` is a string literal with type `&str`. `str` strings
 
 In this workshop we'll work with ASCII strings so byte string literals that contain no escaped characters are OK to use as packet payloads.
 
-You'll note that `log::info!("{:?}", b"Hello")` will print `[72, 101, 108, 108, 111]` rather than `"Hello"` and that the `{}` format specifier (`Display`) does not work. This is because the type of the literal is `&[u8; N]` and in Rust this type means "bytes"; those bytes could be ASCII data, UTF-8 data or something else.
+You'll note that `defmt::println!("{:?}", b"Hello")` will print `[72, 101, 108, 108, 111]` rather than `"Hello"` and that the `{}` format specifier (`Display`) does not work. This is because the type of the literal is `&[u8; N]` and in Rust this type means "bytes"; those bytes could be ASCII data, UTF-8 data or something else.
 
 To print this you'll need to convert the slice `&[u8]` into a string (`&str`) using the `str::from_utf8` function. This function will verify that the slice contains well formed UTF-8 data and interpret it as a UTF-8 string (`&str`). As long as we use ASCII data (printable ASCII characters) this conversion will not fail.
 
-Something similar will happen with byte literals: `log::info!("{}", b'A')` will print `65` rather than `A`. To get the `A` output you can cast the byte literal (`u8` value) to the `char` type: `log::info!("{}", b'A' as char)`.
+Something similar will happen with byte literals: `defmt::println!("{}", b'A')` will print `65` rather than `A`. To get the `A` output you can cast the byte literal (`u8` value) to the `char` type: `defmt::println!("{}", b'A' as char)`.

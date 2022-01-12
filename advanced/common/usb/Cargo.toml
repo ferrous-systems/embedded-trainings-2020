@@ -6,4 +6,6 @@ name = "usb"
 version = "0.0.0"
 
 [dependencies]
-log = "0.4.8"
+defmt = "0.3.0"
+
+
