@@ -14,11 +14,22 @@ RTIC makes a clearer distinction between the application's initialization phase,
 
 You can use `rustfmt` on `target/rtic-expansion.rs` to make the generated code easier to read. Among other things, the file should contain the following lines. Note that interrupts are disabled during the execution of the `init` function:
 
-``` rust
-fn main() -> ! {
+```rust
+unsafe extern "C" fn main() -> ! {
     rtic::export::interrupt::disable();
-    let late = init(init::Context::new(/* .. */));
-    rtic::export::interrupt::enable();
-    idle(idle::Context::new(/* .. */))
+    let mut core: rtic::export::Peripherals = rtic::export::Peripherals::steal().into();
+    #[inline(never)]
+    fn __rtic_init_resources<F>(f: F)
+    where
+        F: FnOnce(),
+    {
+        f();
+    }
+    __rtic_init_resources(|| {
+        let (shared_resources, local_resources, mut monotonics) =
+            init(init::Context::new(core.into()));
+        rtic::export::interrupt::enable();
+            });
+    idle(idle::Context::new(&rtic::export::Priority::new(0)))
 }
 ```
