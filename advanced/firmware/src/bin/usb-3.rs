@@ -19,16 +19,21 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
         let board = dk::init().unwrap();
 
         usbd::init(board.power, &board.usbd);
 
-        (MySharedResources {}, MyLocalResources { usbd: board.usbd, ep0in: board.ep0in, }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources {
+                usbd: board.usbd,
+                ep0in: board.ep0in,
+            },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd, ep0in])]
@@ -43,21 +48,21 @@ mod app {
 
     fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
         defmt::println!("USB: {} @ {}", event, dk::uptime());
-    
+
         match event {
             Event::UsbReset => {
                 // nothing to do here at the moment
             }
-    
+
             Event::UsbEp0DataDone => todo!(), // <- TODO
-    
+
             Event::UsbEp0Setup => {
                 let bmrequesttype = usbd::bmrequesttype(usbd);
                 let brequest = usbd::brequest(usbd);
                 let wlength = usbd::wlength(usbd);
                 let windex = usbd::windex(usbd);
                 let wvalue = usbd::wvalue(usbd);
-    
+
                 defmt::println!(
                     "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                     bmrequesttype,
@@ -66,7 +71,7 @@ mod app {
                     windex,
                     wvalue
                 );
-    
+
                 let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength).expect(
                     "Error parsing request (goal achieved if GET_DESCRIPTOR Device was handled before)",
                 );
@@ -75,7 +80,7 @@ mod app {
                         if descriptor == Descriptor::Device =>
                     {
                         defmt::println!("GET_DESCRIPTOR Device [length={}]", length);
-    
+
                         // TODO send back a valid device descriptor, truncated to `length` bytes
                         // let desc = usb2::device::Descriptor { .. };
                         let resp = [];
@@ -96,6 +101,4 @@ mod app {
             }
         }
     }
-    
 }
-

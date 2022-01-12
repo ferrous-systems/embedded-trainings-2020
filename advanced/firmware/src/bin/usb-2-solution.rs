@@ -19,8 +19,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
@@ -28,7 +27,11 @@ mod app {
 
         usbd::init(board.power, &board.usbd);
 
-        (MySharedResources {}, MyLocalResources { usbd: board.usbd }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources { usbd: board.usbd },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd])]
@@ -42,14 +45,14 @@ mod app {
 
     fn on_event(usbd: &USBD, event: Event) {
         defmt::println!("USB: {} @ {}", event, dk::uptime());
-    
+
         match event {
             Event::UsbReset => {
                 // nothing to do here at the moment
             }
-    
+
             Event::UsbEp0DataDone => todo!(),
-    
+
             Event::UsbEp0Setup => {
                 // the BMREQUESTTYPE register contains information about data recipient, transfer type and direction
                 let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
@@ -68,14 +71,14 @@ mod app {
                 // composed of a high register (WVALUEH) and a low register (WVALUEL)
                 let wvalue = (u16::from(usbd.wvalueh.read().wvalueh().bits()) << 8)
                     | u16::from(usbd.wvaluel.read().wvaluel().bits());
-    
+
                 // NOTE the `dk` crate contains helper functions for the above operations
                 // let bmrequesttype = usbd::bmrequesttype(usbd);
                 // let brequest = usbd::brequest(usbd);
                 // let wlength = usbd::wlength(usbd);
                 // let windex = usbd::windex(usbd);
                 // let wvalue = usbd::wvalue(usbd);
-    
+
                 defmt::println!(
                     "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                     bmrequesttype,
@@ -84,7 +87,7 @@ mod app {
                     windex,
                     wvalue
                 );
-    
+
                 let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
                     .expect("Error parsing request");
                 match request {
@@ -92,7 +95,7 @@ mod app {
                         if descriptor == Descriptor::Device =>
                     {
                         defmt::println!("GET_DESCRIPTOR Device [length={}]", length);
-    
+
                         defmt::println!("Goal reached; move to the next section");
                         dk::exit()
                     }
@@ -105,6 +108,5 @@ mod app {
                 }
             }
         }
-    }  
+    }
 }
-

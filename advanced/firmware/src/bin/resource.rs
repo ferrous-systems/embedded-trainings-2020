@@ -15,9 +15,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
@@ -29,7 +27,11 @@ mod app {
 
         defmt::println!("USBDETECTED interrupt enabled");
 
-        (MySharedResources {}, MyLocalResources {power}, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources { power },
+            init::Monotonics(),
+        )
     }
 
     #[idle]

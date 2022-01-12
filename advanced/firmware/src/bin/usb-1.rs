@@ -18,8 +18,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {  
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
@@ -31,7 +30,11 @@ mod app {
 
         defmt::println!("USBD initialized");
 
-        (MySharedResources {}, MyLocalResources { usbd: board.usbd }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources { usbd: board.usbd },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd])]
@@ -45,10 +48,10 @@ mod app {
 
     fn on_event(_usbd: &USBD, event: Event) {
         defmt::println!("USB: {} @ {}", event, dk::uptime());
-    
+
         match event {
             Event::UsbReset => todo!(),
-    
+
             Event::UsbEp0DataDone => todo!(),
             // leave this at it is for now.
             Event::UsbEp0Setup => {
@@ -58,5 +61,3 @@ mod app {
         }
     }
 }
-
-

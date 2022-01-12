@@ -23,16 +23,22 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
         let board = dk::init().unwrap();
 
         usbd::init(board.power, &board.usbd);
 
-        (MySharedResources {}, MyLocalResources { usbd: board.usbd, ep0in: board.ep0in, state: State::Default, }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources {
+                usbd: board.usbd,
+                ep0in: board.ep0in,
+                state: State::Default,
+            },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd, ep0in, state])]
@@ -47,18 +53,18 @@ mod app {
     }
     fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
         defmt::println!("USB: {} @ {}", event, dk::uptime());
-    
+
         match event {
             Event::UsbReset => {
                 defmt::println!("USB reset condition detected");
                 *state = State::Default;
             }
-    
+
             Event::UsbEp0DataDone => {
                 defmt::println!("EP0IN: transfer complete");
                 ep0in.end(usbd);
             }
-    
+
             Event::UsbEp0Setup => {
                 if ep0setup(usbd, ep0in, state).is_err() {
                     defmt::warn!("EP0IN: unexpected request; stalling the endpoint");
@@ -67,17 +73,17 @@ mod app {
             }
         }
     }
-    
+
     /// The `bConfigurationValue` of the only supported configuration
     const CONFIG_VAL: u8 = 42;
-    
+
     fn ep0setup(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State) -> Result<(), ()> {
         let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
         let brequest = usbd.brequest.read().brequest().bits();
         let wlength = usbd::wlength(usbd);
         let windex = usbd::windex(usbd);
         let wvalue = usbd::wvalue(usbd);
-    
+
         defmt::println!(
             "bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
             bmrequesttype,
@@ -86,13 +92,13 @@ mod app {
             windex,
             wvalue
         );
-    
+
         let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
             .expect("Error parsing request");
         defmt::println!("EP0: {}", defmt::Debug2Format(&request));
         //                        ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
         //                                            `StandardRequest` with `defmt`
-    
+
         match request {
             // section 9.4.3
             // this request is valid in any state
@@ -114,11 +120,11 @@ mod app {
                     let bytes = desc.bytes();
                     let _ = ep0in.start(&bytes[..core::cmp::min(bytes.len(), length.into())], usbd);
                 }
-    
+
                 Descriptor::Configuration { index } => {
                     if index == 0 {
                         let mut resp = heapless::Vec::<u8, 64>::new();
-    
+
                         let conf_desc = usb2::configuration::Descriptor {
                             wTotalLength: (usb2::configuration::Descriptor::SIZE
                                 + usb2::interface::Descriptor::SIZE)
@@ -132,7 +138,7 @@ mod app {
                             },
                             bMaxPower: 250, // 500 mA
                         };
-    
+
                         let iface_desc = usb2::interface::Descriptor {
                             bInterfaceNumber: 0,
                             bAlternativeSetting: 0,
@@ -142,7 +148,7 @@ mod app {
                             bInterfaceProtocol: 0,
                             iInterface: None,
                         };
-    
+
                         resp.extend_from_slice(&conf_desc.bytes()).unwrap();
                         resp.extend_from_slice(&iface_desc.bytes()).unwrap();
                         ep0in.start(&resp[..core::cmp::min(resp.len(), length.into())], usbd);
@@ -151,10 +157,10 @@ mod app {
                         return Err(());
                     }
                 }
-    
+
                 _ => return Err(()),
             },
-    
+
             Request::SetAddress { address } => {
                 match state {
                     State::Default => {
@@ -164,7 +170,7 @@ mod app {
                             // stay in the default state
                         }
                     }
-    
+
                     State::Address(..) => {
                         if let Some(address) = address {
                             // use the new address
@@ -173,19 +179,19 @@ mod app {
                             *state = State::Default;
                         }
                     }
-    
+
                     // unspecified behavior
                     State::Configured { .. } => return Err(()),
                 }
-    
+
                 // the response to this request is handled in hardware
             }
-    
+
             Request::SetConfiguration { value } => {
                 match *state {
                     // unspecified behavior
                     State::Default => return Err(()),
-    
+
                     State::Address(address) => {
                         if let Some(value) = value {
                             if value.get() == CONFIG_VAL {
@@ -199,7 +205,7 @@ mod app {
                             // stay in the address mode
                         }
                     }
-    
+
                     State::Configured {
                         address,
                         value: curr_value,
@@ -223,17 +229,15 @@ mod app {
                         }
                     }
                 }
-    
+
                 usbd.tasks_ep0status
                     .write(|w| w.tasks_ep0status().set_bit());
             }
-    
+
             // stall any other request
             _ => return Err(()),
         }
-    
+
         Ok(())
     }
-    
 }
-

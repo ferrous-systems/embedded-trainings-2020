@@ -1,7 +1,6 @@
 #![no_main]
 #![no_std]
 
-
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use firmware as _;
 
@@ -19,9 +18,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
@@ -33,7 +30,11 @@ mod app {
 
         defmt::println!("USBD initialized");
 
-        (MySharedResources {}, MyLocalResources {usbd: board.usbd }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources { usbd: board.usbd },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd])]
@@ -47,15 +48,15 @@ mod app {
 
     fn on_event(_usbd: &USBD, event: Event) {
         defmt::println!("USB: {}", event);
-    
+
         match event {
             Event::UsbReset => {
                 // going from the Default state to the Default state is a no-operation
                 defmt::println!("returning to the Default state");
             }
-    
+
             Event::UsbEp0DataDone => todo!(),
-    
+
             Event::UsbEp0Setup => {
                 defmt::println!("goal reached; move to the next section");
                 dk::exit();
@@ -63,5 +64,3 @@ mod app {
         }
     }
 }
-
-

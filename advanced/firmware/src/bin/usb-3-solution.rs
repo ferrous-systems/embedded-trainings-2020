@@ -20,9 +20,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
@@ -30,7 +28,14 @@ mod app {
 
         usbd::init(board.power, &board.usbd);
 
-        (MySharedResources {}, MyLocalResources { usbd: board.usbd, ep0in: board.ep0in, }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources {
+                usbd: board.usbd,
+                ep0in: board.ep0in,
+            },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd, ep0in])]
@@ -45,21 +50,21 @@ mod app {
 
     fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
         defmt::println!("USB: {} @ {}", event, dk::uptime());
-    
+
         match event {
             Event::UsbReset => {
                 // nothing to do here at the moment
             }
-    
+
             Event::UsbEp0DataDone => ep0in.end(usbd),
-    
+
             Event::UsbEp0Setup => {
                 let bmrequesttype = usbd.bmrequesttype.read().bits() as u8;
                 let brequest = usbd.brequest.read().brequest().bits();
                 let wlength = usbd::wlength(usbd);
                 let windex = usbd::windex(usbd);
                 let wvalue = usbd::wvalue(usbd);
-    
+
                 defmt::println!(
                     "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                     bmrequesttype,
@@ -68,7 +73,7 @@ mod app {
                     windex,
                     wvalue
                 );
-    
+
                 let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength).expect(
                     "Error parsing request (goal achieved if GET_DESCRIPTOR Device was handled before)",
                 );
@@ -77,7 +82,7 @@ mod app {
                         if descriptor == Descriptor::Device =>
                     {
                         defmt::println!("GET_DESCRIPTOR Device [length={}]", length);
-    
+
                         let desc = usb2::device::Descriptor {
                             bDeviceClass: 0,
                             bDeviceProtocol: 0,
@@ -92,7 +97,8 @@ mod app {
                             idVendor: consts::VID,
                         };
                         let desc_bytes = desc.bytes();
-                        let resp = &desc_bytes[..core::cmp::min(desc_bytes.len(), usize::from(length))];
+                        let resp =
+                            &desc_bytes[..core::cmp::min(desc_bytes.len(), usize::from(length))];
                         ep0in.start(&resp, usbd);
                     }
                     Request::SetAddress { .. } => {
@@ -110,6 +116,4 @@ mod app {
             }
         }
     }
-    
 }
-

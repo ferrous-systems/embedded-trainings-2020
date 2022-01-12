@@ -1,7 +1,6 @@
 #![no_main]
 #![no_std]
 
-
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use firmware as _;
 
@@ -20,9 +19,7 @@ mod app {
     }
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
@@ -30,7 +27,11 @@ mod app {
 
         usbd::init(board.power, &board.usbd);
 
-        (MySharedResources {}, MyLocalResources { usbd: board.usbd }, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources { usbd: board.usbd },
+            init::Monotonics(),
+        )
     }
 
     #[task(binds = USBD, local = [usbd])]
@@ -44,17 +45,17 @@ mod app {
 
     fn on_event(_usbd: &USBD, event: Event) {
         defmt::println!("USB: {} @ {}", event, dk::uptime());
-    
+
         match event {
             Event::UsbReset => {
                 // nothing to do here at the moment
             }
-    
+
             Event::UsbEp0DataDone => todo!(),
-    
+
             Event::UsbEp0Setup => {
                 // TODO read USBD registers
-    
+
                 // the BMREQUESTTYPE register contains information about data recipient, transfer type and direction
                 let bmrequesttype: u8 = 0;
                 // the BREQUEST register stores the type of the current request (e.g. SET_ADDRESS, GET_DESCRIPTOR, ...)
@@ -69,7 +70,7 @@ mod app {
                 // address in SET_ADRESS requests)
                 // composed of a high register (WVALUEH) and a low register (WVALUEL)
                 let wvalue: u16 = 0;
-    
+
                 defmt::println!(
                     "SETUP: bmrequesttype: {}, brequest: {}, wlength: {}, windex: {}, wvalue: {}",
                     bmrequesttype,
@@ -78,7 +79,7 @@ mod app {
                     windex,
                     wvalue
                 );
-    
+
                 let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
                     .expect("Error parsing request");
                 match request {
@@ -87,9 +88,9 @@ mod app {
                     {
                         // TODO modify `Request::parse()` in `advanced/common/usb/lib.rs`
                         // so that this branch is reached
-    
+
                         defmt::println!("GET_DESCRIPTOR Device [length={}]", length);
-    
+
                         defmt::println!("Goal reached; move to the next section");
                         dk::exit()
                     }
@@ -102,6 +103,5 @@ mod app {
                 }
             }
         }
-    }    
+    }
 }
-

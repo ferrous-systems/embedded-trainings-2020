@@ -1,7 +1,6 @@
 #![no_main]
 #![no_std]
 
-
 // this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use firmware as _;
 
@@ -10,20 +9,21 @@ mod app {
     use cortex_m::asm;
 
     #[local]
-    struct MyLocalResources {
-    }
+    struct MyLocalResources {}
 
     #[shared]
-    struct MySharedResources {
-        
-    }
+    struct MySharedResources {}
 
     #[init]
     fn init(_cx: init::Context) -> (MySharedResources, MyLocalResources, init::Monotonics) {
         dk::init().unwrap();
 
         defmt::println!("Hello");
-        (MySharedResources {}, MyLocalResources {}, init::Monotonics())
+        (
+            MySharedResources {},
+            MyLocalResources {},
+            init::Monotonics(),
+        )
     }
 
     #[idle]
