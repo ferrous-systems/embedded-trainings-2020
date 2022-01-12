@@ -53,7 +53,7 @@ mod app {
             // leave this at it is for now.
             Event::UsbEp0Setup => {
                 defmt::println!("goal reached; move to the next section");
-                asm::bkpt()
+                dk::exit();
             }
         }
     }

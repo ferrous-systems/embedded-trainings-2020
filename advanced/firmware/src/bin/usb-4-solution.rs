@@ -12,7 +12,6 @@ mod app {
     use dk::{
         peripheral::USBD,
         usbd::{self, Ep0In, Event},
-        Peripherals,
     };
     use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 
@@ -90,8 +89,8 @@ mod app {
     
         let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
             .expect("Error parsing request");
-        defmt::println!("EP0: {:?}", defmt::Debug2Format(&request));
-        //                        ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
+        defmt::println!("EP0: {}", defmt::Debug2Format(&request));
+        //                         ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
         //                                            `StandardRequest` with `defmt`
         match request {
             // section 9.4.3

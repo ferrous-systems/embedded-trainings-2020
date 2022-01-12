@@ -46,7 +46,7 @@ mod app {
     }
 
     fn on_event(_usbd: &USBD, event: Event) {
-        defmt::println!("USB: {:?}", event);
+        defmt::println!("USB: {}", event);
     
         match event {
             Event::UsbReset => {
@@ -58,7 +58,7 @@ mod app {
     
             Event::UsbEp0Setup => {
                 defmt::println!("goal reached; move to the next section");
-                asm::bkpt();
+                dk::exit();
             }
         }
     }

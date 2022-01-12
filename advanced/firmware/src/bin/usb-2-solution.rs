@@ -9,7 +9,6 @@ mod app {
     use dk::{
         peripheral::USBD,
         usbd::{self, Event},
-        Peripherals,
     };
 
     use usb::{Descriptor, Request};

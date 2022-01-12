@@ -9,7 +9,6 @@ mod app {
     use dk::{
         peripheral::USBD,
         usbd::{self, Ep0In, Event},
-        Peripherals,
     };
     use usb::{Descriptor, Request};
 
@@ -43,7 +42,7 @@ mod app {
     }
 
     fn on_event(usbd: &USBD, ep0in: &mut Ep0In, event: Event) {
-        defmt::println!("USB: {:?} @ {:?}", event, dk::uptime());
+        defmt::println!("USB: {} @ {}", event, dk::uptime());
     
         match event {
             Event::UsbReset => {

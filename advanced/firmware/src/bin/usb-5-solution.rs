@@ -12,7 +12,6 @@ mod app {
     use dk::{
         peripheral::USBD,
         usbd::{self, Ep0In, Event},
-        Peripherals,
     };
     use usb2::{GetDescriptor as Descriptor, StandardRequest as Request, State};
 
@@ -47,7 +46,7 @@ mod app {
         }
     }
     fn on_event(usbd: &USBD, ep0in: &mut Ep0In, state: &mut State, event: Event) {
-        defmt::println!("USB: {:?} @ {:?}", event, dk::uptime());
+        defmt::println!("USB: {} @ {}", event, dk::uptime());
     
         match event {
             Event::UsbReset => {
@@ -90,7 +89,7 @@ mod app {
     
         let request = Request::parse(bmrequesttype, brequest, wvalue, windex, wlength)
             .expect("Error parsing request");
-        defmt::println!("EP0: {:?}", defmt::Debug2Format(&request));
+        defmt::println!("EP0: {}", defmt::Debug2Format(&request));
         //                        ^^^^^^^^^^^^^^^^^^^ this adapter is currently needed to log
         //                                            `StandardRequest` with `defmt`
     
