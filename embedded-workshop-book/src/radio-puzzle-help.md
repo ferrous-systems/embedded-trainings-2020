@@ -2,7 +2,7 @@
 
 ## Use a dictionary.
 
-Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. It supplies a stack-allocated, fixed-capacity version of the `std::Vec` type which will come in handy to store byte arrays. To store character mappings we recommend using a `heapless::IndexMap`.
+Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not available in `no_std` code (without linking to a global allocator) but you can use one of the stack-allocated maps in the [`heapless`] crate. It supplies a stack-allocated, fixed-capacity version of the `std::Vec` type which will come in handy to store byte arrays. To store character mappings we recommend using a `heapless::LinearMap`.
 
 `heapless` is already declared as a dependency in the Cargo.toml of the project so you can directly import it into the application code using a `use` statement.
 
@@ -12,13 +12,13 @@ Our suggestion is to use a dictionary / map. `std::collections::HashMap` is not 
 
 ``` rust
 use heapless::Vec;         // like `std::Vec` but stack-allocated
-use heapless::FnvIndexMap; // a dictionary / map
-use heapless::consts::*;   // defines U16, U32, U64... etc. to set the size of the IndexMap
+use heapless::LinearMap; // a dictionary / map
+use heapless::consts::*;   // defines U16, U32, U64... etc. to set the size of the LinearMap
 
 fn main() {
     // A hash map with a capacity of 16 key-value pairs allocated on the stack
     // note that U16 is a heapless constant, not Rust's u16
-    let mut my_map = FnvIndexMap::<_, _, U16>::new();
+    let mut my_map = LinearMap::<_, _, U16>::new();
     my_map.insert(b'A', b'~').unwrap();
 
     // A vector with a fixed capacity of 8 elements allocated on the stack
@@ -28,9 +28,9 @@ fn main() {
 }
 ```
 
-If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module (e.g. `U8`, `U64` etc.). The [`heapless::IndexMap` documentation][indexMap] of the `heapless` crate has some usage examples, as does the [`heapless::Vec` documentation][vec].
+If you haven't used a stack-allocated collection before note that you'll need to specify the capacity of the collection as a type parameter using one of the "type-level values" in the `heapless::consts` module (e.g. `U8`, `U64` etc.). The [`heapless::LinearMap` documentation][indexMap] of the `heapless` crate has some usage examples, as does the [`heapless::Vec` documentation][vec].
 
-[indexMap]: https://docs.rs/heapless/0.5.5/heapless/struct.IndexMap.html
+[indexMap]: https://docs.rs/heapless/0.5.5/heapless/struct.LinearMap.html
 [vec]: https://docs.rs/heapless/0.5.5/heapless/struct.Vec.html
 
 ## Note the difference between character literals and byte literals!

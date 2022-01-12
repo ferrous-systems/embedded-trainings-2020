@@ -287,8 +287,7 @@ fn RTC0() {
     unsafe { core::mem::transmute::<_, RTC0>(()).events_ovrflw.reset() }
 }
 
-/// Exits the application and prints a backtrace when the program is executed through the `probe-run`
-/// Cargo runner
+/// Exits the application when the program is executed through the `probe-run` Cargo runner
 pub fn exit() -> ! {
     unsafe {
         // turn off the USB D+ pull-up before pausing the device with a breakpoint
