@@ -323,6 +323,7 @@ fn RTC0() {
 
 /// Exits the application when the program is executed through the `probe-run` Cargo runner
 pub fn exit() -> ! {
+    unsafe { (0x4002_7504 as *mut u32).write_volatile(0) }
     log::info!("`dk::exit() called; exiting ...`");
     // force any pending memory operation to complete before the BKPT instruction that follows
     atomic::compiler_fence(Ordering::SeqCst);
