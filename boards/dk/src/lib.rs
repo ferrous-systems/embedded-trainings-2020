@@ -14,8 +14,7 @@ use cortex_m::{asm, peripheral::NVIC};
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 #[cfg(feature = "beginner")]
 pub use hal::ieee802154;
-#[doc(hidden)] 
-pub use hal::pac::{Peripherals, interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
+pub use hal::pac::{interrupt, Interrupt, NVIC_PRIO_BITS, RTC0};
 use hal::{
     clocks::{self, Clocks},
     gpio::{p0, Level, Output, Pin, Port, PushPull},
