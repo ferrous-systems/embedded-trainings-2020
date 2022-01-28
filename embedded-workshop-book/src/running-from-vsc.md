@@ -12,7 +12,7 @@ $ export DEFMT_LOG=warn
 
 ### PowerShell
 ```console
-$ Env: DEFMT_LOG = "warn"
+$ $Env:DEFMT_LOG = "warn"
 ```
 
 ### Windows
