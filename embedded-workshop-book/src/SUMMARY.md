@@ -69,6 +69,7 @@
     - [Dongle USB functionality is not working](./troubleshoot-usb-dongle.md)
     - [`cargo run` errors](./troubleshoot-cargo-run-error.md)
     - [`no probe was found` error](./troubleshoot-probe-not-found.md)
+    - [`location info is incomplete` error](./troubleshoot-location-info.md)
     - [DEPRECATED - `nrfutil` setup](DEPRECATED-nrfutil-setup.md)
 - [Appendix](./appendix.md)
   - [Using GDB](./gdb.md)
