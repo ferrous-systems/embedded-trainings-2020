@@ -18,11 +18,10 @@ defmt-rtt = "0.3.1"
 advanced = []
 beginner = []
 
-# set defmt logging levels here
 default = [
-  "defmt-info",
-  # "dependency-a/defmt-trace",
+  "other-feature"
 ]
+other-feature = []
 
 # do NOT modify these features
 defmt-default = []

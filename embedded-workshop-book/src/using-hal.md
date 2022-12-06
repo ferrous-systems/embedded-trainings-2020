@@ -28,15 +28,10 @@ $ cargo doc -p dk --open
 
 ✅ Check the API docs of the `Led` abstraction. Change the `led` program, so that the bottom two LEDs are turned on, and the top two are turned off.
 
-🔎 If you want to see logs from Led API of the `dk` Hardware Abstraction Layer, go to `boards/dk/Cargo.toml` and change the log level of the `dk` crate:
+🔎 If you want to see logs from Led API of the `dk` Hardware Abstraction Layer, flash the dk with the following environment variable:
 
-```diff
-# set defmt logging levels here
-default = [
--  "defmt-debug",
-+  "defmt-trace",
-  # "dependency-a/defmt-trace",
-]
+```console
+$ DEFMT_LOG=trace cargo run --bin led
 ```
 
 Among the logs you'll find the line "I/O pins have been configured for digital output". At this point the electrical pins of the nRF52840 microcontroller have been configured to drive the 4 LEDs on the board.

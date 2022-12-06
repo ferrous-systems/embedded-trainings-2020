@@ -34,12 +34,11 @@ opt-level = 3
 overflow-checks = false
 
 [features]
-# set defmt logging levels here
-default = [
-  "defmt-default",
-  # "dependency-a/defmt-trace",
-]
 
+default = [
+  "other-feature"
+]
+other-feature = []
 # do NOT modify these features
 defmt-default = []
 defmt-trace = []
