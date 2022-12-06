@@ -37,12 +37,13 @@ stack backtrace:
 
 In `no_std` programs the behavior of panic is defined using the `#[panic_handler]` attribute. In the example, the *panic handler* is defined in the `panic_log` crate but we can also implement it manually:
 
-✅ Comment out the `panic_probe` import and add the following function to the example:
+✅ Comment out the `use apps as _;` import and add the following function to the example:
 
 ``` rust
 #[panic_handler]
 fn panic(info: &core::panic::PanicInfo) -> ! {
-    defmt::panic!("{}", info);
+    defmt::error!("{}", defmt::Debug2Format(info));
+    asm::udf();
 }
 ```
 
