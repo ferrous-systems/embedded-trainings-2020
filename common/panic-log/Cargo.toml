@@ -6,16 +6,16 @@ name = "panic-log"
 version = "0.0.0"
 
 [dependencies]
-cortex-m = "0.6.4"
-defmt = "0.2.1"
+cortex-m = "0.7.6"
+defmt = "0.3.2"
 
 
 [features]
-# set defmt logging levels here
+
 default = [
-  "defmt-debug",
-  # "dependency-a/defmt-trace",
+  "other-feature"
 ]
+other-feature = []
 
 # do NOT modify these features
 defmt-default = []
