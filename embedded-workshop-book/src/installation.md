@@ -147,13 +147,13 @@ Install the [`flip-link`](https://crates.io/crates/flip-link) and [`probe-run`](
 
 $ cargo install probe-run
 (..)
-Installed package `probe-run v0.3.1` (..)
+Installed package `probe-run v0.3.5` (..)
 
 $ cargo install flip-link
 (..)
-Installed package `flip-link v0.1.5` (..)
+Installed package `flip-link v0.1.6` (..)
 
 $ cargo install nrfdfu
 (..)
-Installed package `nrfdfu v0.1.0` (..)
+Installed package `nrfdfu v0.1.3` (..)
 ```
