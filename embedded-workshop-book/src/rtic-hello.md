@@ -16,6 +16,12 @@ You can use `rustfmt` on `target/rtic-expansion.rs` to make the generated code e
 
 ```rust
 unsafe extern "C" fn main() -> ! {
+    const _CONST_CHECK: () = {
+        if rtic::export::is_armv6() {
+        } else {
+        }
+    };
+    let _ = _CONST_CHECK;
     rtic::export::interrupt::disable();
     let mut core: rtic::export::Peripherals = rtic::export::Peripherals::steal().into();
     #[inline(never)]
@@ -29,7 +35,7 @@ unsafe extern "C" fn main() -> ! {
         let (shared_resources, local_resources, mut monotonics) =
             init(init::Context::new(core.into()));
         rtic::export::interrupt::enable();
-            });
+    });
     idle(idle::Context::new(&rtic::export::Priority::new(0)))
 }
 ```
