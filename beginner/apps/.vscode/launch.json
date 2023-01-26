@@ -7,9 +7,9 @@
         "executable": "./target/thumbv7em-none-eabihf/debug/hello", 
         "name": "Debug Microcontroller (launch)",
         "request": "launch",
-        "preLaunchTask": "rust: cargo build",
+        "preLaunchTask": "Build Rust (Debug)",
         "type": "cortex-debug",
-        "runToMain": true,
+        "runToEntryPoint": "main",
         "configFiles": [
           "interface/jlink.cfg",
         ],
