@@ -24,6 +24,8 @@
       - [Collision avoidance](./collision-avoidance.md)
       - [Interrupt handling](./interrupt-handling.md)
       - [Starting a Project from Scratch](./from-scratch.md)
+- [Down the Stack Workbook](./down-the-stack.md)
+    - [BSC Exercise](./bsc-exercise.md)
 - [Advanced Workbook](./advanced-workbook.md)
     - [Code Organization](./code-organisation.md)
     - [Listing USB Devices](./listing-usb-devices.md)
