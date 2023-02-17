@@ -43,8 +43,10 @@ pub mod usbd;
 pub struct Board {
     /// LEDs
     pub leds: Leds,
+    // --- Exercise --- 🔽
     /// Buttons
     pub buttons: Buttons,
+    // --- Exercise --- 🔼 
     /// Timer
     pub timer: Timer,
 
@@ -56,8 +58,10 @@ pub struct Board {
     pub power: POWER,
     /// USB control endpoint 0
     pub ep0in: Ep0In,
+    // --- Exercise --- 🔽
     /// uarte interface
     pub uarte: Uarte,
+    // --- Exercise --- 🔼 
 }
 
 /// All LEDs on the board
@@ -129,7 +133,7 @@ impl Led {
         }
     }
 }
-
+// --- Exercise ---  🔽
 /// All buttons on the board
 pub struct Buttons {
     /// BUTTON1: pin P0.11, green LED
@@ -153,10 +157,13 @@ impl Button {
         self.inner.is_low() == Ok(true)
     }
 }
+// --- Exercise --- 🔼 
+
 /// A timer for creating blocking delays
 pub struct Timer {
     inner: hal::Timer<hal::pac::TIMER0, OneShot>,
 }
+
 
 impl Timer {
     /// Blocks program execution for at least the specified `duration`
@@ -275,16 +282,20 @@ pub fn init() -> Result<Board, ()> {
         let led_2 = pins.p0_14.degrade().into_push_pull_output(Level::High);
         let led_3 = pins.p0_15.degrade().into_push_pull_output(Level::High);
         let led_4 = pins.p0_16.degrade().into_push_pull_output(Level::High);
+        
+        // --- Exercise --- 🔽
         // Buttons
         let b_1 = pins.p0_11.degrade().into_pullup_input();
         let b_2 = pins.p0_12.degrade().into_pullup_input();
         let b_3 = pins.p0_24.degrade().into_pullup_input();
         let b_4 = pins.p0_25.degrade().into_pullup_input();
+        // --- Exercise --- 🔼 
 
         defmt::debug!("I/O pins have been configured for digital output");
 
         let timer = hal::Timer::new(periph.TIMER0);
-        
+
+        // --- Exercise --- 🔽
         // Uarte
         let pins =  hal::uarte::Pins {
             rxd: pins.p0_08.degrade().into_floating_input(),
@@ -295,7 +306,8 @@ pub fn init() -> Result<Board, ()> {
        
 
         let uarte = hal::uarte::Uarte::new(periph.UARTE0, pins, Parity::INCLUDED, Baudrate::BAUD115200);
-        
+        // --- Exercise --- 🔼 
+
         // Radio
         let radio = {
             let mut radio = ieee802154::Radio::init(periph.RADIO, clocks);
@@ -315,19 +327,24 @@ pub fn init() -> Result<Board, ()> {
                 led_3: Led { inner: led_3 },
                 led_4: Led { inner: led_4 },
             },
+
+            // --- Exercise --- 🔽
             buttons: Buttons {
                 b_1: Button { inner: b_1},
                 b_2: Button { inner: b_2},
                 b_3: Button { inner: b_3},
                 b_4: Button { inner: b_4},
             },
-
+            // --- Exercise --- 🔼 
             radio,
             timer: Timer { inner: timer },
             usbd: periph.USBD,
             power: periph.POWER,
             ep0in: unsafe { Ep0In::new(&mut EP0IN_BUF) },
+            
+            // --- Exercise ---  🔽
             uarte: Uarte { inner: uarte },
+            // --- Exercise --- 🔼 
         })
     } else {
         Err(())
