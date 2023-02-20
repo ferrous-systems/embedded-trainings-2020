@@ -6,38 +6,31 @@
 
 use core::{
     ops,
-    fmt,
     sync::atomic::{self, Ordering},
     time::Duration,
 };
 
 use cortex_m::asm;
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
-pub use hal::pac::{
-    UARTE1, uarte0::{
-        baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity}};
+
 use hal::{
-    gpio::{p0, Level, Output, Input, PullUp, Pin, Port, PushPull},
-    timer::OneShot, prelude::InputPin,
+    gpio::{p0, Level, Output, Pin, Port, PushPull},
+    timer::OneShot,
 };
 
 use defmt;
 use defmt_rtt as _; // global logger
 
-/// Components on the board
+/// Components on the boarde
+// Add structs for the peripheral you want to implement. First for the buttons, later UARTE
 pub struct Board {
     /// LEDs
     pub leds: Leds,
-    // --- Exercise --- 🔽
-    /// Buttons
-    pub buttons: Buttons,
-    // --- Exercise --- 🔼 
+
     /// Timer
     pub timer: Timer,
-    // --- Exercise --- 🔽
-    /// uarte interface
-    pub uarte: Uarte,
-    // --- Exercise --- 🔼 
+    
+
 }
 
 /// All LEDs on the board
@@ -101,31 +94,21 @@ impl Led {
         }
     }
 }
-// --- Exercise ---  🔽
+
 /// All buttons on the board
-pub struct Buttons {
-    /// BUTTON1: pin P0.11, green LED
-    pub b_1: Button,
-    /// BUTTON2: pin P0.12, green LED
-    pub b_2: Button,
-    /// BUTTON3: pin P0.24, green LED
-    pub b_3: Button,
-    /// BUTTON4: pin P0.25, green LED
-    pub b_4: Button,
-}
+// todo! Add a struct that represents all buttons of the board.
+// ...
 
 /// A single button
-pub struct Button {
-    inner: Pin<Input<PullUp>>,
-}
+// todo! Add a struct that represents a single button.
+// ...
 
-impl Button {
-    /// returns true if button is pushed 
-    pub fn is_pushed(&self) -> bool {
-        self.inner.is_low() == Ok(true)
-    }
-}
-// --- Exercise --- 🔼 
+
+// Add an impl block for the Button struct
+// todo! Add a method that returns true, if the button is pushed.
+// ...
+
+
 
 /// A timer for creating blocking delays
 pub struct Timer {
@@ -183,24 +166,12 @@ impl ops::DerefMut for Timer {
 }
 
 /// Uarte peripheral
-pub struct Uarte {
-    inner: hal::Uarte<hal::pac::UARTE0>,
-}
+// todo! Add a struct that represents the Uarte 
+// ...
 
-impl fmt::Write for Uarte {
 
-    fn write_str(&mut self, s: &str) -> fmt::Result {
-        // Copy all data into an on-stack buffer so we never try to EasyDMA from
-        // flash.
-        let mut buf: [u8; 16] = [0; 16];
-        for block in s.as_bytes().chunks(16) {
-            buf[..block.len()].copy_from_slice(block);
-            self.inner.write(&buf[..block.len()]).map_err(|_| fmt::Error)?;
-        }
-
-        Ok(())
-    }
-}
+// todo! Implement the fmt::Write Trait for Uarte
+// ...
 
 /// Initializes the board
 ///
@@ -216,30 +187,26 @@ pub fn init() -> Result<Board, ()> {
         let led_3 = pins.p0_15.degrade().into_push_pull_output(Level::High);
         let led_4 = pins.p0_16.degrade().into_push_pull_output(Level::High);
         
-        // --- Exercise --- 🔽
-        // Buttons
-        let b_1 = pins.p0_11.degrade().into_pullup_input();
-        let b_2 = pins.p0_12.degrade().into_pullup_input();
-        let b_3 = pins.p0_24.degrade().into_pullup_input();
-        let b_4 = pins.p0_25.degrade().into_pullup_input();
-        // --- Exercise --- 🔼 
+
+        // Buttons 
+        // todo! Assign the pins of the buttons
+        // ...
+        
+
 
         defmt::debug!("I/O pins have been configured for digital output");
 
         let timer = hal::Timer::new(periph.TIMER0);
 
-        // --- Exercise --- 🔽
+      
         // Uarte
-        let pins =  hal::uarte::Pins {
-            rxd: pins.p0_08.degrade().into_floating_input(),
-            txd: pins.p0_06.degrade().into_push_pull_output(Level::High),
-            cts: Some(pins.p0_07.degrade().into_floating_input()),
-            rts: Some(pins.p0_05.degrade().into_push_pull_output(Level::High)),
-        };
+        // todo! Assign the pins of the UARTE peripheral
+        // ...
        
-
-        let uarte = hal::uarte::Uarte::new(periph.UARTE0, pins, Parity::INCLUDED, Baudrate::BAUD115200);
-        // --- Exercise --- 🔼 
+        // todo! Instantiate the UARTE peripheral
+        // ...
+        
+        
 
         Ok(Board {
             leds: Leds {
@@ -249,20 +216,13 @@ pub fn init() -> Result<Board, ()> {
                 led_4: Led { inner: led_4 },
             },
 
-            // --- Exercise --- 🔽
-            buttons: Buttons {
-                b_1: Button { inner: b_1},
-                b_2: Button { inner: b_2},
-                b_3: Button { inner: b_3},
-                b_4: Button { inner: b_4},
-            },
-            // --- Exercise --- 🔼 
+            // todo! Create an instance of the struct that contains all the single buttons. 
+            // ...
 
             timer: Timer { inner: timer },
 
-            // --- Exercise ---  🔽
-            uarte: Uarte { inner: uarte },
-            // --- Exercise --- 🔼 
+            // todo! Create an instance of the UARTE struct
+            // ...
         })
     } else {
         Err(())
