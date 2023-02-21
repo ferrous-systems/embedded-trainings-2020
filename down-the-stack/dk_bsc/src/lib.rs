@@ -1,7 +1,6 @@
-//! Hardware Abstraction Layer (HAL) for the nRF52840 Development Kit
+//! Board Support Crate (BSC) for the nRF52840 Development Kit
 
 #![deny(missing_docs)]
-#![deny(warnings)]
 #![no_std]
 
 use core::{
