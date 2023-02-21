@@ -4,7 +4,7 @@
 use cortex_m::asm;
 use cortex_m_rt::entry;
 use core::fmt::Write;
-// this imports `beginner/apps/lib.rs` to retrieve our global logger + panicking-behavior
+// this imports `down-the-stack/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
 #[entry]
@@ -26,7 +26,4 @@ fn main() -> ! {
     }
 
     // this program does not `exit`; use Ctrl+C to terminate it
-    loop {
-        asm::nop();
-    }
 }

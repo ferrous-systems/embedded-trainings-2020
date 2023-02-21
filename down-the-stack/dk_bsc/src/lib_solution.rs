@@ -1,7 +1,6 @@
-//! Hardware Abstraction Layer (HAL) for the nRF52840 Development Kit
+//! Board Support Crate (BSC) for the nRF52840 Development Kit
 
 #![deny(missing_docs)]
-#![deny(warnings)]
 #![no_std]
 
 use core::{
@@ -13,9 +12,12 @@ use core::{
 
 use cortex_m::asm;
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
+use nrf52840_hal as hal;
 pub use hal::pac::{
     UARTE1, uarte0::{
         baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity}};
+
+
 use hal::{
     gpio::{p0, Level, Output, Input, PullUp, Pin, Port, PushPull},
     timer::OneShot, prelude::InputPin,
