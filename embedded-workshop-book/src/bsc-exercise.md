@@ -1,37 +1,48 @@
 # BSC Exercise
 
 In this exercise you will learn how to write a board support crate. 
-The bsc template will already contain the led and timer implementation. 
-The radio and USB/Power implementations will be deleted, because that just takes up unnecessary space and adds to confusion. 
+The template will already contain the LED and timer implementation. 
+
+Note: Introduction to the exercise is a guided tour through the template and running the hello example. 
 
 
 ## Learning goals
 * implement buttons functionality 
-* uarte implementation
-* impl blocks, associated functions, methods
+* UARTE implementation
+* `impl` blocks, associated functions, methods
 * generate docs!
 
+## Prerequesits
 
-## Steps
-### Write a button implementation
-* add field in the board struct
-* add struct for all buttons
-* add struct for the single button
+* 
+## Tasks
+* Write a button implementation. This entails the following steps
+  * `struct Buttons` with 4 fields, that represents each of the four buttons 
+  * `struct Button` that is a wrapper for the pin that a single button is connected to
+  * a method `is_pushed` that checks if a single button is pushed. 
+  * initialize the pins in `fn init()`
+  * add the `struct Button` to the definition and instantiation of `struct Board`.
+  * Run `apps/buttons.rs` to test. 
+* Write a UARTE implementation. 
 
-* Read docs, section 8.7 for info about pins and pin configuration
-* add button bring up to board init
+## Knowledge
 
-* add doc lines every where!
-* add methods in impl block:
-  * detect button push
-  * debounce button function? like in knurling session, requires implementation of a second timer, just for this?
+## Representation of Peripherals
+The boards peripherals are represented as nested structs. The `struct Board` contains fields that represent single peripherals or groups of peripherals as structs, which in turn either contain a field of the single peripheral or ...
 
-### Write Uarte implementation
-* add field to the board struct
-* add struct for the instance, how to figure out what the type of the inner field is
-* create instance in init, add baudrate, parity etc. 
-* add to instantiation of board struct
-* impl fmt::Write for the Uarte struct, simple write does not work because of dma 
-* example code with button is not a good idea for the simple button implementation.
+You have to add structs to represent the buttons and the UARTE peripheral to the board struct. 
 
-I think this is plenty for an hour. 
+## Comments
+
+
+## impl blocks
+
+## visibility of structs, fields and functions: the pub keyword
+
+
+## Hardware documentation for pin configuration
+
+
+
+
+
