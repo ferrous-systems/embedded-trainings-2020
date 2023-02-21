@@ -13,6 +13,7 @@ use core::{
 use cortex_m::asm;
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 
+use nrf52840_hal as hal;
 use hal::{
     gpio::{p0, Level, Output, Pin, Port, PushPull},
     timer::OneShot,
