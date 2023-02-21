@@ -12,7 +12,7 @@ fn main() -> ! {
     // to enable more verbose logs, go to your `Cargo.toml` and set defmt logging levels
     // to `defmt-trace` by changing the `default = []` entry in `[features]`
 
-    let board = dk_template::init().unwrap();
+    let board = dk_bsc::init().unwrap();
 
     let button_1 = board.buttons.b_1;
     let mut uarte = board.uarte;

@@ -17,7 +17,7 @@ fn main() -> ! {
     //       ! is the 'never' type: this function never returns
 
     // initializes the peripherals
-    dk::init().unwrap();
+    dk_bsc::init().unwrap();
 
     defmt::println!("Hello, world!"); // :wave:
 
