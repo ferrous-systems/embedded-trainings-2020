@@ -22,11 +22,3 @@ default = [
   "other-feature"
 ]
 other-feature = []
-
-# do NOT modify these features
-defmt-default = []
-defmt-trace = []
-defmt-debug = []
-defmt-info = []
-defmt-warn = []
-defmt-error = []
