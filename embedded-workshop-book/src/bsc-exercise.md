@@ -1,16 +1,19 @@
 # BSC Exercise
 
 In this exercise you will learn how to write a board support crate. 
-The template will already contain the LED and timer implementation. 
+The template `dk_bsc/src/lib.rs` already contains the LED and Timer implementations. You will implement the buttons and the UARTE peripheral. 
 
-Note: Introduction to the exercise is a guided tour through the template and running the hello example. 
+Note: Introduction to the exercise is a guided tour through the template, and it's architecture. Make the participants aware of the placeholders for their implementations. run the hello example on the unmodified lib. 
 
 
-## Learning goals
-* implement buttons functionality 
+## You will learn how to
+* modify the `init()` function that brings up the board's peripherals
+* how to configure pins 
+* how to write a function that checks the state of a pin
+* write methods for a `struct`
 * UARTE implementation
-* `impl` blocks, associated functions, methods
-* generate docs!
+* implement a Trait
+* to document and generate docs for your own library!
 
 ## Prerequesits
 
