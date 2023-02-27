@@ -13,14 +13,14 @@ use core::{
 use cortex_m::asm;
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 use nrf52840_hal as hal;
-pub use hal::pac::{
-    UARTE1, uarte0::{
-        baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity}};
+pub use hal::pac::uarte0::{
+    baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity};
 
 
 use hal::{
-    gpio::{p0, Level, Output, Input, PullUp, Pin, Port, PushPull},
-    timer::OneShot, prelude::InputPin,
+gpio::{p0, Level, Output, Input, PullUp, Pin, Port, PushPull},
+timer::OneShot, prelude::InputPin,
+uarte,
 };
 
 use defmt;
@@ -186,7 +186,7 @@ impl ops::DerefMut for Timer {
 
 /// Uarte peripheral
 pub struct Uarte {
-    inner: hal::Uarte<hal::pac::UARTE0>,
+    inner: hal::Uarte<hal::pac::UARTE1>,
 }
 
 impl fmt::Write for Uarte {
@@ -240,7 +240,7 @@ pub fn init() -> Result<Board, ()> {
         };
        
 
-        let uarte = hal::uarte::Uarte::new(periph.UARTE0, pins, Parity::INCLUDED, Baudrate::BAUD115200);
+        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
         // --- Exercise --- 🔼 
 
         Ok(Board {
