@@ -4,6 +4,7 @@
 use cortex_m::asm;
 use cortex_m_rt::entry;
 use core::fmt::Write;
+
 // this imports `down-the-stack/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
@@ -14,16 +15,17 @@ fn main() -> ! {
 
     let board = dk_bsc::init().unwrap();
 
-    let button_1 = board.buttons.b_1;
     let mut uarte = board.uarte;
+
+
+    
     
     
     let tx_buffer = "Hello\n";
+    uarte.write_str(tx_buffer).unwrap();
     
     // this program does not `exit`; use Ctrl+C to terminate it
     loop {
-        if button_1.is_pushed() {
-            uarte.write_str(tx_buffer).unwrap();
-        }
+        asm::nop();
     }
 }
