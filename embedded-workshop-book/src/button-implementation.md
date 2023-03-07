@@ -52,3 +52,11 @@ Run the following command:
 ```shell
 cargo run --bin button
 ```
+
+### Step 7: Generate the docs!
+
+Out of the apps folder run the following command to build the docs for this crate and to view your written documentation!
+
+```shell
+cargo doc
+```
