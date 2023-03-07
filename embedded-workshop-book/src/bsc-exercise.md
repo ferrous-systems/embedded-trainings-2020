@@ -15,17 +15,17 @@ Note: Introduction to the exercise is a guided tour through the template, and it
 * implement a Trait
 * to document and generate docs for your own library!
 
-## Prerequesits
+## Prerequisites
+[todo!]
 
-* 
 ## Tasks
 * Write a button implementation. This entails the following steps
-  * `struct Buttons` with 4 fields, that represents each of the four buttons 
-  * `struct Button` that is a wrapper for the pin that a single button is connected to
-  * a method `is_pushed` that checks if a single button is pushed. 
-  * initialize the pins in `fn init()`
-  * add the `struct Button` to the definition and instantiation of `struct Board`.
-  * Run `apps/buttons.rs` to test. 
+  ✅ `struct Buttons` with 4 fields, that represents each of the four buttons 
+  ✅ `struct Button` that is a wrapper for the pin that a single button is connected to
+  ✅ a method `is_pushed` that checks if a single button is pushed. 
+  ✅ initialize the pins in `fn init()`
+  ✅ add the `struct Button` to the definition and instantiation of `struct Board`.
+  ✅ Run `apps/buttons.rs` to test. 
 * Write a UARTE implementation. 
 
 ## Knowledge
@@ -34,18 +34,19 @@ Note: Introduction to the exercise is a guided tour through the template, and it
 The boards peripherals are represented as nested structs. The `struct Board` contains fields that represent single peripherals or groups of peripherals as structs, which in turn either contain a field of the single peripheral or ...
 
 You have to add structs to represent the buttons and the UARTE peripheral to the board struct. 
+[todo!]
 
 ## Comments
-
+[todo!]
 
 ## impl blocks
-
-## visibility of structs, fields and functions: the pub keyword
-
+[todo!]
+## Visibility of structs, fields and functions: the pub keyword
+[todo!]
 
 ## Hardware documentation for pin configuration
 
-
+Go to [Nordic Infocenter](https://infocenter.nordicsemi.com/topic/ug_nrf52840_dk/UG/dk/intro.html) to download the User Guide. You can find all the information that is relevant to this exercise in there.
 
 
 
