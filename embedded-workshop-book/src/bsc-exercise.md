@@ -8,8 +8,9 @@ You can test after each step by running the following command out of `down-the-s
 ```
 cargo run --bin hello
 ```
+This program will not call any of the functions you are implementing, so it does not matter if they are incomplete. It will refuse to build if there are errors present in the `lib.rs`!
 
-This program will not call any of the functions you are implementing, so it does not matter if they are incomplete. It will refuse to build if there are errors present in the lib!
+`down-the-stack/dk_bsc/src/lib_solution.rs` contains the full solution code.
 
 Note for trainer: Introduction to the exercise is a guided tour through the template, and it's architecture. Make the participants aware of the placeholders for their implementations. run the hello example on the unmodified lib. 
 
@@ -45,7 +46,12 @@ You have to add structs to represent the buttons and the UARTE peripheral to the
 [todo!]
 
 ## Comments
-[todo!]
+The `lib.rs` has an attribute #![deny(missing_docs)]. This means, that missing doc comments for structs are returned as compiler errors, to remind you to document your work properly. 
+
+```rust
+/// This is a doc comment
+// This is a normal comment
+```
 
 ## impl blocks
 [todo!]
