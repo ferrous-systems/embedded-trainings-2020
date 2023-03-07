@@ -14,14 +14,9 @@ fn main() -> ! {
     // to `defmt-trace` by changing the `default = []` entry in `[features]`
 
     let board = dk_bsc::init().unwrap();
-
     let mut uarte = board.uarte;
 
-
-    
-    
-    
-    let tx_buffer = "Hello\n";
+    let tx_buffer = "Hello, World!\n";
     uarte.write_str(tx_buffer).unwrap();
     
     // this program does not `exit`; use Ctrl+C to terminate it
