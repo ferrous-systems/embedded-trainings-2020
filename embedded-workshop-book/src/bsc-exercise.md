@@ -28,15 +28,24 @@ Note for trainer: Introduction to the exercise is a guided tour through the temp
 [todo!]
 
 ## Tasks
-* Write a button implementation. This entails the following steps
-  ✅ `struct Buttons` with 4 fields, that represents each of the four buttons 
-  ✅ `struct Button` that is a wrapper for the pin that a single button is connected to
-  ✅ a method `is_pushed` that checks if a single button is pushed. 
-  ✅ initialize the pins in `fn init()`
-  ✅ add the `struct Button` to the definition and instantiation of `struct Board`.
+* Write a button implementation. This entails the following steps:
+  ✅ Add `struct Buttons` with 4 fields, that represents each of the four buttons.
+  ✅ Add `struct Button` that is a wrapper for the pin that a single button is connected to.
+  ✅ Write a method `is_pushed` that checks if a single button is pushed. 
+  ✅ Initialize the pins in `fn init()`.
+  ✅ Add the `struct Button` to the definition and instantiation of `struct Board`.
   ✅ Run `apps/buttons.rs` to test. 
-* Write a UARTE implementation. 
-[todo!]
+  ✅ Run `cargo doc` out of the apps folder to find all your doc comments!
+* Write a UARTE implementation. This entails the following steps:
+  ✅ Check the `uarte` module of the `nrf-hal` for requirements of the instantiating method.
+  ✅ Add `struct Uarte` that serves as wrapper for the `UARTE1` instance.
+  ✅ Initialize the UARTE1 peripheral in `fn init()` using the following settings:
+  * parity: included
+  * baudrate: 115200 baud
+  ✅ Add `struct Uarte` to the definition and instantiation of `struct Board`.
+  ✅ Implement the `fmt::Write` trait for `struct Uarte`.
+  ✅ Connect your computer to the virtual UART port with `screen`
+  ✅ Run `apps/uarte_print.rs` to test.
 ## Knowledge
 
 ## Representation of Peripherals
