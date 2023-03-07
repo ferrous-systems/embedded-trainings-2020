@@ -30,16 +30,16 @@ use defmt_rtt as _; // global logger
 pub struct Board {
     /// LEDs
     pub leds: Leds,
-    // --- Exercise --- 🔽
+    // 🔽 ---  Exercise Button --- 🔽
     /// Buttons
     pub buttons: Buttons,
-    // --- Exercise --- 🔼 
+    // 🔼  --- Exercise Button --- 🔼 
     /// Timer
     pub timer: Timer,
-    // --- Exercise --- 🔽
+    // 🔽 ---  Exercise UARTE --- 🔽
     /// uarte interface
     pub uarte: Uarte,
-    // --- Exercise --- 🔼 
+    // 🔼  --- Exercise UARTE --- 🔼 
 }
 
 /// All LEDs on the board
@@ -103,7 +103,7 @@ impl Led {
         }
     }
 }
-// --- Exercise ---  🔽
+// 🔽 ---  Exercise Button --- 🔽
 /// All buttons on the board
 pub struct Buttons {
     /// BUTTON1: pin P0.11, green LED
@@ -127,7 +127,7 @@ impl Button {
         self.inner.is_low() == Ok(true)
     }
 }
-// --- Exercise --- 🔼 
+// 🔼  --- Exercise Button --- 🔼 
 
 /// A timer for creating blocking delays
 pub struct Timer {
@@ -184,6 +184,7 @@ impl ops::DerefMut for Timer {
     }
 }
 
+// 🔽 ---  Exercise UARTE --- 🔽
 /// Uarte peripheral
 pub struct Uarte {
     inner: hal::Uarte<hal::pac::UARTE1>,
@@ -203,6 +204,7 @@ impl fmt::Write for Uarte {
         Ok(())
     }
 }
+// 🔼  --- Exercise UARTE --- 🔼 
 
 /// Initializes the board
 ///
@@ -218,19 +220,19 @@ pub fn init() -> Result<Board, ()> {
         let led_3 = pins.p0_15.degrade().into_push_pull_output(Level::High);
         let led_4 = pins.p0_16.degrade().into_push_pull_output(Level::High);
         
-        // --- Exercise --- 🔽
+        // 🔽 ---  Exercise Button --- 🔽
         // Buttons
         let b_1 = pins.p0_11.degrade().into_pullup_input();
         let b_2 = pins.p0_12.degrade().into_pullup_input();
         let b_3 = pins.p0_24.degrade().into_pullup_input();
         let b_4 = pins.p0_25.degrade().into_pullup_input();
-        // --- Exercise --- 🔼 
+        // 🔼  --- Exercise Button --- 🔼 
 
         defmt::debug!("I/O pins have been configured for digital output");
 
         let timer = hal::Timer::new(periph.TIMER0);
 
-        // --- Exercise --- 🔽
+        // 🔽 ---  Exercise UARTE --- 🔽
         // Uarte
         let pins =  hal::uarte::Pins {
             rxd: pins.p0_08.degrade().into_floating_input(),
@@ -241,7 +243,7 @@ pub fn init() -> Result<Board, ()> {
        
 
         let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
-        // --- Exercise --- 🔼 
+        // 🔼  --- Exercise UARTE --- 🔼 
 
         Ok(Board {
             leds: Leds {
@@ -251,20 +253,20 @@ pub fn init() -> Result<Board, ()> {
                 led_4: Led { inner: led_4 },
             },
 
-            // --- Exercise --- 🔽
+            // 🔽 ---  Exercise Button --- 🔽
             buttons: Buttons {
                 b_1: Button { inner: b_1},
                 b_2: Button { inner: b_2},
                 b_3: Button { inner: b_3},
                 b_4: Button { inner: b_4},
             },
-            // --- Exercise --- 🔼 
+            // 🔼  --- Exercise Button --- 🔼 
 
             timer: Timer { inner: timer },
 
-            // --- Exercise ---  🔽
+            // 🔽 ---  Exercise UARTE --- 🔽
             uarte: Uarte { inner: uarte },
-            // --- Exercise --- 🔼 
+            // 🔼  --- Exercise UARTE --- 🔼 
         })
     } else {
         Err(())
