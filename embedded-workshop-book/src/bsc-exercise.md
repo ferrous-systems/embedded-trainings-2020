@@ -35,7 +35,7 @@ Note for trainer: Introduction to the exercise is a guided tour through the temp
   ✅ add the `struct Button` to the definition and instantiation of `struct Board`.
   ✅ Run `apps/buttons.rs` to test. 
 * Write a UARTE implementation. 
-
+[todo!]
 ## Knowledge
 
 ## Representation of Peripherals
