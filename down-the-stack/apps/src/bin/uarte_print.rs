@@ -8,6 +8,8 @@ use core::fmt::Write;
 // this imports `down-the-stack/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
 
+// ⚠️ ⚠️ ⚠️ Don't change this file! ⚠️ ⚠️ ⚠️
+
 #[entry]
 fn main() -> ! {
     // to enable more verbose logs, go to your `Cargo.toml` and set defmt logging levels

@@ -2,7 +2,7 @@
 
 In this exercise you will learn how to write a board support crate by implementing buttons and the UARTE peripheral. 
 
-The template `down-the-stack/dk_bsc/src/lib.rs` already contains the LED and Timer implementations.  
+The template `down-the-stack/dk_bsc/src/lib.rs` already contains the LED and Timer implementations. Add your code to the designated lines. You'll find a //todo! there. 
 
 You can test after each step by running the following command out of `down-the-stack/apps`
 ```
@@ -10,7 +10,7 @@ cargo run --bin hello
 ```
 This program will not call any of the functions you are implementing, so it does not matter if they are incomplete. It will refuse to build if there are errors present in the `lib.rs`!
 
-`down-the-stack/dk_bsc/src/lib_solution.rs` contains the full solution code.
+`down-the-stack/dk_bsc/src/lib_solution.rs` contains the full solution code. 
 
 Note for trainer: Introduction to the exercise is a guided tour through the template, and it's architecture. Make the participants aware of the placeholders for their implementations. run the hello example on the unmodified lib. 
 

@@ -38,8 +38,8 @@ Building this code brings up warnings about unused variables.
 
 ### Step 5: Add everything to the board struct. 
 
-In the definition of the board struct add a field for the `struct Buttons`
-In the pub `fn init()` function. Add the button field to the instantiation of the Board struct, assigning the pins you defined earlier to the respective buttons. 
+In the definition of the `struct Board` add a field for the `struct Buttons`.
+In the pub `fn init()` function, where `Board` is instantiated, add the button field, assigning the pins you defined earlier to the respective buttons. 
 
 <!-- Solution Code Snippet -->
 
