@@ -1,11 +1,13 @@
 #![no_main]
 #![no_std]
 
-use cortex_m::asm;
+
 use cortex_m_rt::entry;
-use core::fmt::Write;
+
 // this imports `down-the-stack/apps/lib.rs` to retrieve our global logger + panicking-behavior
 use apps as _;
+
+// ⚠️ ⚠️ ⚠️ Don't change this file! ⚠️ ⚠️ ⚠️
 
 #[entry]
 fn main() -> ! {
