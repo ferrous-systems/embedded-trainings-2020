@@ -26,34 +26,44 @@ Uarte0 is ensabled.
 Uarte0 is disabled.
 ```
 
+Find the starter code in `down-the-stack/apps/uarte_enable.rs`
+Find the full solution in `down-the-stack/apps/uarte_enable_solution.rs`
+
+
 ## Step-by-Step Solution
 
-✅ Find the values that can be written in the `enable` register:
+### Step 1: Find the values that can be written in the `enable` register:
 
 0: disabled
 8: enabled
 
-✅ Import the PAC
+### Step 2: Import the PAC
 
-In `down-the-stack/apps/Cargo.toml`:
+In `down-the-stack/apps/Cargo.toml` add:
 
 ```
 dk_pac = { path = "../dk_pac", features = ["critical-section"]}
 ```
-In `apps/bin/uarte_enable.rs`:
+In `apps/bin/uarte_enable.rs` add:
 
 ```rust 
 use dk_pac::UARTE0;
 ```
 
-✅ Take ownership of the peripherals with `take()` and bind the `UARTE0` peripheral to it's own variable
+### Step 3: Take ownership of the peripherals with `take()`
+
+Take ownership of the peripherals with `take()`. Take note, the take returns an `Option<T>` so that needs to be taken care of. Bind the `UARTE0` peripheral to it's own variable.
 
 ```rust
 let periph = dk_pac::Peripherals::take().unwrap();
 let uarte = periph.UARTE0;
 ```
 
-✅ Write a helper function that reads the bits of the enable register. It prints "Uarte0 is enabled", when the value is not 0. If it is 0, it prints "Uarte0 is disabled". Add a function call to `fn main()`
+### Step 4: Write a helper function to get the status of the register.
+
+The helper function either reads the raw bits of the enable register or makes use of the specific method available. 
+
+The function prints "Uarte0 is enabled" or "Uarte0 is disabled" depending on the case. Add a function call to `fn main()`.
 
 Run the code. The terminal output should read: "Uarte0 is disabled".
 
@@ -67,7 +77,9 @@ fn is_uarte_enabled(uarte: &UARTE0) {
 }
 ```
 
-✅ Enable the peripheral safely by passing `w.enable().enabled()` in the closure. Call the helper function after this new line and run your code. 
+### Step 5: Enable the peripheral safely.
+
+Enable the peripheral safely by passing `w.enable().enabled()` in the closure of `write()`. Call the helper function after this new line and run your code. 
 
 It should print:
 
@@ -80,7 +92,9 @@ Uarte0 is ensabled.
 uarte.enable.write(|w| w.enable().enabled());
 ```
 
-✅ Disable the peripheral unsafely by writing raw bits into the register. 
+### Step 6: Disable the peripheral unsafely by writing raw bits into the register. 
+
+Write 0 into the register to disable it. Call the helper function once more and run your code. Compare your output with the expected output on top of this page. 
 
 ```rust
 unsafe {
