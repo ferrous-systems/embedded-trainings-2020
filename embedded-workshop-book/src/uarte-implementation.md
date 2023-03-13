@@ -8,7 +8,7 @@ The UART protocol requires four pins, they are usually labelled:
 * TXD
 * CTS
 * RTS
-  
+
 Check the User Guide in section 7.2 to find to find out which pins are reserved for these and what their configuration needs to be.  
 
 ### Step 2: Explore the `nrf-hal` to find out what needs to be done. 
@@ -24,7 +24,7 @@ A quick search of the document reveals where to find all of them:
 * `Parity` and `Baudrate`: Re-export on line 34
 
 Add the following lines as import:
-```rust
+```
 use hal::pac::uarte0::{
     baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity};
 use hal::uarte;
@@ -36,8 +36,11 @@ The struct has one field labelled `inner`, it contains the `UARTE1` instance: `h
 <!-- Solution Code Snippet -->
 ### Step 4: Bring up the peripheral in the `fn init()`
 
-Take a closer look at the definition of the `uarte::Pins` struct. Import the types of the pin configuration that you don't have yet. Note, that the third and fourth pin are each wrapped in an `Option`. 
+Take a closer look at the definition of the `uarte::Pins` struct in the `nrf-hal`. Compare the pin type configurations with the ones you have already imported in `lib.rs`. Add the ones you're missing. 
+
 Create an instance of this struct in `fn init()` with the appropriate pins and configurations. Set the output pin's level to `Level::High`.
+Note, that the third and fourth pin are each wrapped in an `Option`. 
+
 
 Create an interface to the UARTE1 instance with `uarte::Uarte::new(...)` that you bind to a variable. This instantiating method takes four arguments:
 * The `UARTE1` instance can be found in the `periph` variable.
@@ -54,7 +57,9 @@ add the field to the instance of the `Board` struct in `fn init()`.
 <!-- Solution Code Snippet -->
 ### Step 6: Implementing the `fmt::Write` trait
 
-We can't just write to the Uarte instance. A simple write would write from flash memory. This does not work because of EasyDMA. We have to write a function that implements the `fmt::Write` trait. This trait guarantees that the buffer is fully and successfully written on a stack allocated buffer, before it returns. 
+We can't just write to the `Uarte` instance. A simple write would write from flash memory. This does not work because of EasyDMA. We have to write a function that implements the `fmt::Write` trait. This trait guarantees that the buffer is fully and successfully written on a stack allocated buffer, before it returns. 
+
+Add `use::core::fmt;` to your imports.
 
 Create a public method `write_str`. It takes a mutable reference to self and a `&str` as argument. It returns an `fmt::Result`
 
@@ -76,7 +81,7 @@ return `Ok(())`
 Use the following command to find the address of the nRF52840-DK on your computer. 
 
 ```
-ls /dev/tty*
+ls /dev/tty.usbmodem*
 ```
 
 Run the following command to run `screen` with the nRF52840-DK with 115200 baud. 
@@ -95,3 +100,5 @@ cargo run --bin uarte_print
 ```
 
 On your terminal window where `screen` runs, "Hello, World" should appear. 
+
+You need to terminate `screen` manually.
