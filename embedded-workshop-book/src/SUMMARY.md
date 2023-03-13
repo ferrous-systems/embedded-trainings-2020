@@ -28,6 +28,7 @@
     - [BSC Exercise](./bsc-exercise.md)
       - [Button Implementation](./button-implementation.md)
       - [UARTE Implementation](./uarte-implementation.md)
+    - [PAC Exercise](./pac-exercise.md)
 - [Advanced Workbook](./advanced-workbook.md)
     - [Code Organization](./code-organisation.md)
     - [Listing USB Devices](./listing-usb-devices.md)
