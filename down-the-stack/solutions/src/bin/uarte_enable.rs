@@ -6,7 +6,7 @@ use cortex_m_rt::entry;
 use dk_pac::UARTE0;
 
 // this imports `down-the-stack/apps/lib.rs` to retrieve our global logger + panicking-behavior
-use apps as _;
+use uarte_enable_solution as _;
 use defmt;
 use defmt_rtt as _; // global logger
 
