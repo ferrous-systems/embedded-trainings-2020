@@ -9,7 +9,7 @@ The UART protocol requires four pins, they are usually labelled:
 * CTS
 * RTS
 
-Check the User Guide in section 7.2 to find to find out which pins are reserved for these and what their configuration needs to be.  
+✅ Check the User Guide in section 7.2 to find to find out which pins are reserved for these and what their configuration needs to be.  
 
 ### Step 2: Explore the `nrf-hal` to find out what needs to be done. 
 
@@ -23,68 +23,148 @@ A quick search of the document reveals where to find all of them:
 * `Pins`: Line 463
 * `Parity` and `Baudrate`: Re-export on line 34
 
-Add the following lines as import:
+✅ Add the following lines as import:
 ```
 use hal::pac::uarte0::{
     baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity};
 use hal::uarte;
 ```
 
-###  Step 3: Add `struct Uarte` that serves as a wrapper for the `UARTE1` instance.
+###  Step 3: Add `struct Uarte
 
+✅ Add `struct Uarte` that serves as a wrapper for the `UARTE1` instance.
 The struct has one field labelled `inner`, it contains the `UARTE1` instance: `hal::Uarte<hal::pac::UARTE1>`.
-<!-- Solution Code Snippet -->
+
+<details>
+  <summary>Solution</summary>
+
+```rust
+pub struct Uarte {
+    inner: hal::Uarte<hal::pac::UARTE1>,
+}
+```
+</details>
+
 ### Step 4: Bring up the peripheral in the `fn init()`
 
-Take a closer look at the definition of the `uarte::Pins` struct in the `nrf-hal`. Compare the pin type configurations with the ones you have already imported in `lib.rs`. Add the ones you're missing. 
+✅ Take a closer look at the definition of the `uarte::Pins` struct in the `nrf-hal`. Compare the pin type configurations with the ones you have already imported in `lib.rs`. Add the ones you're missing. 
 
-Create an instance of this struct in `fn init()` with the appropriate pins and configurations. Set the output pin's level to `Level::High`.
+✅ Create an instance of this struct in `fn init()` with the appropriate pins and configurations. Set the output pin's level to `Level::High`.
 Note, that the third and fourth pin are each wrapped in an `Option`. 
 
-
-Create an interface to the UARTE1 instance with `uarte::Uarte::new(...)` that you bind to a variable. This instantiating method takes four arguments:
+✅ Create an interface to the UARTE1 instance with `uarte::Uarte::new(...)` that you bind to a variable. This instantiating method takes four arguments:
 * The `UARTE1` instance can be found in the `periph` variable.
 * Your instance of the `uarte::Pins` struct.
 * Set parity to `Parity::INCLUDED` 
 * set the baud rate to `Baudrate::BAUD115200`.
-  
 
-<!-- Solution Code Snippet -->
+<details>
+  <summary>Solution</summary>
+
+```rust
+  let pins =  hal::uarte::Pins {
+            rxd: pins.p0_08.degrade().into_floating_input(),
+            txd: pins.p0_06.degrade().into_push_pull_output(Level::High),
+            cts: Some(pins.p0_07.degrade().into_floating_input()),
+            rts: Some(pins.p0_05.degrade().into_push_pull_output(Level::High)),
+        };
+       
+
+        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
+```
+</details>
+
 ### Step 5: Board struct
 
-Add a field for the `Uarte` struct in the `Board` struct. 
+✅  Add a field for the `Uarte` struct in the `Board` struct. 
 add the field to the instance of the `Board` struct in `fn init()`.
-<!-- Solution Code Snippet -->
+
+<details>
+  <summary>Solution</summary>
+
+```rust
+
+pub struct Board {
+    /// LEDs
+    pub leds: Leds,
+    /// Buttons
+    pub buttons: Buttons,
+    /// Timer
+    pub timer: Timer,
+    /// uarte interface
+    pub uarte: Uarte,
+}
+
+// ...
+
+pub fn init() -> Result<Board, ()> {
+
+    // ... 
+
+        Ok(Board {
+            leds: Leds {
+                // ...
+            },
+
+            buttons: Buttons {
+                // ...
+            },
+            // 🔼  --- Exercise Button --- 🔼 
+
+            timer: Timer { inner: timer },
+
+            uarte: Uarte { inner: uarte },
+        })
+    } else {
+        Err(())
+    }
+```
+
+</details>
+
 ### Step 6: Implementing the `fmt::Write` trait
 
 We can't just write to the `Uarte` instance. A simple write would write from flash memory. This does not work because of EasyDMA. We have to write a function that implements the `fmt::Write` trait. This trait guarantees that the buffer is fully and successfully written on a stack allocated buffer, before it returns. 
 
-Add `use::core::fmt;` to your imports.
+✅ Add `use::core::fmt;` to your imports.
 
-Create a public method `write_str`. It takes a mutable reference to self and a `&str` as argument. It returns an `fmt::Result`
+✅ Create a public method `write_str`. It takes a mutable reference to self and a `&str` as argument. It returns an `fmt::Result`
 
-Create a buffer. The type is an `array` of 16 u8, set to all 0. 
+✅ Create a buffer. The type is an `array` of 16 u8, set to all 0. 
 
-To copy all data into an on-stack buffer, iterate over every chunk of the string to copy it into the buffer:
+✅ To copy all data into an on-stack buffer, iterate over every chunk of the string to copy it into the buffer:
+
+<details>
+  <summary>Solution</summary>
 
 ```rust
-for block in string.as_bytes().chunks(16) {
-    buf[..block.len()].copy_from_slice(block);
-    self.inner.write(&buf[..block.len()]).map_err(|_| fmt::Error)?;
+impl fmt::Write for Uarte {
+
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        // Copy all data into an on-stack buffer so we never try to EasyDMA from
+        // flash.
+        let mut buf: [u8; 16] = [0; 16];
+        for block in s.as_bytes().chunks(16) {
+            buf[..block.len()].copy_from_slice(block);
+            self.inner.write(&buf[..block.len()]).map_err(|_| fmt::Error)?;
+        }
+
+        Ok(())
+    }
 }
 ```
-return `Ok(())`
+</details>
 
 ### Step 7: Connect your computer to the virtual UART
-[directions for mac present, linux and windows are missing.]
+[todo!] [directions for mac present, linux and windows are missing.]
    
-Use the following command to find the address of the nRF52840-DK on your computer. 
+✅  Use the following command to find the address of the nRF52840-DK on your computer. 
 
 ```
 ls /dev/tty.usbmodem*
 ```
 
-Run the following command to run `screen` with the nRF52840-DK with 115200 baud. 
+✅  Run the following command to run `screen` with the nRF52840-DK with 115200 baud. 
 
 ```
 screen <address of mc> 115200
@@ -92,9 +172,8 @@ screen <address of mc> 115200
 
 ### Step 7: Run the example.
    
-In another terminal window go into the folder `down-the-stack/apps`.
+✅ In another terminal window go into the folder `down-the-stack/apps` and use the following command. 
 
-Use the following command. 
 ```
 cargo run --bin uarte_print
 ```
