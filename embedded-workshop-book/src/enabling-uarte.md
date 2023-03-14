@@ -94,7 +94,7 @@ uarte.enable.write(|w| w.enable().enabled());
 
 ### Step 6: Disable the peripheral unsafely by writing raw bits into the register. 
 
-Write 0 into the register to disable it. Call the helper function once more and run your code. Compare your output with the expected output on top of this page. 
+Write 0 into the register to disable it by passing the closure `|w| w.bits(0x00 as u32)` to the `write()` method. This action is unsafe, so it needs to be in an unsafe block. Call the helper function once more and run your code. Compare your output with the expected output on top of this page. 
 
 ```rust
 unsafe {
