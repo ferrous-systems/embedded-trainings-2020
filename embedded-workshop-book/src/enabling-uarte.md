@@ -1,10 +1,10 @@
 # Enabling the UARTE0 peripheral
 
-Write a simple program which uses the PAC to enable the UART. See how writing arbitrary values to the ENABLE field in the ENABLE register is unsafe, because only values 0 or 8 should be used.
+Write a simple program which uses the PAC to enable the UARTE0. See how writing arbitrary values to the ENABLE field in the ENABLE register is unsafe, because only values 0 or 8 should be used.
 
 ## In this exercise you will learn how to:
 * to safely write into a register 
-* how to unsafely write into a register
+* how to write raw bits into a register
 * how to read a register
 
 ## Prerequisites
@@ -27,7 +27,7 @@ Uarte0 is disabled.
 ```
 
 Find the starter code in `down-the-stack/apps/uarte_enable.rs`
-Find the full solution in `down-the-stack/apps/uarte_enable_solution.rs`
+Find the full solution in `down-the-stack/solutions/uarte_enable.rs`
 
 
 ## Step-by-Step Solution
