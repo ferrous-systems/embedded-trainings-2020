@@ -2,7 +2,7 @@
 
 In this exercise you will learn how to write a board support crate by implementing buttons and the UARTE peripheral. 
 
-The template `down-the-stack/dk_bsc/src/lib.rs` already contains the LED and Timer implementations. Add your code to the designated lines. You'll find a //todo! there. 
+The template `down-the-stack/dk_bsc/src/lib.rs` already contains the LED and Timer implementations. Add your code to the designated lines. You'll find a `//todo!` there. 
 
 You can test after each step by running the following command out of `down-the-stack/apps`
 ```
@@ -12,7 +12,7 @@ This program will not call any of the functions you are implementing, so it does
 
 `down-the-stack/dk_bsc/src/lib_solution.rs` contains the full solution code. 
 
-Note for trainer: Introduction to the exercise is a guided tour through the template, and it's architecture. Make the participants aware of the placeholders for their implementations. run the hello example on the unmodified lib. 
+
 
 
 ## You will learn how to
@@ -52,7 +52,7 @@ Note for trainer: Introduction to the exercise is a guided tour through the temp
 ## Knowledge
 
 ### Comments
-The `lib.rs` has an attribute #![deny(missing_docs)]. This means, that missing doc comments for structs are returned as compiler errors, to remind you to document your work properly. 
+The `lib.rs` has an attribute `#![deny(missing_docs)]`. This means, that missing doc comments for structs are returned as compiler errors, to remind you to document your work properly. 
 
 ```rust
 /// This is a doc comment

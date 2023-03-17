@@ -30,7 +30,7 @@ use hal::pac::uarte0::{
 use hal::uarte;
 ```
 
-###  Step 3: Add `struct Uarte
+###  Step 3: Add `struct Uarte`
 
 ✅ Add `struct Uarte` that serves as a wrapper for the `UARTE1` instance.
 The struct has one field labelled `inner`, it contains the `UARTE1` instance: `hal::Uarte<hal::pac::UARTE1>`.
@@ -132,7 +132,7 @@ We can't just write to the `Uarte` instance. A simple write would write from fla
 
 ✅ Create a buffer. The type is an `array` of 16 u8, set to all 0. 
 
-✅ To copy all data into an on-stack buffer, iterate over every chunk of the string to copy it into the buffer:
+✅ To copy all data into an on-stack buffer, iterate over every chunk of the string to copy it into the buffer.
 
 <details>
   <summary>Solution</summary>
@@ -170,7 +170,7 @@ ls /dev/tty.usbmodem*
 screen <address of mc> 115200
 ```
 
-### Step 7: Run the example.
+### Step 8: Run the example.
    
 ✅ In another terminal window go into the folder `down-the-stack/apps` and use the following command. 
 
