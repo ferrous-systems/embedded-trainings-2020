@@ -13,7 +13,7 @@ The pins need to be configured as input pins with an internal pull-up. The pins 
    
 ✅ Add the struct that represents the single button. It has only one field, `inner`. The type of this button is the pin configuration: `Pin<Input<PullUp>>`
 
-✅ Add the `struct` that represents the group of buttons has four fields, one for each button. The field name contains the number that corresponds to the button numeration on the board. The of type of each field is the struct that represents the generic single button. 
+✅ Add the `struct` that represents the group of buttons has four fields, one for each button. The field name contains the number that corresponds to the button numeration on the board. The type of each field is the struct that represents the generic single button. 
 
 ✅ Add doc comments for every struct and field!
 
