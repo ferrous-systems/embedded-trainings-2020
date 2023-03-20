@@ -103,7 +103,7 @@ impl Led {
         }
     }
 }
-// 🔽 ---  Exercise Button --- 🔽
+// 🔽 ---  Button Exercise --- 🔽
 /// All buttons on the board
 pub struct Buttons {
     /// BUTTON1: pin P0.11, green LED
