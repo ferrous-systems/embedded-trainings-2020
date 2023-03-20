@@ -184,7 +184,7 @@ impl ops::DerefMut for Timer {
     }
 }
 
-// 🔽 ---  Exercise UARTE --- 🔽
+// 🔽 ---  UARTE Exercise --- 🔽
 /// Uarte peripheral
 pub struct Uarte {
     inner: hal::Uarte<hal::pac::UARTE1>,
