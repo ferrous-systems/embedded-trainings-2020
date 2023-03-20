@@ -39,7 +39,7 @@ pub struct Board {
     // 🔽 ---  UARTE Exercise --- 🔽
     /// uarte interface
     pub uarte: Uarte,
-    // 🔼  --- Exercise UARTE --- 🔼 
+    // 🔼  --- UARTE Exercise --- 🔼 
 }
 
 /// All LEDs on the board
