@@ -264,7 +264,7 @@ pub fn init() -> Result<Board, ()> {
 
             timer: Timer { inner: timer },
 
-            // 🔽 ---  Exercise UARTE --- 🔽
+            // 🔽 ---  UARTE Exercise --- 🔽
             uarte: Uarte { inner: uarte },
             // 🔼  --- Exercise UARTE --- 🔼 
         })
