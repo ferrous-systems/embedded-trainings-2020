@@ -124,7 +124,11 @@ pub fn init() -> Result<Board, ()> {
 
 ### Step 6: Implementing the `fmt::Write` trait
 
-We can't just write to the `Uarte` instance. A simple write would write from flash memory. This does not work because of EasyDMA. We have to write a function that implements the `fmt::Write` trait. This trait guarantees that the buffer is fully and successfully written on a stack allocated buffer, before it returns. 
+We want to implement the `fmt::Write` trait so that users can call `write!` on our Uarte object
+
+When implementing this, we can't just write to the `Uarte` instance because a simple write of a string literal would try and read the string literal from flash memory. This does not work because the EasyDMA peripheral in the nRF52 series can only access RAM, not flash. 
+
+Instead our implementation must ensure all the strings are copied to a stack allocated buffer and that buffer is passed to the Uarte's `write` method. 
 
 ✅ Add `use::core::fmt;` to your imports.
 
