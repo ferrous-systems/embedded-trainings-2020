@@ -9,7 +9,7 @@ The UART protocol requires four pins, they are usually labelled:
 * CTS
 * RTS
 
-✅ Check the User Guide in section 7.2 to find to find out which pins are reserved for these and what their configuration needs to be.  
+✅ Check the [User Guide in section 7.2](https://infocenter.nordicsemi.com/topic/ug_nrf52840_dk/UG/dk/vir_com_port.html) to find to find out which pins are reserved for these and what their configuration needs to be. 
 
 ### Step 2: Explore the `nrf-hal` to find out what needs to be done. 
 

@@ -3,9 +3,7 @@
 
 ### Step 1: Read the docs! 
 
-✅ Go to [Nordic Infocenter](https://infocenter.nordicsemi.com/topic/ug_nrf52840_dk/UG/dk/intro.html) to download the **User Guide**. 
-
-✅ Read docs, section 8.7 for info about pins and pin configuration related to the buttons. Note down the pins that the buttons are connected to. 
+✅ Read the [User Guide section 8.7](https://infocenter.nordicsemi.com/topic/ug_nrf52840_dk/UG/dk/hw_buttons_leds.html?cp=5_0_4_7_6) for info about pins and pin configuration related to the buttons. Note down the pins that the buttons are connected to. 
 
 The pins need to be configured as input pins with an internal pull-up. The pins as well as the configurations are defined as types in the `nrf-hal` in the `gpio` peripheral. Add the following imports: `Input` and `PullUp`.
 
