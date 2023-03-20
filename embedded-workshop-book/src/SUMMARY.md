@@ -26,6 +26,8 @@
       - [Starting a Project from Scratch](./from-scratch.md)
 - [Down the Stack Workbook](./down-the-stack.md)
     - [BSC Exercise](./bsc-exercise.md)
+      - [Button Implementation](./button-implementation.md)
+      - [UARTE Implementation](./uarte-implementation.md)
 - [Advanced Workbook](./advanced-workbook.md)
     - [Code Organization](./code-organisation.md)
     - [Listing USB Devices](./listing-usb-devices.md)

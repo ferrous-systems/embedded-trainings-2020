@@ -13,14 +13,14 @@ use core::{
 use cortex_m::asm;
 use embedded_hal::digital::v2::{OutputPin as _, StatefulOutputPin};
 use nrf52840_hal as hal;
-pub use hal::pac::{
-    UARTE1, uarte0::{
-        baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity}};
+pub use hal::pac::uarte0::{
+    baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity};
 
 
 use hal::{
-    gpio::{p0, Level, Output, Input, PullUp, Pin, Port, PushPull},
-    timer::OneShot, prelude::InputPin,
+gpio::{p0, Level, Output, Input, PullUp, Pin, Port, PushPull},
+timer::OneShot, prelude::InputPin,
+uarte,
 };
 
 use defmt;
@@ -30,16 +30,16 @@ use defmt_rtt as _; // global logger
 pub struct Board {
     /// LEDs
     pub leds: Leds,
-    // --- Exercise --- 🔽
+    // 🔽 ---  Button Exercise --- 🔽
     /// Buttons
     pub buttons: Buttons,
-    // --- Exercise --- 🔼 
+    // 🔼  --- Button Exercise --- 🔼 
     /// Timer
     pub timer: Timer,
-    // --- Exercise --- 🔽
+    // 🔽 ---  UARTE Exercise --- 🔽
     /// uarte interface
     pub uarte: Uarte,
-    // --- Exercise --- 🔼 
+    // 🔼  --- UARTE Exercise --- 🔼 
 }
 
 /// All LEDs on the board
@@ -103,16 +103,16 @@ impl Led {
         }
     }
 }
-// --- Exercise ---  🔽
+// 🔽 ---  Button Exercise --- 🔽
 /// All buttons on the board
 pub struct Buttons {
-    /// BUTTON1: pin P0.11, green LED
+    /// BUTTON1: pin P0.11
     pub b_1: Button,
-    /// BUTTON2: pin P0.12, green LED
+    /// BUTTON2: pin P0.12
     pub b_2: Button,
-    /// BUTTON3: pin P0.24, green LED
+    /// BUTTON3: pin P0.24
     pub b_3: Button,
-    /// BUTTON4: pin P0.25, green LED
+    /// BUTTON4: pin P0.25
     pub b_4: Button,
 }
 
@@ -127,7 +127,7 @@ impl Button {
         self.inner.is_low() == Ok(true)
     }
 }
-// --- Exercise --- 🔼 
+// 🔼  --- Button Exercise --- 🔼 
 
 /// A timer for creating blocking delays
 pub struct Timer {
@@ -184,9 +184,10 @@ impl ops::DerefMut for Timer {
     }
 }
 
+// 🔽 ---  UARTE Exercise --- 🔽
 /// Uarte peripheral
 pub struct Uarte {
-    inner: hal::Uarte<hal::pac::UARTE0>,
+    inner: hal::Uarte<hal::pac::UARTE1>,
 }
 
 impl fmt::Write for Uarte {
@@ -203,6 +204,7 @@ impl fmt::Write for Uarte {
         Ok(())
     }
 }
+// 🔼  --- UARTE Exercise --- 🔼 
 
 /// Initializes the board
 ///
@@ -218,19 +220,19 @@ pub fn init() -> Result<Board, ()> {
         let led_3 = pins.p0_15.degrade().into_push_pull_output(Level::High);
         let led_4 = pins.p0_16.degrade().into_push_pull_output(Level::High);
         
-        // --- Exercise --- 🔽
+        // 🔽 ---  Button Exercise --- 🔽
         // Buttons
         let b_1 = pins.p0_11.degrade().into_pullup_input();
         let b_2 = pins.p0_12.degrade().into_pullup_input();
         let b_3 = pins.p0_24.degrade().into_pullup_input();
         let b_4 = pins.p0_25.degrade().into_pullup_input();
-        // --- Exercise --- 🔼 
+        // 🔼  --- Button Exercise --- 🔼 
 
         defmt::debug!("I/O pins have been configured for digital output");
 
         let timer = hal::Timer::new(periph.TIMER0);
 
-        // --- Exercise --- 🔽
+        // 🔽 ---  UARTE Exercise --- 🔽
         // Uarte
         let pins =  hal::uarte::Pins {
             rxd: pins.p0_08.degrade().into_floating_input(),
@@ -240,8 +242,8 @@ pub fn init() -> Result<Board, ()> {
         };
        
 
-        let uarte = hal::uarte::Uarte::new(periph.UARTE0, pins, Parity::INCLUDED, Baudrate::BAUD115200);
-        // --- Exercise --- 🔼 
+        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
+        // 🔼  --- UARTE Exercise --- 🔼 
 
         Ok(Board {
             leds: Leds {
@@ -251,20 +253,20 @@ pub fn init() -> Result<Board, ()> {
                 led_4: Led { inner: led_4 },
             },
 
-            // --- Exercise --- 🔽
+            // 🔽 ---  Button Exercise --- 🔽
             buttons: Buttons {
                 b_1: Button { inner: b_1},
                 b_2: Button { inner: b_2},
                 b_3: Button { inner: b_3},
                 b_4: Button { inner: b_4},
             },
-            // --- Exercise --- 🔼 
+            // 🔼  --- Button Exercise --- 🔼 
 
             timer: Timer { inner: timer },
 
-            // --- Exercise ---  🔽
+            // 🔽 ---  UARTE Exercise --- 🔽
             uarte: Uarte { inner: uarte },
-            // --- Exercise --- 🔼 
+            // 🔼  --- UARTE Exercise --- 🔼 
         })
     } else {
         Err(())
