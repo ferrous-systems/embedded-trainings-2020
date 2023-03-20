@@ -25,13 +25,13 @@ Building this code should return a warning: field `inner` is never read.
 ```rust
 /// All buttons on the board
 pub struct Buttons {
-    /// BUTTON1: pin P0.11, green LED
+    /// BUTTON1: pin P0.11
     pub b_1: Button,
-    /// BUTTON2: pin P0.12, green LED
+    /// BUTTON2: pin P0.12
     pub b_2: Button,
-    /// BUTTON3: pin P0.24, green LED
+    /// BUTTON3: pin P0.24
     pub b_3: Button,
-    /// BUTTON4: pin P0.25, green LED
+    /// BUTTON4: pin P0.25
     pub b_4: Button,
 }
 
