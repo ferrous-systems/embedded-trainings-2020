@@ -32,8 +32,11 @@ use hal::uarte;
 
 ###  Step 3: Add `struct Uarte`
 
-✅ Add `struct Uarte` that serves as a wrapper for the `UARTE1` instance.
-The struct has one field labelled `inner`, it contains the `UARTE1` instance: `hal::Uarte<hal::pac::UARTE1>`.
+✅ Add `struct Uarte` that serves as a wrapper for underlying HAL UART driver.
+
+The struct has one field labelled `inner` which is of type `hal::Uarte` but with the type parameter `T` being set to `hal::pac::UARTE1`.
+
+The main difference between using our `Uarte` object and the underlying HAL `Uarte` object is that *ours* will be pre-configured for the correct pins and baud rate, according to the layout of our nRF52840-DK board and the Virtual COM Port interface chip on the other end of the UART link.
 
 <details>
   <summary>Solution</summary>
