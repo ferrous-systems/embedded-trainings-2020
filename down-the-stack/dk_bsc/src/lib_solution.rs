@@ -253,7 +253,7 @@ pub fn init() -> Result<Board, ()> {
                 led_4: Led { inner: led_4 },
             },
 
-            // 🔽 ---  Exercise Button --- 🔽
+            // 🔽 ---  Button Exercise --- 🔽
             buttons: Buttons {
                 b_1: Button { inner: b_1},
                 b_2: Button { inner: b_2},
