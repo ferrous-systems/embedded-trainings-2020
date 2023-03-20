@@ -55,7 +55,9 @@ pub struct Uarte {
 ✅ Create an instance of this struct in `fn init()` with the appropriate pins and configurations. Set the output pin's level to `Level::High`.
 Note, that the third and fourth pin are each wrapped in an `Option`. 
 
-✅ Create an interface to the UARTE1 instance with `uarte::Uarte::new(...)` that you bind to a variable. This instantiating method takes four arguments:
+✅ Create a Uarte driver with `hal::uarte::Uarte::new(...)` and bind it to a variable called `uarte` - we will stash this in our own `Uarte` struct later.
+
+Creating the Uarte driver requires four arguments:
 * The `UARTE1` instance can be found in the `periph` variable.
 * Your instance of the `uarte::Pins` struct.
 * Set parity to `Parity::INCLUDED` 
