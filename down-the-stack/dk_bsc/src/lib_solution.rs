@@ -36,7 +36,7 @@ pub struct Board {
     // 🔼  --- Button Exercise --- 🔼 
     /// Timer
     pub timer: Timer,
-    // 🔽 ---  Exercise UARTE --- 🔽
+    // 🔽 ---  UARTE Exercise --- 🔽
     /// uarte interface
     pub uarte: Uarte,
     // 🔼  --- Exercise UARTE --- 🔼 
