@@ -226,7 +226,7 @@ pub fn init() -> Result<Board, ()> {
         let b_2 = pins.p0_12.degrade().into_pullup_input();
         let b_3 = pins.p0_24.degrade().into_pullup_input();
         let b_4 = pins.p0_25.degrade().into_pullup_input();
-        // 🔼  --- Exercise Button --- 🔼 
+        // 🔼  --- Button Exercise --- 🔼 
 
         defmt::debug!("I/O pins have been configured for digital output");
 
