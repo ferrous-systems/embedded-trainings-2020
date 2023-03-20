@@ -30,7 +30,7 @@ use defmt_rtt as _; // global logger
 pub struct Board {
     /// LEDs
     pub leds: Leds,
-    // 🔽 ---  Exercise Button --- 🔽
+    // 🔽 ---  Button Exercise --- 🔽
     /// Buttons
     pub buttons: Buttons,
     // 🔼  --- Exercise Button --- 🔼 
