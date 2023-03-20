@@ -232,7 +232,7 @@ pub fn init() -> Result<Board, ()> {
 
         let timer = hal::Timer::new(periph.TIMER0);
 
-        // 🔽 ---  Exercise UARTE --- 🔽
+        // 🔽 ---  UARTE Exercise --- 🔽
         // Uarte
         let pins =  hal::uarte::Pins {
             rxd: pins.p0_08.degrade().into_floating_input(),
