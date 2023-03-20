@@ -220,7 +220,7 @@ pub fn init() -> Result<Board, ()> {
         let led_3 = pins.p0_15.degrade().into_push_pull_output(Level::High);
         let led_4 = pins.p0_16.degrade().into_push_pull_output(Level::High);
         
-        // 🔽 ---  Exercise Button --- 🔽
+        // 🔽 ---  Button Exercise --- 🔽
         // Buttons
         let b_1 = pins.p0_11.degrade().into_pullup_input();
         let b_2 = pins.p0_12.degrade().into_pullup_input();
