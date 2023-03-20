@@ -266,7 +266,7 @@ pub fn init() -> Result<Board, ()> {
 
             // 🔽 ---  UARTE Exercise --- 🔽
             uarte: Uarte { inner: uarte },
-            // 🔼  --- Exercise UARTE --- 🔼 
+            // 🔼  --- UARTE Exercise --- 🔼 
         })
     } else {
         Err(())
