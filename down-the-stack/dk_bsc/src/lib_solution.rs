@@ -243,7 +243,7 @@ pub fn init() -> Result<Board, ()> {
        
 
         let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
-        // 🔼  --- Exercise UARTE --- 🔼 
+        // 🔼  --- UARTE Exercise --- 🔼 
 
         Ok(Board {
             leds: Leds {
