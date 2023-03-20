@@ -127,7 +127,7 @@ impl Button {
         self.inner.is_low() == Ok(true)
     }
 }
-// 🔼  --- Exercise Button --- 🔼 
+// 🔼  --- Button Exercise --- 🔼 
 
 /// A timer for creating blocking delays
 pub struct Timer {
