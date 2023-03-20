@@ -136,7 +136,7 @@ Instead our implementation must ensure all the strings are copied to a stack all
 
 ✅ Create a buffer. The type is an `array` of 16 u8, set to all 0. 
 
-✅ To copy all data into an on-stack buffer, iterate over every chunk of the string to copy it into the buffer.
+✅ To copy all data into an on-stack buffer, *iterate* over *chunks* of the string and copy them into the buffer (noting that the chunk length may be less than the requested size if you are at the end of the input string).
 
 <details>
   <summary>Solution</summary>
