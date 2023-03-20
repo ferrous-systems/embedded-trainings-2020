@@ -109,7 +109,7 @@ pub fn init() -> Result<Board, ()> {
             buttons: Buttons {
                 // ...
             },
-            // 🔼  --- Exercise Button --- 🔼 
+            // 🔼  --- Button Exercise --- 🔼 
 
             timer: Timer { inner: timer },
 
