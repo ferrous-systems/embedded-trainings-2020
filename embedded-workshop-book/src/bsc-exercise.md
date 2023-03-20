@@ -1,6 +1,6 @@
 # BSC Exercise
 
-In this exercise you will learn how to write a board support crate by implementing buttons and the UARTE peripheral. 
+In this exercise you will learn how to write a *Board Support Crate* (or BSC, also known as a *Board Support Package*) by implementing support for handling button presses, and support for using the UARTE peripheral. 
 
 The template `down-the-stack/dk_bsc/src/lib.rs` already contains the LED and Timer implementations. Add your code to the designated lines. You'll find a `//todo!` there. 
 
