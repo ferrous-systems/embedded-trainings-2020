@@ -204,7 +204,7 @@ impl fmt::Write for Uarte {
         Ok(())
     }
 }
-// 🔼  --- Exercise UARTE --- 🔼 
+// 🔼  --- UARTE Exercise --- 🔼 
 
 /// Initializes the board
 ///
