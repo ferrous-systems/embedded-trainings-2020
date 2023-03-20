@@ -14,7 +14,7 @@ The UART protocol requires four pins, they are usually labelled:
 ### Step 2: Explore the `nrf-hal` to find out what needs to be done. 
 
 
-The `nrf52840-hal` is a crate that exports all the `52840` flagged features from the `nrf-hal-common`. Let's take a look at the nRF-Hal [Uarte module](https://github.com/nrf-rs/nrf-hal/blob/v0.14.1/nrf-hal-common/src/uarte.rs). 
+The `nrf52840-hal` is a crate that exports all the `52840` flagged features from the `nrf-hal-common`. Let's take a look at the `nrf52840-hal`'s [Uarte module](https://github.com/nrf-rs/nrf-hal/blob/v0.14.1/nrf-hal-common/src/uarte.rs). 
 
 In line 16 we see, that the nRF52840 uses the `hal::pac::UARTE1` peripheral.
 In line 44 you find the `struct Uarte<T>(T)`, the interface to a UARTE instance `T`. Besides the instance `T`, the instantiating method takes variables of the following types as arguments: `Pins`, `Parity` and `Baudrate`.
