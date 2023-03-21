@@ -60,14 +60,20 @@ This does not change to the docs, but `lib.rs` is a bit more readable.
 form -i src/lib.rs -o src/ 
 ```
 
-In case this last command causes problems try this instead:
+✅ Re-run `cargo fmt`. 
 
-Move `lib.rs` out of `/src`.
 
-Run the following command:
+
+## Troubleshooting
+
+### `form`
+
+In case the `form` command above causes problems, try this instead:
+
+1. Move `lib.rs` out of `/src`.
+
+2. Run the following command:
 
 ```terminal
 form -i ./lib.rs -o ./src
 ```
-
-✅ Re-run `cargo fmt`. 
