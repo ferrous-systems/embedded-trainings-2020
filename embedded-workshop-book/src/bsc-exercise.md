@@ -12,9 +12,6 @@ This program will not call any of the functions you are implementing, so it does
 
 `down-the-stack/dk_bsc/src/lib_solution.rs` contains the full solution code. 
 
-
-
-
 ## You will learn how to
 * modify the `init()` function that brings up the board's peripherals
 * how to configure pins 
@@ -23,7 +20,8 @@ This program will not call any of the functions you are implementing, so it does
 * implement a Trait
 * to document and generate docs for your own library!
 
-## Prerequisites
+## Prerequisites 
+* installation of `pyserial` or other serial terminal that you are familiar with. 
 * `impl` keyword
 * methods and associated functions
 * `pub` keyword

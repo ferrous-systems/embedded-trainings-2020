@@ -3,11 +3,13 @@
 
 ### Step 1: Check Documentation.
 
-The UART protocol requires four pins, they are usually labelled:
+The UART protocol requires up to four pins, two are mandatory, additional two are optional. they are usually labelled:
 * RXD
 * TXD
-* CTS
-* RTS
+* CTS (optional)
+* RTS (optional)
+
+We will only use the mandatory ones. 
 
 ✅ Check the [User Guide in section 7.2](https://infocenter.nordicsemi.com/topic/ug_nrf52840_dk/UG/dk/vir_com_port.html) to find to find out which pins are reserved for these and what their configuration needs to be. 
 
@@ -24,6 +26,7 @@ A quick search of the document reveals where to find all of them:
 * `Parity` and `Baudrate`: Re-export on line 34
 
 ✅ Add the following lines as import:
+
 ```
 use hal::pac::uarte0::{
     baudrate::BAUDRATE_A as Baudrate, config::PARITY_A as Parity};
@@ -53,14 +56,14 @@ pub struct Uarte {
 ✅ Take a closer look at the definition of the `uarte::Pins` struct in the `nrf-hal`. Compare the pin type configurations with the ones you have already imported in `lib.rs`. Add the ones you're missing. 
 
 ✅ Create an instance of this struct in `fn init()` with the appropriate pins and configurations. Set the output pin's level to `Level::High`.
-Note, that the third and fourth pin are each wrapped in an `Option`. 
+Note, that the third and fourth pin are each wrapped in an `Option`: Their type is `None` in this case.
 
 ✅ Create a Uarte driver with `hal::uarte::Uarte::new(...)` and bind it to a variable called `uarte` - we will stash this in our own `Uarte` struct later.
 
 Creating the Uarte driver requires four arguments:
 * The `UARTE1` instance can be found in the `periph` variable.
 * Your instance of the `uarte::Pins` struct.
-* Set parity to `Parity::INCLUDED` 
+* Set parity to `Parity::EXCLUDED` 
 * set the baud rate to `Baudrate::BAUD115200`.
 
 <details>
@@ -70,12 +73,12 @@ Creating the Uarte driver requires four arguments:
   let pins =  hal::uarte::Pins {
             rxd: pins.p0_08.degrade().into_floating_input(),
             txd: pins.p0_06.degrade().into_push_pull_output(Level::High),
-            cts: Some(pins.p0_07.degrade().into_floating_input()),
-            rts: Some(pins.p0_05.degrade().into_push_pull_output(Level::High)),
+            cts: None,
+            rts: None,
         };
        
 
-        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
+        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::EXCLUDED, Baudrate::BAUD115200);
 ```
 </details>
 
@@ -165,18 +168,28 @@ impl fmt::Write for Uarte {
 </details>
 
 ### Step 7: Connect your computer to the virtual UART
-[todo!] [directions for mac present, linux and windows are missing.]
    
 ✅  Use the following command to find the address of the nRF52840-DK on your computer. 
+
+Linux:
+```
+$ ls /dev/ttyACM*
+```
+
+MacOS:
 
 ```
 ls /dev/tty.usbmodem*
 ```
 
-✅  Run the following command to run `screen` with the nRF52840-DK with 115200 baud. 
+Windows: 
+a USB Serial Device (COM port) in the Device Manager under the Ports section.
+
+✅  Run the following command to run `miniterm` with the nRF52840-DK with 115200 baud. This includes the default settings of no parity, 8 data bits, 1 stop bit
 
 ```
-screen <address of mc> 115200
+python3 -m serial.tools.miniterm <address> 115200
+
 ```
 
 ### Step 8: Run the example.
@@ -187,6 +200,5 @@ screen <address of mc> 115200
 cargo run --bin uarte_print
 ```
 
-On your terminal window where `screen` runs, "Hello, World" should appear. 
+On your terminal window where `miniterm` runs, "Hello, World" should appear. 
 
-You need to terminate `screen` manually.
