@@ -14,7 +14,7 @@ In the `modules` section, look for the `uarte0` module. It is divided into submo
 * `W` - the writer proxy for the ENABLE register, with the following methods:
     * `enable()` returns the field ENABLE writer `ENABLE_W`. 
     * `unsafe bits()` writes raw bits into the register.
-* `R` - the register ENABLE reader writer with the following methods:
+* `R` - the reader proxy for the ENABLE register, with the following methods:
     * `enable()` returns the field ENABLE reader `ENABLE_R`. 
     * `bits()` reads raw bits from the register. 
 
