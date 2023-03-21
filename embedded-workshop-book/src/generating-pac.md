@@ -40,7 +40,7 @@ svd2rust --target cortex-m -i nrf52.svd
 If you check the folder `down-the-stack/dk-pac` now, you see three new files:
 * lib.rs - the file that contains the generated code for the pac
 * device.x - linker script that weakly aliases all the interrupt handlers to the default exception handler (DefaultHandler).
-* build.rs - linker script
+* build.rs - build script that places device.x somewhere the linker can find.
 
 ✅ Make an `/src` and move the generated `lib.rs` into it.
 
