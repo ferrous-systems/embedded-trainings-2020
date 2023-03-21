@@ -39,7 +39,7 @@ Find the full solution in `down-the-stack/solutions/src/bin/uarte_enable.rs`
 
 ### Step 2: Import the PAC
 
-In `down-the-stack/apps/Cargo.toml` add:
+In the Cargo configuration file for the `apps` package, `down-the-stack/apps/Cargo.toml`, add:
 
 ```
 dk_pac = { path = "../dk_pac", features = ["critical-section"]}
