@@ -5,7 +5,7 @@ Generate your own PAC from an SVD file.
 ## In this exercise you will learn how to
 * generate a PAC from an SVD file.
 * format the generated code. 
-* split the single PAC file into it's modules.
+* split the single PAC file into one file per module.
 
 ## Prerequisites
 * usage of cargo install
