@@ -44,7 +44,7 @@ In the Cargo configuration file for the `apps` package, `down-the-stack/apps/Car
 ```
 dk_pac = { path = "../dk_pac", features = ["critical-section"]}
 ```
-In `apps/bin/uarte_enable.rs` add:
+In the main source file for the `uarte_enable` binary, `apps/bin/uarte_enable.rs`, add:
 
 ```rust 
 use dk_pac::UARTE0;
