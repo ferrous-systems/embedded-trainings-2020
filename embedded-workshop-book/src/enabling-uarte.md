@@ -52,7 +52,7 @@ use dk_pac::UARTE0;
 
 ### Step 3: Take ownership of the peripherals with `take()`
 
-Take ownership of the peripherals with `take()`. Take note, the take returns an `Option<T>` so that needs to be taken care of. Bind the `UARTE0` peripheral to it's own variable.
+Take ownership of the peripherals with `take()`. Be aware, the take returns an `Option<T>` so that needs to be taken care of. Bind the `UARTE0` peripheral to its own variable.
 
 ```rust
 let periph = dk_pac::Peripherals::take().unwrap();
