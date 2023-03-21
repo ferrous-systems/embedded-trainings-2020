@@ -26,7 +26,7 @@ Uarte0 is ensabled.
 Uarte0 is disabled.
 ```
 
-Find the starter code in `down-the-stack/apps/uarte_enable.rs`
+Find the starter code in `down-the-stack/apps/src/bin/uarte_enable.rs`
 Find the full solution in `down-the-stack/solutions/uarte_enable.rs`
 
 
