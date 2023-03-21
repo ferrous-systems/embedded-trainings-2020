@@ -11,7 +11,7 @@ In the `Structs` section look for the `struct Peripherals`. Taking ownership of 
 
 In the `modules` section, look for the `uarte0` module. It is divided into submodules. `enable` is the register we are concerned about. Clicking on it shows the associated type definitions.  
 
-* `W` - the register ENABLE writer with the following methods:
+* `W` - the writer proxy for the ENABLE register, with the following methods:
     * `enable()` returns the field ENABLE writer `ENABLE_W`. 
     * `unsafe bits()` writes raw bits into the register.
 * `R` - the register ENABLE reader writer with the following methods:
