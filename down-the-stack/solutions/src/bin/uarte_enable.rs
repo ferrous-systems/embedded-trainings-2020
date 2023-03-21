@@ -28,7 +28,7 @@ fn main() -> ! {
 
     // disable the UART0 peripheral by writing 0 directly into the register -- the unsafe way
     unsafe {
-        uarte.enable.write(|w| w.bits(0x00 as u32));
+        uarte.enable.write(|w| w.bits(0x00u32));
     }
 
     is_uarte_enabled(&uarte);
