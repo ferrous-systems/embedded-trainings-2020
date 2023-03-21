@@ -15,8 +15,8 @@ Generate your own PAC from an SVD file.
 * Install `svd2rust` and `form` via cargo. 
 * Download the [nrf-svd][svd] file and place it into `down-the-stack/dk-pac`.
 * Run `svd2rust` on the file using the `cortex-m` target. 
-* Format the generated file to make it readable. 
 * Split the file into its modules using `form`.
+* Format the generated file to make it readable. 
 * Check the documentation. 
 
 ## Step-by-Step Solution

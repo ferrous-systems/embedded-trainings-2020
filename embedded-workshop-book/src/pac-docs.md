@@ -35,6 +35,12 @@ Note the difference between the struct field `UARTE0` in `Peripherals` and the m
 
 * `dk_pac/src/lib.rs` defines the singleton peripherals as part of a larger `struct Peripherals`. There are two methods for this struct: `take()` and `steal()`. `take()` assures, that only one instance of this can exist. Hence, it's safe. Note that `take()` is only available with the `critical-section` feature enabled.
 
+To generate documentation that includes `take()`, pass the `critical-section` feature flag when generating the docs: 
+
+```
+cargo doc --open --features critical-section
+```
+
 * `dk_pac/src/uarte0.rs` defines a struct that contains all the registers of the `UARTE0` peripheral. The `enable` field represents the register of the same name. 
 
 * `dk_pac/src/uarte0/enable.rs` defines the types associated with this register that you already saw in the docs. 
