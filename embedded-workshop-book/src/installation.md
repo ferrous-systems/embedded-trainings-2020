@@ -157,3 +157,6 @@ $ cargo install nrfdfu
 (..)
 Installed package `nrfdfu v0.1.3` (..)
 ```
+## pySerial for Down The Stack
+
+If you don't have a serial terminal you're familiar with, we recommend using `pySerial`. Follow the installation instructions [here](https://pythonhosted.org/pyserial/pyserial.html#installation). This may require an update of your python installation. This is needed for the second day of the 3 day embedded training. 

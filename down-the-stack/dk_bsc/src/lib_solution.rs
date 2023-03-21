@@ -237,12 +237,12 @@ pub fn init() -> Result<Board, ()> {
         let pins =  hal::uarte::Pins {
             rxd: pins.p0_08.degrade().into_floating_input(),
             txd: pins.p0_06.degrade().into_push_pull_output(Level::High),
-            cts: Some(pins.p0_07.degrade().into_floating_input()),
-            rts: Some(pins.p0_05.degrade().into_push_pull_output(Level::High)),
+            cts: None,
+            rts: None,
         };
        
 
-        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::INCLUDED, Baudrate::BAUD115200);
+        let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::EXCLUDED, Baudrate::BAUD115200);
         // 🔼  --- UARTE Exercise --- 🔼 
 
         Ok(Board {
