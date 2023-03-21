@@ -2,7 +2,7 @@
 authors = ["Tanks Transfeld <tanks.transfeld@ferrous-systems.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
-name = "uarte_enable_solution"
+name = "solutions"
 version = "0.0.0"
 
 [dependencies]
