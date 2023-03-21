@@ -79,7 +79,7 @@ fn is_uarte_enabled(uarte: &UARTE0) {
 
 ### Step 5: Enable the peripheral safely.
 
-Enable the peripheral safely by passing `w.enable().enabled()` in the closure of `write()`. Call the helper function after this new line and run your code. 
+Enable the peripheral safely by passing `w.enable().enabled()` in the closure of a call to `write()` on the `enable` field of our UARTE object. Call the helper function after this new line and run your code. 
 
 It should print:
 
