@@ -14,7 +14,7 @@ Write a simple program which uses the PAC to enable the UARTE0. See how writing 
 ## Tasks
 * Find out which values can be written into the `enable` register.
 * Take ownership of the board's peripherals
-* Write a helper function that reads the UARTE0's `enable` register and print's status.
+* Write a helper function that reads `UARTE0`'s `enable` register and prints the enable status.
 * Enable the UARTE0 peripheral using a safe method.
 * Disable the UARTE0 peripheral by writing raw bits in it (unsafe).
 
