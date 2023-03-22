@@ -137,7 +137,44 @@ let p = nrf52840::Peripherals::take().unwrap();
 // This register has only one field
 let current_baud_rate = p.UARTE1.baudrate.read().baudrate();
 // This register has multiple fields
-p.UARTE1.inten.write(|w| {
+p.UARTE1.inten.modify(|_r, w| {
+    w.cts().enabled();
+    w.ncts().enabled();
+    w.rxrdy().enabled();
+    w    
+});
+```
+
+---
+
+## Wait, what's a closure?
+
+* It's an anonymous function, declared in-line with your other code
+* It can 'capture' local variables (although we don't use that feature here)
+* It enables a very powerful Rust idiom, that you can't easily do in C...
+
+---
+
+## Let's take it in turns
+
+* I, the callee, need to set some stuff up
+* You, the caller, need to do a bit of work
+* I, the callee, need to clean everything up
+
+We can use a closure to insert the caller-provided code in the middle of our
+function. We see this used
+[all](https://doc.rust-lang.org/core/iter/trait.Iterator.html#method.map)
+[over](https://doc.rust-lang.org/core/primitive.str.html#method.matches)
+[the](https://doc.rust-lang.org/std/thread/fn.spawn.html) Rust standard library!
+
+---
+
+## You tell me...
+
+What are the three steps here?
+
+```rust
+p.UARTE1.inten.modify(|_r, w| {
     w.cts().enabled();
     w.ncts().enabled();
     w.rxrdy().enabled();
