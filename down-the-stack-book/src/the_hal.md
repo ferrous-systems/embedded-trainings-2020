@@ -93,5 +93,5 @@ let pins =  hal::uarte::Pins {
 let uarte = hal::uarte::Uarte::new(periph.UARTE1, pins, Parity::EXCLUDED, Baudrate::BAUD115200);
 ```
 
-This is example is for the nRF52. We'll use it later in the example.
+This is an example for the nRF52. We'll use it later in the example.
 
