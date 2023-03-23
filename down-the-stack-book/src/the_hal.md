@@ -74,7 +74,7 @@ This differs widely across MCUs (ST, Nordic, Espressif, Atmel, etc). Some MCUs (
 ## Correctness by design
 
 * HALs want to make it hard to do the wrong thing
-* Is a UART driver any use, if you haven't configured at least one TX pin and one RX pin?
+* Is a UART driver of any use, if you haven't configured at least one TX pin and one RX pin?
 * Should the UART driver check you've done that?
 
 ---
