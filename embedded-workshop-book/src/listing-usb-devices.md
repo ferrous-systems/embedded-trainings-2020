@@ -12,7 +12,11 @@ Bus 001 Device 001: ID 1d6b:0002
 Bus 001 Device 010: ID 1366:1015 <- J-Link on the nRF52840 Development Kit
 ```
 
-The goal of this workshop is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`; `cargo xtask usb-list` will highlight the USB device that matches that VID PID pair.
+## Workshop goal
+
+The goal of this workshop is to get the nRF52840 SoC to show in this list. The embedded application will use the vendor ID (VID) and product ID (PID) defined in `advanced/common/consts`.
+
+`cargo xtask usb-list` will highlight the USB device that matches that VID PID pair.
 
 ``` console
 $ # expected output
