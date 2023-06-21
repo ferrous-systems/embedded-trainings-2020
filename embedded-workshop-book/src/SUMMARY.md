@@ -26,7 +26,7 @@
       - [Starting a Project from Scratch](./from-scratch.md)
 - [Advanced Workbook](./advanced-workbook.md)
     - [Code Organization](./code-organisation.md)
-    - [Listing USB Devices](./listing-usb-devices.md)
+    - [Workshop goal](./workshop-goal.md)
     - [Hello, world!](./hello-world.md)
     - [Checking the API documentation](./api-documentation.md)
     - [RTIC hello](./rtic-hello.md)
