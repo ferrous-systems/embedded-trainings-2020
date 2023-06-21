@@ -1,4 +1,5 @@
 #![no_std]
 
-pub const VID: u16 = 0x2020;
-pub const PID: u16 = 0x0717;
+// using the "working" IDs of nRF board
+pub const VID: u16 = 0x1366;
+pub const PID: u16 = 0x1015;
