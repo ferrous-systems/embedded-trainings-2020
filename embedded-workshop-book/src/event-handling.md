@@ -7,3 +7,10 @@ Below the `idle` function you'll see a `#[task]` handler, a function. This *task
 Note that all tasks will be prioritized over the `idle` function so the execution of `idle` will be interrupted (paused) by the `on_power_event` task. When the `on_power_event` task finishes (returns) the execution of the `idle` will be resumed. This will become more obvious in the next section.
 
 Try this: add an infinite loop to the end of `init` so that it never returns. Now run the program and connect the USB cable. What behavior do you observe? How would you explain this behavior? (hint: look at the `rtic-expansion.rs` file: under what conditions is the `init` function executed?)
+
+<details>
+<summary>Click me to see hint</summary>
+
+You may observe that nothing happens when you plug in the USB cable to J3. The `init` function is called once inside the `main` but `init` in this case has an infinite loop.
+
+</details>
