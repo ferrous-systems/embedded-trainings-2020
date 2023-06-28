@@ -6,6 +6,6 @@ name = "print-descs"
 version = "0.0.0"
 
 [dependencies]
-rusb = "0.5.5"
+rusb = "0.8"
 anyhow = "1.0.31"
 consts = { path = "../../common/consts/" }

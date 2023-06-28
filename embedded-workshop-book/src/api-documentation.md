@@ -9,4 +9,4 @@ $ cargo doc -p dk --open
 ```
 
 
-> NOTE: If you are using Safari and the documentation is hard to read due to missing CSS, try opening it in a different browser.
+> ❗️ If you are using Safari and the documentation is hard to read due to missing CSS, try opening it in a different browser.
