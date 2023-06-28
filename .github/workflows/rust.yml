@@ -18,13 +18,8 @@ jobs:
     - name: check out repository
       uses: actions/checkout@v2
 
-    - name: set up rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-
-    - name: set up actions.rs
-      uses: actions-rs/cargo@v1
+    - name: Use the latest stable release
+      run: rustup update stable && rustup default stable
 
     - name: cache rust dependencies
       uses: actions/cache@v2
