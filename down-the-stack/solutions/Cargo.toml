@@ -1,0 +1,50 @@
+[package]
+authors = ["Tanks Transfeld <tanks.transfeld@ferrous-systems.com>"]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+name = "solutions"
+version = "0.0.0"
+
+[dependencies]
+cortex-m = {version = "0.7.6", features = ["critical-section-single-core"]}
+cortex-m-rt = "0.7.2"
+dk_bsc = { path = "../dk_bsc" }
+dk_pac = { path = "../dk_pac", features = ["critical-section"]}
+heapless = "0.7.16"
+panic-probe = { version = "0.3.0", features = ["print-defmt"] }
+defmt = "0.3.2"
+defmt-rtt = "0.3.2"
+
+# optimize code in both profiles
+[profile.dev]
+codegen-units = 1
+debug = 2
+debug-assertions = true # !
+incremental = false
+lto = "fat"
+opt-level = 'z' # !
+overflow-checks = false
+
+[profile.release]
+codegen-units = 1
+debug = 1
+debug-assertions = false
+incremental = false
+lto = "fat"
+opt-level = 3
+overflow-checks = false
+
+[features]
+
+
+default = [
+  "other-feature"
+]
+other-feature = []
+# do NOT modify these features
+defmt-default = []
+defmt-trace = []
+defmt-debug = []
+defmt-info = []
+defmt-warn = []
+defmt-error = []

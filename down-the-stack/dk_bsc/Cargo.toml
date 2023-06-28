@@ -1,0 +1,24 @@
+[package]
+authors = ["Jorge Aparicio <jorge.aparicio@ferrous-systems.com>", "Tanks Transfeld <tanks.transfeld@ferrous-systems.com"]
+edition = "2018"
+license = "MIT OR Apache-2.0"
+name = "dk_bsc"
+version = "0.0.0"
+
+[dependencies]
+cortex-m = {version = "0.7.6", features = ["critical-section-single-core"]}
+cortex-m-rt = "0.7.2"
+embedded-hal = "0.2.7"
+nrf52840-hal = "0.14.0"
+panic-probe = { version = "0.3.0", features = ["print-defmt"] }
+defmt = "0.3.2"
+defmt-rtt = "0.3.2"
+
+[features]
+advanced = []
+beginner = []
+
+default = [
+  "other-feature"
+]
+other-feature = []
